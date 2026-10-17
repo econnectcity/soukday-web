@@ -4,6 +4,8 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 import { STORES } from '../data/mockData';
 import { Store } from '../types';
+import { LiveWebSettings } from '../types';
+import { DEFAULT_LIVE_SETTINGS } from '../services/api';
 import { 
   ShieldCheck, 
   Clock, 
@@ -17,9 +19,13 @@ import {
 
 interface ButcherSectionProps {
   stores?: Store[];
+  settings?: LiveWebSettings;
 }
 
-export default function ButcherSection({ stores = STORES }: ButcherSectionProps) {
+export default function ButcherSection({ 
+  stores = STORES,
+  settings = DEFAULT_LIVE_SETTINGS 
+}: ButcherSectionProps) {
   const { selectedAddress, setIsAddressModalOpen } = useCart();
 
   const sourceStores = stores && stores.length > 0 ? stores : STORES;
@@ -51,18 +57,19 @@ export default function ButcherSection({ stores = STORES }: ButcherSectionProps)
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-red-600 mb-1">
               <Flame className="w-3.5 h-3.5 fill-red-600" />
-              <span>Viandes fraîches & artisanales</span>
+              <span>{settings?.butcherSectionTag || 'Viandes fraîches & artisanales'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
-              Boucheries livrant chez vous
+              {settings?.butcherSectionTitle || 'Boucheries livrant chez vous'}
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 mt-1">
-              Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à{' '}
+              {settings?.butcherSectionSubtitle || 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à'}{' '}
               <strong className="text-stone-900 underline decoration-[#F68B62] decoration-2">
                 {selectedAddress.city} ({selectedAddress.postalCode})
               </strong>
             </p>
           </div>
+
 
           <button
             type="button"

@@ -2,6 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { LiveWebSettings } from '../types';
+import { DEFAULT_LIVE_SETTINGS } from '../services/api';
 import { 
   Store, 
   Truck, 
@@ -13,7 +15,11 @@ import {
   Globe2
 } from 'lucide-react';
 
-export default function Footer() {
+interface FooterProps {
+  settings?: LiveWebSettings;
+}
+
+export default function Footer({ settings = DEFAULT_LIVE_SETTINGS }: FooterProps) {
   return (
     <footer className="bg-stone-900 text-stone-300 pt-14 pb-8 border-t border-stone-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -67,28 +73,44 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="col-span-2 space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#F68B62] to-[#ff9e7a] flex items-center justify-center text-white font-black text-lg">
-                S
-              </div>
-              <span className="text-2xl font-black text-white tracking-tight">
-                Souk<span className="text-[#F68B62]">day</span>
-              </span>
+              {settings?.webFooterLogo ? (
+                <img 
+                  src={settings.webFooterLogo} 
+                  alt={settings.siteTitle || 'Soukday'} 
+                  className="h-9 sm:h-10 w-auto max-w-[190px] object-contain" 
+                />
+              ) : (
+                <>
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#F68B62] to-[#ff9e7a] flex items-center justify-center text-white font-black text-lg">
+                    S
+                  </div>
+                  <span className="text-2xl font-black text-white tracking-tight">
+                    Souk<span className="text-[#F68B62]">day</span>
+                  </span>
+                </>
+              )}
             </div>
             <p className="text-stone-400 text-xs leading-relaxed max-w-sm">
-              Soukday est la première plateforme d’épiceries orientales, boucheries halal et spécialités du monde au Canada. 
-              Faites votre marché en toute confiance et recevez vos produits favoris chez vous.
+              {settings?.footerAboutText || 'Soukday est la première plateforme d’épiceries orientales, boucheries halal et spécialités du monde au Canada. Faites votre marché en toute confiance et recevez vos produits favoris chez vous.'}
             </p>
             <div className="text-stone-400 text-xs space-y-1">
               <div className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-[#F68B62]" />
-                <span>Montréal, Québec, Canada</span>
+                <span>{settings?.footerAddress || 'Montréal, Québec, Canada'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#F68B62]" />
-                <span>contact@soukday.ca</span>
+                <span>{settings?.footerEmail || 'contact@soukday.ca'}</span>
               </div>
+              {settings?.footerPhone && (
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-[#F68B62]" />
+                  <span>{settings.footerPhone}</span>
+                </div>
+              )}
             </div>
           </div>
+
 
           {/* Magasins */}
           <div className="space-y-3">
@@ -180,7 +202,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
           <div>
-            © 2026 Soukday Inc. Tous droits réservés. Plateforme de commerce multi-vendeurs.
+            {settings?.copyrightDetails || '© 2026 Soukday Inc. Tous droits réservés. Plateforme de commerce multi-vendeurs.'}
           </div>
           <div className="flex items-center gap-4">
             <span className="hover:text-stone-300 cursor-pointer">Conditions d’utilisation</span>

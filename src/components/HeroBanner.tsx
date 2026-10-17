@@ -3,9 +3,15 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { POPULAR_LOCATIONS } from '../data/mockData';
+import { LiveWebSettings } from '../types';
+import { DEFAULT_LIVE_SETTINGS } from '../services/api';
 import { MapPin, ArrowRight, ShieldCheck, Truck, Sparkles, CheckCircle2 } from 'lucide-react';
 
-export default function HeroBanner() {
+interface HeroBannerProps {
+  settings?: LiveWebSettings;
+}
+
+export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBannerProps) {
   const { selectedAddress, setSelectedAddress } = useCart();
   const [inputVal, setInputVal] = useState(selectedAddress.postalCode || '');
   const [successNotice, setSuccessNotice] = useState(false);
@@ -55,17 +61,20 @@ export default function HeroBanner() {
             {/* Pill tag */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/30 text-xs font-bold tracking-wide shadow-xs">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Votre marché oriental & local à portée de clic</span>
+              <span>{settings?.heroTagline || 'Votre marché oriental & local à portée de clic'}</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight leading-[1.15]">
-              Vos <span className="text-[#F68B62]">épiceries fines</span> & <span className="text-[#F68B62]">boucheries locales</span> livrées à votre porte.
+              {settings?.heroTitle ? (
+                settings.heroTitle
+              ) : (
+                <>Vos <span className="text-[#F68B62]">épiceries fines</span> & <span className="text-[#F68B62]">boucheries locales</span> livrées à votre porte.</>
+              )}
             </h1>
 
             <p className="text-stone-600 text-sm sm:text-base max-w-xl leading-relaxed">
-              Entrez votre code postal pour découvrir les boucheries halal et magasins qui livrent chez vous. 
-              Les produits d’épicerie directe <strong>Soukday</strong> sont expédiés partout au Canada et aux États-Unis !
+              {settings?.heroSubtitle || 'Entrez votre code postal pour découvrir les boucheries halal et magasins qui livrent chez vous. Les produits d’épicerie directe Soukday sont expédiés partout au Canada et aux États-Unis !'}
             </p>
 
             {/* Address / Postal Code Form */}
@@ -104,17 +113,18 @@ export default function HeroBanner() {
             <div className="grid grid-cols-3 gap-3 pt-3 border-t border-stone-200/60 max-w-xl text-stone-700 text-xs">
               <div className="flex items-center gap-2">
                 <Truck className="w-4 h-4 text-[#F68B62] shrink-0" />
-                <span className="font-medium">Livraison le jour même</span>
+                <span className="font-medium">{settings?.heroBadge1 || 'Livraison le jour même'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-[#F68B62] shrink-0" />
-                <span className="font-medium">Boucheries 100% Halal</span>
+                <span className="font-medium">{settings?.heroBadge2 || 'Boucheries 100% Halal'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#F68B62] shrink-0" />
-                <span className="font-medium">Épicerie Canada & USA</span>
+                <span className="font-medium">{settings?.heroBadge3 || 'Épicerie Canada & USA'}</span>
               </div>
             </div>
+
 
           </div>
 

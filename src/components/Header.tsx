@@ -3,6 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
+import { LiveWebSettings } from '../types';
+import { DEFAULT_LIVE_SETTINGS } from '../services/api';
 import { 
   MapPin, 
   Search, 
@@ -14,7 +16,11 @@ import {
   PhoneCall
 } from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+  settings?: LiveWebSettings;
+}
+
+export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps) {
   const { 
     cartCount, 
     cartSubtotal, 
@@ -31,25 +37,27 @@ export default function Header() {
       <div className="bg-gradient-to-r from-[#F68B62] via-[#f79d79] to-[#F68B62] text-white text-xs py-1.5 px-4 font-medium">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="bg-white/20 px-2 py-0.5 rounded-full text-[11px] font-semibold flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Nouveau
-            </span>
+            {settings?.headerAnnouncementTag && (
+              <span className="bg-white/20 px-2 py-0.5 rounded-full text-[11px] font-semibold flex items-center gap-1">
+                <Sparkles className="w-3 h-3" /> {settings.headerAnnouncementTag}
+              </span>
+            )}
             <span>
-              Épicerie Soukday expédiée partout au Canada et vers les États-Unis éligibles !
+              {settings?.headerAnnouncementText || 'Épicerie Soukday expédiée partout au Canada et vers les États-Unis éligibles !'}
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4 text-[11px]">
             <a 
-              href="https://admin.soukday.ca/#/seller/register" 
+              href={settings?.headerPartnerUrl || "https://admin.soukday.ca/#/seller/register"} 
               target="_blank" 
               rel="noreferrer"
               className="hover:underline flex items-center gap-1"
             >
-              <StoreIcon className="w-3 h-3" /> Devenir vendeur partenaire
+              <StoreIcon className="w-3 h-3" /> {settings?.headerPartnerText || 'Devenir vendeur partenaire'}
             </a>
             <span className="opacity-60">|</span>
             <span className="flex items-center gap-1">
-              <PhoneCall className="w-3 h-3" /> Support client 7j/7
+              <PhoneCall className="w-3 h-3" /> {settings?.headerSupportPhone ? `${settings.headerSupportText}: ${settings.headerSupportPhone}` : (settings?.headerSupportText || 'Support client 7j/7')}
             </span>
           </div>
         </div>
@@ -61,18 +69,29 @@ export default function Header() {
           
           {/* Logo & Brand */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#F68B62] to-[#ff9e7a] flex items-center justify-center text-white font-black text-xl shadow-md shadow-[#F68B62]/20 group-hover:scale-105 transition-transform">
-              S
-            </div>
-            <div>
-              <span className="text-2xl font-black tracking-tight text-stone-900 flex items-center">
-                Souk<span className="text-[#F68B62]">day</span>
-              </span>
-              <span className="block text-[10px] -mt-1 font-semibold uppercase tracking-wider text-stone-400">
-                Épiceries & Boucheries
-              </span>
-            </div>
+            {settings?.webHeaderLogo ? (
+              <img 
+                src={settings.webHeaderLogo} 
+                alt={settings.siteTitle || 'Soukday'} 
+                className="h-10 sm:h-11 w-auto max-w-[190px] object-contain group-hover:scale-105 transition-transform" 
+              />
+            ) : (
+              <>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#F68B62] to-[#ff9e7a] flex items-center justify-center text-white font-black text-xl shadow-md shadow-[#F68B62]/20 group-hover:scale-105 transition-transform">
+                  S
+                </div>
+                <div>
+                  <span className="text-2xl font-black tracking-tight text-stone-900 flex items-center">
+                    Souk<span className="text-[#F68B62]">day</span>
+                  </span>
+                  <span className="block text-[10px] -mt-1 font-semibold uppercase tracking-wider text-stone-400">
+                    Épiceries & Boucheries
+                  </span>
+                </div>
+              </>
+            )}
           </Link>
+
 
           {/* Location / Address Picker Button */}
           <button 

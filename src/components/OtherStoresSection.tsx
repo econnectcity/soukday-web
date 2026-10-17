@@ -4,6 +4,8 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 import { STORES } from '../data/mockData';
 import { Store } from '../types';
+import { LiveWebSettings } from '../types';
+import { DEFAULT_LIVE_SETTINGS } from '../services/api';
 import { 
   Store as StoreIcon, 
   MapPin, 
@@ -16,9 +18,13 @@ import {
 
 interface OtherStoresSectionProps {
   stores?: Store[];
+  settings?: LiveWebSettings;
 }
 
-export default function OtherStoresSection({ stores = STORES }: OtherStoresSectionProps) {
+export default function OtherStoresSection({ 
+  stores = STORES,
+  settings = DEFAULT_LIVE_SETTINGS 
+}: OtherStoresSectionProps) {
   const { selectedAddress } = useCart();
 
   const sourceStores = stores && stores.length > 0 ? stores : STORES;
@@ -35,13 +41,13 @@ export default function OtherStoresSection({ stores = STORES }: OtherStoresSecti
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F68B62] mb-1.5 px-3 py-1 rounded-full bg-[#FCEFEA] border border-[#F68B62]/25 shadow-xs">
               <StoreIcon className="w-3.5 h-3.5" />
-              <span>Commerces de proximité & Supermarchés</span>
+              <span>{settings?.otherStoresSectionTag || 'Commerces de proximité & Supermarchés'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
-              Autres magasins disponibles
+              {settings?.otherStoresSectionTitle || 'Autres magasins disponibles'}
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 mt-1">
-              Supermarchés orientaux, pâtisseries fines, épiceries de quartier et traiteurs pour votre adresse
+              {settings?.otherStoresSectionSubtitle || 'Supermarchés orientaux, pâtisseries fines, épiceries de quartier et traiteurs pour votre adresse'}
             </p>
           </div>
         </div>

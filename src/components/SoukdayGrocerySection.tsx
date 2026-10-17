@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { SOUKDAY_GROCERY_SUBCATEGORIES, PRODUCTS } from '../data/mockData';
 import { Product } from '../types';
+import { LiveWebSettings } from '../types';
+import { DEFAULT_LIVE_SETTINGS } from '../services/api';
 import { 
   Package, 
   Globe2, 
@@ -18,9 +20,13 @@ import {
 
 interface SoukdayGrocerySectionProps {
   products?: Product[];
+  settings?: LiveWebSettings;
 }
 
-export default function SoukdayGrocerySection({ products = PRODUCTS }: SoukdayGrocerySectionProps) {
+export default function SoukdayGrocerySection({ 
+  products = PRODUCTS,
+  settings = DEFAULT_LIVE_SETTINGS 
+}: SoukdayGrocerySectionProps) {
   const { cart, addToCart, updateQuantity } = useCart();
   const [activeSubcat, setActiveSubcat] = useState<string | null>(null);
 
@@ -51,28 +57,36 @@ export default function SoukdayGrocerySection({ products = PRODUCTS }: SoukdayGr
             <div className="space-y-3 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F68B62]/20 text-[#F68B62] border border-[#F68B62]/30 text-xs font-bold tracking-wide">
                 <Globe2 className="w-3.5 h-3.5" />
-                <span>Expédition Nationale & Internationale</span>
+                <span>{settings?.directGroceryTag || 'Expédition Nationale & Internationale'}</span>
               </div>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white flex items-center gap-2">
-                Épicerie Directe <span className="text-[#F68B62]">Soukday</span>
+                {settings?.directGroceryTitle ? (
+                  settings.directGroceryTitle
+                ) : (
+                  <>Épicerie Directe <span className="text-[#F68B62]">Soukday</span></>
+                )}
               </h2>
               <p className="text-stone-300 text-xs sm:text-sm lg:text-base leading-relaxed">
-                Les produits d’épicerie fine vendus directement par <strong className="text-white">Soukday</strong> peuvent être expédiés 
-                partout au <strong className="text-white">Canada (10 provinces)</strong> et vers les <strong className="text-white">destinations éligibles aux États-Unis</strong>. 
-                Emballage soigné, arrivages réguliers et marques authentiques.
+                {settings?.directGroceryDescription || (
+                  <>
+                    Les produits d’épicerie fine vendus directement par <strong className="text-white">Soukday</strong> peuvent être expédiés 
+                    partout au <strong className="text-white">Canada (10 provinces)</strong> et vers les <strong className="text-white">destinations éligibles aux États-Unis</strong>. 
+                    Emballage soigné, arrivages réguliers et marques authentiques.
+                  </>
+                )}
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:gap-4 shrink-0 text-xs">
               <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:border-[#F68B62]/40 transition-colors">
                 <Truck className="w-5 h-5 text-[#F68B62] mb-1.5" />
-                <div className="font-bold text-white text-sm">Canada & USA</div>
-                <div className="text-[11px] text-stone-300">Postes Canada / UPS</div>
+                <div className="font-bold text-white text-sm">{settings?.directGroceryFeature1Title || 'Canada & USA'}</div>
+                <div className="text-[11px] text-stone-300">{settings?.directGroceryFeature1Subtitle || 'Postes Canada / UPS'}</div>
               </div>
               <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:border-[#F68B62]/40 transition-colors">
                 <ShieldCheck className="w-5 h-5 text-[#F68B62] mb-1.5" />
-                <div className="font-bold text-white text-sm">Fraîcheur 100%</div>
-                <div className="text-[11px] text-stone-300">Garantie Soukday</div>
+                <div className="font-bold text-white text-sm">{settings?.directGroceryFeature2Title || 'Fraîcheur 100%'}</div>
+                <div className="text-[11px] text-stone-300">{settings?.directGroceryFeature2Subtitle || 'Garantie Soukday'}</div>
               </div>
             </div>
           </div>

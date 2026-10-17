@@ -1,4 +1,4 @@
-import { Store, Category, Product, UserAddress } from '../types';
+import { Store, Category, Product, UserAddress, LiveWebSettings } from '../types';
 import { STORES, MAIN_CATEGORIES, PRODUCTS } from '../data/mockData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://admin.soukday.ca';
@@ -139,3 +139,144 @@ function getStoreImage(name: string): string {
   const match = STORES.find(s => s.name.toLowerCase() === name?.toLowerCase());
   return match?.image || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=700&q=80';
 }
+
+export const DEFAULT_LIVE_SETTINGS: LiveWebSettings = {
+  siteTitle: 'Soukday - Épiceries orientales & Boucheries Halal',
+  websiteUrl: 'https://soukday.ca',
+  color: '#F68B62',
+  lightColor: '#FCEFEA',
+  darkColor: '#1c1917',
+  favicon: '',
+  webLogo: '',
+  webHeaderLogo: '',
+  webFooterLogo: '',
+  placeholderImage: '',
+  loading: '',
+
+  headerAnnouncementText: 'Épicerie Soukday expédiée partout au Canada et vers les États-Unis éligibles !',
+  headerAnnouncementTag: 'Nouveau',
+  headerPartnerText: 'Devenir vendeur partenaire',
+  headerPartnerUrl: 'https://admin.soukday.ca/#/seller/register',
+  headerSupportText: 'Support client 7j/7',
+  headerSupportPhone: '',
+
+  heroTagline: 'Votre marché oriental & local à portée de clic',
+  heroTitle: 'Vos épiceries fines & boucheries locales livrées à votre porte.',
+  heroSubtitle: 'Entrez votre code postal pour découvrir les boucheries halal et magasins qui livrent chez vous. Les produits d’épicerie directe Soukday sont expédiés partout au Canada et aux États-Unis !',
+  heroBadge1: 'Livraison le jour même',
+  heroBadge2: 'Boucheries 100% Halal',
+  heroBadge3: 'Épicerie Canada & USA',
+
+  directGroceryTag: 'Expédition Nationale & Internationale',
+  directGroceryTitle: 'Épicerie Directe Soukday',
+  directGroceryDescription: 'Les produits d’épicerie fine vendus directement par Soukday peuvent être expédiés partout au Canada (10 provinces) et vers les destinations éligibles aux États-Unis. Emballage soigné, arrivages réguliers et marques authentiques.',
+  directGroceryFeature1Title: 'Canada & USA',
+  directGroceryFeature1Subtitle: 'Postes Canada / UPS',
+  directGroceryFeature2Title: 'Fraîcheur 100%',
+  directGroceryFeature2Subtitle: 'Garantie Soukday',
+
+  butcherSectionTag: 'Viandes fraîches & artisanales',
+  butcherSectionTitle: 'Boucheries livrant chez vous',
+  butcherSectionSubtitle: 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à votre porte',
+
+  otherStoresSectionTag: 'Commerces de proximité & Supermarchés',
+  otherStoresSectionTitle: 'Autres magasins disponibles',
+  otherStoresSectionSubtitle: 'Supermarchés orientaux, pâtisseries fines, épiceries de quartier et traiteurs pour votre adresse',
+
+  footerAboutText: 'Soukday est la première plateforme au Québec dédiée aux épiceries orientales, boucheries halal certifiées et commerces de spécialités avec livraison locale et expédition nationale.',
+  footerAddress: 'Montréal, Québec, Canada',
+  footerEmail: 'support@soukday.ca',
+  footerPhone: '+1 (514) 000-0000',
+  copyrightDetails: 'Copyright © 2026 Soukday. Tous droits réservés.',
+
+  isAndroidApp: false,
+  androidAppUrl: '',
+  isIosApp: false,
+  iosAppUrl: '',
+
+  commonMetaTitle: 'Soukday - Épiceries orientales, Boucheries Halal & Marchés locaux',
+  commonMetaDescription: 'Commandez en ligne auprès de vos boucheries halal et épiceries locales au Québec. Épicerie directe expédiée partout au Canada et aux États-Unis.',
+};
+
+export async function fetchLiveWebSettings(): Promise<LiveWebSettings> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/customer/settings?is_web_setting=1`, {
+      next: { revalidate: 60 },
+      headers: { 
+        'Accept': 'application/json',
+        'x-access-key': '903361',
+      },
+    });
+    if (!res.ok) throw new Error('Failed to fetch web settings');
+    const json = await res.json();
+    if (json.status === 1 && json.data) {
+      const decodedRaw = typeof atob === 'function' 
+        ? atob(json.data) 
+        : Buffer.from(json.data, 'base64').toString('utf8');
+      const decoded = JSON.parse(decodedRaw);
+      const ws = decoded.web_settings || {};
+
+      return {
+        siteTitle: ws.site_title || DEFAULT_LIVE_SETTINGS.siteTitle,
+        websiteUrl: ws.website_url || DEFAULT_LIVE_SETTINGS.websiteUrl,
+        color: ws.color || DEFAULT_LIVE_SETTINGS.color,
+        lightColor: ws.light_color || DEFAULT_LIVE_SETTINGS.lightColor,
+        darkColor: ws.dark_color || DEFAULT_LIVE_SETTINGS.darkColor,
+        favicon: ws.favicon || DEFAULT_LIVE_SETTINGS.favicon,
+        webLogo: ws.web_logo || ws.web_header_logo || DEFAULT_LIVE_SETTINGS.webLogo,
+        webHeaderLogo: ws.web_header_logo || ws.web_logo || DEFAULT_LIVE_SETTINGS.webHeaderLogo,
+        webFooterLogo: ws.web_footer_logo || ws.web_logo || DEFAULT_LIVE_SETTINGS.webFooterLogo,
+        placeholderImage: ws.placeholder_image || DEFAULT_LIVE_SETTINGS.placeholderImage,
+        loading: ws.loading || DEFAULT_LIVE_SETTINGS.loading,
+
+        headerAnnouncementText: ws.header_announcement_text || DEFAULT_LIVE_SETTINGS.headerAnnouncementText,
+        headerAnnouncementTag: ws.header_announcement_tag || DEFAULT_LIVE_SETTINGS.headerAnnouncementTag,
+        headerPartnerText: ws.header_partner_text || DEFAULT_LIVE_SETTINGS.headerPartnerText,
+        headerPartnerUrl: ws.header_partner_url || DEFAULT_LIVE_SETTINGS.headerPartnerUrl,
+        headerSupportText: ws.header_support_text || DEFAULT_LIVE_SETTINGS.headerSupportText,
+        headerSupportPhone: ws.header_support_phone || DEFAULT_LIVE_SETTINGS.headerSupportPhone,
+
+        heroTagline: ws.hero_tagline || DEFAULT_LIVE_SETTINGS.heroTagline,
+        heroTitle: ws.hero_title || DEFAULT_LIVE_SETTINGS.heroTitle,
+        heroSubtitle: ws.hero_subtitle || DEFAULT_LIVE_SETTINGS.heroSubtitle,
+        heroBadge1: ws.hero_badge_1 || DEFAULT_LIVE_SETTINGS.heroBadge1,
+        heroBadge2: ws.hero_badge_2 || DEFAULT_LIVE_SETTINGS.heroBadge2,
+        heroBadge3: ws.hero_badge_3 || DEFAULT_LIVE_SETTINGS.heroBadge3,
+
+        directGroceryTag: ws.direct_grocery_tag || DEFAULT_LIVE_SETTINGS.directGroceryTag,
+        directGroceryTitle: ws.direct_grocery_title || DEFAULT_LIVE_SETTINGS.directGroceryTitle,
+        directGroceryDescription: ws.direct_grocery_description || DEFAULT_LIVE_SETTINGS.directGroceryDescription,
+        directGroceryFeature1Title: ws.direct_grocery_feature_1_title || DEFAULT_LIVE_SETTINGS.directGroceryFeature1Title,
+        directGroceryFeature1Subtitle: ws.direct_grocery_feature_1_subtitle || DEFAULT_LIVE_SETTINGS.directGroceryFeature1Subtitle,
+        directGroceryFeature2Title: ws.direct_grocery_feature_2_title || DEFAULT_LIVE_SETTINGS.directGroceryFeature2Title,
+        directGroceryFeature2Subtitle: ws.direct_grocery_feature_2_subtitle || DEFAULT_LIVE_SETTINGS.directGroceryFeature2Subtitle,
+
+        butcherSectionTag: ws.butcher_section_tag || DEFAULT_LIVE_SETTINGS.butcherSectionTag,
+        butcherSectionTitle: ws.butcher_section_title || DEFAULT_LIVE_SETTINGS.butcherSectionTitle,
+        butcherSectionSubtitle: ws.butcher_section_subtitle || DEFAULT_LIVE_SETTINGS.butcherSectionSubtitle,
+
+        otherStoresSectionTag: ws.other_stores_section_tag || DEFAULT_LIVE_SETTINGS.otherStoresSectionTag,
+        otherStoresSectionTitle: ws.other_stores_section_title || DEFAULT_LIVE_SETTINGS.otherStoresSectionTitle,
+        otherStoresSectionSubtitle: ws.other_stores_section_subtitle || DEFAULT_LIVE_SETTINGS.otherStoresSectionSubtitle,
+
+        footerAboutText: ws.footer_about_text || DEFAULT_LIVE_SETTINGS.footerAboutText,
+        footerAddress: ws.footer_address || DEFAULT_LIVE_SETTINGS.footerAddress,
+        footerEmail: ws.footer_email || DEFAULT_LIVE_SETTINGS.footerEmail,
+        footerPhone: ws.footer_phone || DEFAULT_LIVE_SETTINGS.footerPhone,
+        copyrightDetails: ws.copyright_details || DEFAULT_LIVE_SETTINGS.copyrightDetails,
+
+        isAndroidApp: ws.is_android_app === '1' || ws.is_android_app === 1,
+        androidAppUrl: ws.android_app_url || '',
+        isIosApp: ws.is_ios_app === '1' || ws.is_ios_app === 1,
+        iosAppUrl: ws.ios_app_url || '',
+
+        commonMetaTitle: ws.common_meta_title || DEFAULT_LIVE_SETTINGS.commonMetaTitle,
+        commonMetaDescription: ws.common_meta_description || DEFAULT_LIVE_SETTINGS.commonMetaDescription,
+      };
+    }
+  } catch (err) {
+    console.warn('Using local web settings fallback:', err);
+  }
+  return DEFAULT_LIVE_SETTINGS;
+}
+
