@@ -3,6 +3,7 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { PRODUCTS } from '../data/mockData';
+import { Product } from '../types';
 import { 
   Sparkles, 
   Plus, 
@@ -14,11 +15,17 @@ import {
   Truck
 } from 'lucide-react';
 
-export default function PopularProductsSection() {
+interface PopularProductsSectionProps {
+  products?: Product[];
+}
+
+export default function PopularProductsSection({ products = PRODUCTS }: PopularProductsSectionProps) {
   const { cart, addToCart, updateQuantity, searchQuery, selectedCategory } = useCart();
 
+  const sourceProducts = products && products.length > 0 ? products : PRODUCTS;
+
   // Filter products by search query or category if selected
-  const filteredProducts = PRODUCTS.filter((p) => {
+  const filteredProducts = sourceProducts.filter((p) => {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       const matchName = p.name.toLowerCase().includes(q);

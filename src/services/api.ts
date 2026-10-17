@@ -74,6 +74,51 @@ export async function fetchLiveSellers(lat: number, lng: number): Promise<Store[
   return STORES;
 }
 
+export async function fetchLiveProducts(lat: number, lng: number): Promise<Product[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/customer/products`, {
+      method: 'POST',
+      next: { revalidate: 60 },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json' 
+      },
+      body: JSON.stringify({ latitude: lat, longitude: lng }),
+    });
+    if (!res.ok) throw new Error('Failed to fetch products');
+    const json = await res.json();
+    if (json.status === 1 && Array.isArray(json.data) && json.data.length > 0) {
+      return json.data.map((item: any) => {
+        const variant = item.variants?.[0] || {};
+        const isSoukday = item.seller_id === 0 || item.seller_name?.toLowerCase().includes('soukday');
+        return {
+          id: item.id,
+          name: item.translations?.name || item.name,
+          slug: item.slug || `product-${item.id}`,
+          brand: item.brand?.name || 'Soukday',
+          storeId: item.seller_id,
+          storeName: item.seller_name || (isSoukday ? 'Soukday Épicerie Directe' : 'Boutique Partenaire'),
+          storeType: isSoukday ? 'soukday_direct' : 'local_store',
+          price: parseFloat(variant.discounted_price || variant.price || '0'),
+          originalPrice: variant.discounted_price ? parseFloat(variant.price || '0') : undefined,
+          unit: variant.unit || '1 unité',
+          weightOrVolume: variant.measurement ? `${variant.measurement} ${variant.unit}` : undefined,
+          image: item.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
+          categorySlug: item.category?.slug || 'epicerie-maghrebine',
+          isPopular: true,
+          isHalal: true,
+          canShipNationwide: isSoukday,
+          inStock: (variant.stock || 1) > 0,
+          badge: isSoukday ? 'Expédition Canada & USA' : 'Produit Local',
+        };
+      });
+    }
+  } catch (err) {
+    console.warn('Using local products fallback:', err);
+  }
+  return PRODUCTS;
+}
+
 function getCategoryIcon(slug: string): string {
   if (slug.includes('viande')) return '🥩';
   if (slug.includes('fruit') || slug.includes('legume')) return '🍎';

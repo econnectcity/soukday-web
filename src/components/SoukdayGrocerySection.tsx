@@ -16,12 +16,18 @@ import {
   Truck
 } from 'lucide-react';
 
-export default function SoukdayGrocerySection() {
+interface SoukdayGrocerySectionProps {
+  products?: Product[];
+}
+
+export default function SoukdayGrocerySection({ products = PRODUCTS }: SoukdayGrocerySectionProps) {
   const { cart, addToCart, updateQuantity } = useCart();
   const [activeSubcat, setActiveSubcat] = useState<string | null>(null);
 
+  const sourceProducts = products && products.length > 0 ? products : PRODUCTS;
+
   // Products belonging to Soukday Direct Grocery
-  const groceryProducts = PRODUCTS.filter((p) => p.storeType === 'soukday_direct');
+  const groceryProducts = sourceProducts.filter((p) => p.storeType === 'soukday_direct');
 
   const filteredProducts = activeSubcat
     ? groceryProducts.filter((p) => p.subcategorySlug === activeSubcat)
