@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { MAIN_CATEGORIES, STORES } from '../data/mockData';
 
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://soukday.ca';
 
