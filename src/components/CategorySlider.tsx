@@ -81,13 +81,13 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
           <button
             type="button"
             onClick={() => setSelectedCategory(null)}
-            className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
+            className={`category-chip shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
               selectedCategory === null
-                ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/20 scale-[1.02]'
-                : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/40 text-stone-700 border-stone-200/80'
+                ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25 scale-[1.02]'
+                : 'bg-stone-50 hover:bg-[#FCEFEA]/80 hover:border-[#F68B62]/50 text-stone-700 border-stone-200/80'
             }`}
           >
-            <span className="text-base">✨</span>
+            <span className="text-base group-hover:rotate-12 transition-transform duration-300">✨</span>
             <span>Tous les rayons</span>
           </button>
 
@@ -99,27 +99,27 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
                 key={cat.id}
                 type="button"
                 onClick={() => handleSelect(cat.slug)}
-                className={`group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left transition-all cursor-pointer ${
+                className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer ${
                   isSelected
-                    ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/20 scale-[1.02]'
-                    : 'bg-stone-50 hover:bg-[#FCEFEA]/60 hover:border-[#F68B62]/40 text-stone-800 border-stone-200/80'
+                    ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25 scale-[1.02]'
+                    : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/50 text-stone-800 border-stone-200/80'
                 }`}
               >
                 <div className="w-11 h-11 rounded-xl overflow-hidden bg-stone-200 shrink-0 relative">
                   <img
                     src={cat.image}
                     alt={cat.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-115 transition-transform duration-500 ease-out"
                   />
-                  <span className="absolute bottom-0.5 right-0.5 text-xs drop-shadow-sm">
+                  <span className="absolute bottom-0.5 right-0.5 text-xs drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
                     {cat.icon}
                   </span>
                 </div>
                 <div>
-                  <div className={`text-xs font-bold leading-tight ${isSelected ? 'text-white' : 'text-stone-900'}`}>
+                  <div className={`text-xs font-bold leading-tight transition-colors ${isSelected ? 'text-white' : 'text-stone-900 group-hover:text-[#F68B62]'}`}>
                     {cat.name}
                   </div>
-                  <div className={`text-[10px] leading-snug truncate max-w-[120px] ${isSelected ? 'text-white/80' : 'text-stone-400'}`}>
+                  <div className={`text-[10px] leading-snug truncate max-w-[120px] transition-colors ${isSelected ? 'text-white/80' : 'text-stone-400 group-hover:text-stone-600'}`}>
                     {cat.subtitle}
                   </div>
                 </div>

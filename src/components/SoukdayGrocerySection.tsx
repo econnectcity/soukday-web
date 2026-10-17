@@ -78,13 +78,13 @@ export default function SoukdayGrocerySection({
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:gap-4 shrink-0 text-xs">
-              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:border-[#F68B62]/40 transition-colors">
-                <Truck className="w-5 h-5 text-[#F68B62] mb-1.5" />
+              <div className="feature-card bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:border-[#F68B62]/60 cursor-pointer">
+                <Truck className="w-5 h-5 text-[#F68B62] mb-1.5 transition-transform duration-300 group-hover:scale-110" />
                 <div className="font-bold text-white text-sm">{settings?.directGroceryFeature1Title || 'Canada & USA'}</div>
                 <div className="text-[11px] text-stone-300">{settings?.directGroceryFeature1Subtitle || 'Postes Canada / UPS'}</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:border-[#F68B62]/40 transition-colors">
-                <ShieldCheck className="w-5 h-5 text-[#F68B62] mb-1.5" />
+              <div className="feature-card bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:border-[#F68B62]/60 cursor-pointer">
+                <ShieldCheck className="w-5 h-5 text-[#F68B62] mb-1.5 transition-transform duration-300 group-hover:scale-110" />
                 <div className="font-bold text-white text-sm">{settings?.directGroceryFeature2Title || 'Fraîcheur 100%'}</div>
                 <div className="text-[11px] text-stone-300">{settings?.directGroceryFeature2Subtitle || 'Garantie Soukday'}</div>
               </div>
@@ -101,8 +101,9 @@ export default function SoukdayGrocerySection({
             <span className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Rayons épicerie directe :
             </span>
-            <span className="text-xs text-[#F68B62] font-semibold flex items-center gap-1 cursor-pointer hover:underline">
-              Voir tout le catalogue <ChevronRight className="w-3.5 h-3.5" />
+            <span className="text-xs text-[#F68B62] font-semibold flex items-center gap-1 cursor-pointer hover:underline group">
+              <span>Voir tout le catalogue</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </span>
           </div>
 
@@ -110,10 +111,10 @@ export default function SoukdayGrocerySection({
             <button
               type="button"
               onClick={() => setActiveSubcat(null)}
-              className={`shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`shrink-0 px-4 py-2 rounded-xl text-xs font-bold hover:-translate-y-0.5 transition-all duration-200 cursor-pointer ${
                 activeSubcat === null
-                  ? 'bg-stone-900 text-white shadow-sm'
-                  : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-200'
+                  ? 'bg-stone-900 text-white shadow-md'
+                  : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 shadow-xs'
               }`}
             >
               Tous ({groceryProducts.length})
@@ -125,13 +126,13 @@ export default function SoukdayGrocerySection({
                   key={sub.slug}
                   type="button"
                   onClick={() => setActiveSubcat(isSelected ? null : sub.slug)}
-                  className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                  className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all duration-200 cursor-pointer ${
                     isSelected
-                      ? 'bg-[#F68B62] text-white shadow-sm font-bold'
-                      : 'bg-white hover:bg-[#FCEFEA] text-stone-700 hover:text-[#F68B62] border border-stone-200 hover:border-[#F68B62]/30'
+                      ? 'bg-[#F68B62] text-white shadow-md shadow-[#F68B62]/20 font-bold'
+                      : 'bg-white hover:bg-[#FCEFEA] text-stone-700 hover:text-[#F68B62] border border-stone-200 hover:border-[#F68B62]/30 shadow-xs'
                   }`}
                 >
-                  <span>{sub.icon}</span>
+                  <span className="text-sm">{sub.icon}</span>
                   <span>{sub.name}</span>
                 </button>
               );
@@ -146,7 +147,7 @@ export default function SoukdayGrocerySection({
             return (
               <div
                 key={product.id}
-                className="product-card group bg-white rounded-2xl p-3 border border-stone-100 flex flex-col justify-between"
+                className="product-card group bg-white rounded-2xl p-3 border border-stone-200/70 hover:border-[#F68B62]/50 flex flex-col justify-between cursor-pointer"
               >
                 <div>
                   {/* Badge */}
@@ -166,12 +167,12 @@ export default function SoukdayGrocerySection({
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                     />
                   </div>
 
                   {/* Title & Unit */}
-                  <h3 className="text-xs sm:text-sm font-bold text-stone-900 line-clamp-2 leading-snug group-hover:text-[#F68B62] transition-colors">
+                  <h3 className="text-xs sm:text-sm font-bold text-stone-900 line-clamp-2 leading-snug group-hover:text-[#F68B62] transition-colors duration-200">
                     {product.name}
                   </h3>
                   <div className="text-[11px] text-stone-500 mt-0.5">
@@ -196,17 +197,17 @@ export default function SoukdayGrocerySection({
                     <button
                       type="button"
                       onClick={() => addToCart(product, 1)}
-                      className="w-full py-1.5 px-3 rounded-xl bg-[#FCEFEA]/80 hover:bg-[#F68B62] text-stone-900 hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-[#F68B62]/20 hover:border-transparent"
+                      className="w-full py-2 px-3 rounded-xl bg-[#FCEFEA] hover:bg-[#F68B62] text-stone-800 hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer border border-[#F68B62]/30 hover:border-transparent hover:shadow-md hover:shadow-[#F68B62]/20 active:scale-95"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Ajouter</span>
                     </button>
                   ) : (
-                    <div className="flex items-center justify-between bg-[#F68B62] text-white rounded-xl p-1">
+                    <div className="flex items-center justify-between bg-[#F68B62] text-white rounded-xl p-1 shadow-sm">
                       <button
                         type="button"
                         onClick={() => updateQuantity(product.id, qty - 1)}
-                        className="w-6 h-6 rounded-lg bg-black/15 hover:bg-black/25 flex items-center justify-center text-white cursor-pointer"
+                        className="w-6 h-6 rounded-lg bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
                       >
                         <Minus className="w-3 h-3" />
                       </button>
@@ -214,7 +215,7 @@ export default function SoukdayGrocerySection({
                       <button
                         type="button"
                         onClick={() => updateQuantity(product.id, qty + 1)}
-                        className="w-6 h-6 rounded-lg bg-black/15 hover:bg-black/25 flex items-center justify-center text-white cursor-pointer"
+                        className="w-6 h-6 rounded-lg bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
                       >
                         <Plus className="w-3 h-3" />
                       </button>

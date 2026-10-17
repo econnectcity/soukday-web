@@ -97,9 +97,9 @@ export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps
           <button 
             type="button"
             onClick={() => setIsAddressModalOpen(true)}
-            className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FCEFEA]/60 hover:bg-[#FCEFEA] border border-[#F68B62]/25 hover:border-[#F68B62]/50 text-left transition-all shrink-0 cursor-pointer shadow-xs"
+            className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FCEFEA]/60 hover:bg-[#FCEFEA] border border-[#F68B62]/25 hover:border-[#F68B62]/50 hover:-translate-y-0.5 hover:shadow-xs text-left transition-all duration-200 shrink-0 cursor-pointer"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#FCEFEA] flex items-center justify-center text-[#F68B62] border border-[#F68B62]/20">
+            <div className="w-8 h-8 rounded-lg bg-[#FCEFEA] flex items-center justify-center text-[#F68B62] border border-[#F68B62]/20 group-hover:scale-105 transition-transform">
               <MapPin className="w-4 h-4" />
             </div>
             <div className="text-xs">
@@ -119,13 +119,13 @@ export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Rechercher couscous, agneau, bœuf, épices, boucheries..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-full bg-stone-100/80 hover:bg-stone-100 focus:bg-white border border-transparent focus:border-[#F68B62] text-sm text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#F68B62]/20 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 rounded-full bg-stone-100/80 hover:bg-stone-100 focus:bg-white border border-transparent focus:border-[#F68B62] text-sm text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#F68B62]/20 transition-all duration-200"
               />
               <Search className="w-4 h-4 text-stone-400 absolute left-3.5 pointer-events-none" />
               {searchQuery && (
                 <button 
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 text-xs text-stone-400 hover:text-stone-600 bg-stone-200 hover:bg-stone-300 rounded-full w-4 h-4 flex items-center justify-center cursor-pointer"
+                  className="absolute right-3 text-xs text-stone-400 hover:text-stone-600 bg-stone-200 hover:bg-stone-300 rounded-full w-4 h-4 flex items-center justify-center cursor-pointer transition-colors"
                 >
                   ×
                 </button>
@@ -138,7 +138,7 @@ export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps
             {/* Language toggle */}
             <button 
               type="button" 
-              className="hidden lg:flex items-center gap-1 text-xs font-semibold text-stone-600 hover:text-[#F68B62] px-2.5 py-1.5 rounded-lg hover:bg-stone-50 cursor-pointer"
+              className="hidden lg:flex items-center gap-1 text-xs font-semibold text-stone-600 hover:text-[#F68B62] px-2.5 py-1.5 rounded-lg hover:bg-stone-50 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
             >
               <Globe className="w-3.5 h-3.5" />
               <span>FR</span>
@@ -149,7 +149,7 @@ export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps
               href="https://admin.soukday.ca/#/seller/login"
               target="_blank"
               rel="noreferrer"
-              className="hidden md:inline-flex text-xs font-semibold text-stone-700 hover:text-[#F68B62] px-3 py-2 rounded-xl hover:bg-stone-50 transition-colors"
+              className="hidden md:inline-flex text-xs font-semibold text-stone-700 hover:text-[#F68B62] px-3 py-2 rounded-xl hover:bg-stone-50 hover:-translate-y-0.5 transition-all duration-200"
             >
               Espace Vendeur
             </a>
@@ -158,7 +158,7 @@ export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps
             <button
               type="button"
               onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center gap-2 bg-[#F68B62] hover:bg-[#e07750] text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-[#F68B62]/25 active:scale-95 transition-all cursor-pointer"
+              className="relative flex items-center gap-2 bg-[#F68B62] hover:bg-[#e07750] text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-[#F68B62]/25 hover:shadow-lg hover:shadow-[#F68B62]/35 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 cursor-pointer"
             >
               <ShoppingBag className="w-4 h-4" />
               <span className="hidden sm:inline">Panier</span>

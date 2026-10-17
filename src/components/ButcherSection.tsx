@@ -106,7 +106,7 @@ export default function ButcherSection({
           {displayButchers.map((butcher) => (
             <div
               key={butcher.id}
-              className="store-card group bg-white rounded-3xl overflow-hidden border border-stone-200/80 hover:border-[#F68B62]/40 transition-all flex flex-col justify-between"
+              className="store-card group bg-white rounded-3xl overflow-hidden border border-stone-200/80 hover:border-[#F68B62]/50 flex flex-col justify-between cursor-pointer"
             >
               <div>
                 {/* Store Cover Image */}
@@ -114,9 +114,9 @@ export default function ButcherSection({
                   <img
                     src={butcher.image}
                     alt={butcher.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
                   
                   {/* Badges on image */}
                   <div className="absolute top-3 left-3 flex items-center gap-1.5">
@@ -144,7 +144,7 @@ export default function ButcherSection({
                 <div className="p-4 sm:p-5 space-y-3">
                   <div>
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-black text-base sm:text-lg text-stone-900 group-hover:text-[#F68B62] transition-colors leading-snug">
+                      <h3 className="font-black text-base sm:text-lg text-stone-900 group-hover:text-[#F68B62] transition-colors duration-200 leading-snug">
                         {butcher.name}
                       </h3>
                       <div className="flex items-center gap-1 bg-amber-50 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-md shrink-0">
@@ -187,10 +187,10 @@ export default function ButcherSection({
               <div className="p-4 sm:p-5 pt-0">
                 <button
                   type="button"
-                  className="w-full py-2.5 px-4 rounded-xl bg-stone-900 group-hover:bg-[#F68B62] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-stone-900 group-hover:bg-[#F68B62] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer shadow-xs group-hover:shadow-md group-hover:shadow-[#F68B62]/25 active:scale-95"
                 >
                   <span>Commander les viandes</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform duration-200" />
                 </button>
               </div>
             </div>

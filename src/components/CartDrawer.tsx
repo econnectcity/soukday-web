@@ -26,7 +26,28 @@ export default function CartDrawer() {
     selectedAddress 
   } = useCart();
 
-  if (!isCartOpen) return null;
+  // Prevent background body scrolling when drawer is open
+  React.useEffect(() => {
+    if (isCartOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCartOpen]);
+
+  // Handle escape key to close drawer smoothly
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isCartOpen) {
+        setIsCartOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isCartOpen, setIsCartOpen]);
 
   // Group items by store
   const storeGroups = cart.reduce((acc, item) => {
@@ -40,15 +61,26 @@ export default function CartDrawer() {
   const grandTotal = cartSubtotal + (cartSubtotal > 0 ? deliveryFee : 0);
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Backdrop */}
+    <div 
+      className={`fixed inset-0 z-50 overflow-hidden transition-all duration-300 ${
+        isCartOpen ? 'visible pointer-events-auto' : 'invisible pointer-events-none delay-300'
+      }`}
+      aria-hidden={!isCartOpen}
+    >
+      {/* Backdrop with smooth blur and fade */}
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
+        className={`fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 ease-in-out ${
+          isCartOpen ? 'opacity-100' : 'opacity-0'
+        }`}
         onClick={() => setIsCartOpen(false)}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10 pointer-events-none">
+        <div 
+          className={`w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between pointer-events-auto transform transition-transform duration-350 ease-out ${
+            isCartOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
           
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-stone-100 flex items-center justify-between bg-stone-50/50">
@@ -66,7 +98,7 @@ export default function CartDrawer() {
             <button
               type="button"
               onClick={() => setIsCartOpen(false)}
-              className="w-8 h-8 rounded-full hover:bg-stone-200 flex items-center justify-center text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full hover:bg-stone-200/80 active:scale-95 flex items-center justify-center text-stone-400 hover:text-stone-700 hover:rotate-90 transition-all duration-200 cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>

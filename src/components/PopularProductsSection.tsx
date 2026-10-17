@@ -77,7 +77,7 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
             return (
               <div
                 key={product.id}
-                className="product-card group bg-white rounded-3xl p-3 sm:p-4 border border-stone-200/70 hover:border-[#F68B62]/40 transition-all flex flex-col justify-between"
+                className="product-card group bg-white rounded-3xl p-3 sm:p-4 border border-stone-200/70 hover:border-[#F68B62]/50 flex flex-col justify-between cursor-pointer"
               >
                 <div>
                   {/* Store & Badges row */}
@@ -101,7 +101,7 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                     />
                     {isSoukdayDirect && (
                       <div className="absolute bottom-1.5 left-1.5 bg-black/60 backdrop-blur-xs text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
@@ -117,7 +117,7 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
                   </div>
 
                   {/* Product Name */}
-                  <h3 className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-[#F68B62] transition-colors line-clamp-2 leading-snug">
+                  <h3 className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-[#F68B62] transition-colors duration-200 line-clamp-2 leading-snug">
                     {product.name}
                   </h3>
 
@@ -144,7 +144,7 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
                     <button
                       type="button"
                       onClick={() => addToCart(product, 1)}
-                      className="w-full py-2 px-3 rounded-xl bg-stone-900 hover:bg-[#F68B62] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm active:scale-95"
+                      className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-[#F68B62] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md hover:shadow-[#F68B62]/25 active:scale-95"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Ajouter au panier</span>
@@ -154,7 +154,7 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
                       <button
                         type="button"
                         onClick={() => updateQuantity(product.id, qty - 1)}
-                        className="w-7 h-7 rounded-lg bg-black/15 hover:bg-black/25 flex items-center justify-center text-white cursor-pointer"
+                        className="w-7 h-7 rounded-lg bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
@@ -162,7 +162,7 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
                       <button
                         type="button"
                         onClick={() => updateQuantity(product.id, qty + 1)}
-                        className="w-7 h-7 rounded-lg bg-black/15 hover:bg-black/25 flex items-center justify-center text-white cursor-pointer"
+                        className="w-7 h-7 rounded-lg bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>

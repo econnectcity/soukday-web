@@ -9,7 +9,28 @@ export default function AddressModal() {
   const { isAddressModalOpen, setIsAddressModalOpen, selectedAddress, setSelectedAddress } = useCart();
   const [postalInput, setPostalInput] = useState(selectedAddress.postalCode || '');
 
-  if (!isAddressModalOpen) return null;
+  // Prevent background scrolling when modal is open
+  React.useEffect(() => {
+    if (isAddressModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isAddressModalOpen]);
+
+  // Handle escape key
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isAddressModalOpen) {
+        setIsAddressModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAddressModalOpen, setIsAddressModalOpen]);
 
   const handleCustomPostal = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,15 +69,26 @@ export default function AddressModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div 
+      className={`fixed inset-0 z-50 overflow-y-auto transition-all duration-300 ${
+        isAddressModalOpen ? 'visible pointer-events-auto' : 'invisible pointer-events-none delay-300'
+      }`}
+      aria-hidden={!isAddressModalOpen}
+    >
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
+        className={`fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 ease-in-out ${
+          isAddressModalOpen ? 'opacity-100' : 'opacity-0'
+        }`}
         onClick={() => setIsAddressModalOpen(false)}
       />
 
       <div className="min-h-full flex items-center justify-center p-4">
-        <div className="relative bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-100 space-y-5 animate-fade-in">
+        <div 
+          className={`relative bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-100 space-y-5 transform transition-all duration-300 ease-out ${
+            isAddressModalOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-3'
+          }`}
+        >
           
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -72,11 +104,12 @@ export default function AddressModal() {
             <button
               type="button"
               onClick={() => setIsAddressModalOpen(false)}
-              className="w-8 h-8 rounded-full hover:bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 cursor-pointer"
+              className="w-8 h-8 rounded-full hover:bg-stone-100 active:scale-95 flex items-center justify-center text-stone-400 hover:text-stone-700 hover:rotate-90 transition-all duration-200 cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
+
 
           {/* Postal code input form */}
           <form onSubmit={handleCustomPostal} className="space-y-2">

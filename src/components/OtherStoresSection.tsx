@@ -57,7 +57,7 @@ export default function OtherStoresSection({
           {otherStores.map((store) => (
             <div
               key={store.id}
-              className="store-card group bg-stone-50/70 hover:bg-white rounded-3xl overflow-hidden border border-stone-200/80 hover:border-[#F68B62]/40 transition-all flex flex-col justify-between"
+              className="store-card group bg-stone-50/70 hover:bg-white rounded-3xl overflow-hidden border border-stone-200/80 hover:border-[#F68B62]/50 flex flex-col justify-between cursor-pointer"
             >
               <div>
                 {/* Store Visual Header */}
@@ -65,9 +65,9 @@ export default function OtherStoresSection({
                   <img
                     src={store.image}
                     alt={store.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
                   
                   {/* Category Badge */}
                   <div className="absolute top-3 left-3">
@@ -91,7 +91,7 @@ export default function OtherStoresSection({
                 {/* Details */}
                 <div className="p-4 sm:p-5 space-y-3">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-black text-base sm:text-lg text-stone-900 group-hover:text-[#F68B62] transition-colors leading-snug">
+                    <h3 className="font-black text-base sm:text-lg text-stone-900 group-hover:text-[#F68B62] transition-colors duration-200 leading-snug">
                       {store.name}
                     </h3>
                     <div className="flex items-center gap-1 bg-white text-stone-800 text-xs font-bold px-2 py-0.5 rounded-md border border-stone-200 shrink-0">
@@ -134,9 +134,9 @@ export default function OtherStoresSection({
               <div className="p-4 sm:p-5 pt-0">
                 <button
                   type="button"
-                  className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-stone-900 text-stone-900 hover:text-white border border-stone-300 hover:border-stone-900 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-[#F68B62] text-stone-900 hover:text-white border border-stone-300 hover:border-[#F68B62] font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer shadow-xs hover:shadow-md hover:shadow-[#F68B62]/20 active:scale-95"
                 >
-                  <ShoppingBag className="w-3.5 h-3.5 text-[#F68B62]" />
+                  <ShoppingBag className="w-3.5 h-3.5 text-[#F68B62] group-hover:text-white transition-colors" />
                   <span>Magasiner ce magasin</span>
                 </button>
               </div>

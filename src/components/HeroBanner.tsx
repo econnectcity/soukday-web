@@ -92,16 +92,16 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                 </div>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-6 py-3 bg-[#F68B62] hover:bg-[#e07750] text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-md shadow-[#F68B62]/30 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                  className="w-full sm:w-auto px-6 py-3 bg-[#F68B62] hover:bg-[#e07750] text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-md shadow-[#F68B62]/30 active:scale-95 transition-all duration-200 cursor-pointer whitespace-nowrap group hover:shadow-lg hover:shadow-[#F68B62]/40"
                 >
                   <span>Voir les magasins</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
                 </button>
               </form>
 
               {/* Success Notification Feedback */}
               {successNotice && (
-                <div className="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5 px-2">
+                <div className="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5 px-2 animate-fade-in">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Magasins mis à jour pour {selectedAddress.city} ({selectedAddress.postalCode}) !</span>
                 </div>
@@ -111,15 +111,15 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
 
             {/* Trust Badges */}
             <div className="grid grid-cols-3 gap-3 pt-3 border-t border-stone-200/60 max-w-xl text-stone-700 text-xs">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-[#FCEFEA]/60 transition-colors duration-200 cursor-pointer">
                 <Truck className="w-4 h-4 text-[#F68B62] shrink-0" />
                 <span className="font-medium">{settings?.heroBadge1 || 'Livraison le jour même'}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-[#FCEFEA]/60 transition-colors duration-200 cursor-pointer">
                 <ShieldCheck className="w-4 h-4 text-[#F68B62] shrink-0" />
                 <span className="font-medium">{settings?.heroBadge2 || 'Boucheries 100% Halal'}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-[#FCEFEA]/60 transition-colors duration-200 cursor-pointer">
                 <Sparkles className="w-4 h-4 text-[#F68B62] shrink-0" />
                 <span className="font-medium">{settings?.heroBadge3 || 'Épicerie Canada & USA'}</span>
               </div>
@@ -133,16 +133,16 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
             <div className="relative mx-auto max-w-md lg:max-w-none">
               
               {/* Main Card Image */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-stone-900/10 border-4 border-white aspect-[4/3] sm:aspect-[16/11]">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-stone-900/10 border-4 border-white aspect-[4/3] sm:aspect-[16/11] group cursor-pointer hover:shadow-3xl transition-all duration-500">
                 <img
                   src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1000&q=80"
                   alt="Épicerie et produits frais Soukday"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
                 
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <span className="inline-block px-2.5 py-1 rounded-md bg-[#F68B62] text-[11px] font-bold uppercase tracking-wider mb-1">
+                  <span className="inline-block px-2.5 py-1 rounded-md bg-[#F68B62] text-[11px] font-bold uppercase tracking-wider mb-1 shadow-sm">
                     Épicerie & Boucherie
                   </span>
                   <div className="text-lg font-bold">10 Magasins partenaires au Québec</div>
@@ -151,8 +151,8 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
               </div>
 
               {/* Floating Badge 1: Local Butcher Highlight */}
-              <div className="absolute -bottom-5 -left-4 sm:-left-6 bg-white p-3 rounded-2xl shadow-xl border border-stone-100 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-lg">
+              <div className="absolute -bottom-5 -left-4 sm:-left-6 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-stone-100 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-lg shadow-xs">
                   🥩
                 </div>
                 <div>
@@ -165,8 +165,8 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
               </div>
 
               {/* Floating Badge 2: Nationwide Grocery */}
-              <div className="absolute -top-4 -right-4 sm:-right-6 bg-white p-3 rounded-2xl shadow-xl border border-stone-100 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-bold text-lg border border-[#F68B62]/20">
+              <div className="absolute -top-4 -right-4 sm:-right-6 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-stone-100 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-bold text-lg border border-[#F68B62]/20 shadow-xs">
                   🇨🇦
                 </div>
                 <div>
