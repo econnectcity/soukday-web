@@ -39,16 +39,6 @@ export default function HeroBanner() {
     setTimeout(() => setSuccessNotice(false), 2500);
   };
 
-  const selectQuickLocation = (loc: typeof POPULAR_LOCATIONS[0]) => {
-    setInputVal(loc.postalCode);
-    setSelectedAddress({
-      address: `${loc.city}, QC`,
-      city: loc.city,
-      postalCode: loc.postalCode,
-    });
-    setSuccessNotice(true);
-    setTimeout(() => setSuccessNotice(false), 2500);
-  };
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#fff7f4] via-stone-50 to-stone-100/60 pt-8 pb-14 px-4 sm:px-6 lg:px-8">
@@ -109,31 +99,6 @@ export default function HeroBanner() {
               )}
             </div>
 
-            {/* Quick Postal Code Pills */}
-            <div className="space-y-2">
-              <div className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
-                Villes & secteurs disponibles :
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {POPULAR_LOCATIONS.map((loc) => {
-                  const isSelected = selectedAddress.postalCode === loc.postalCode;
-                  return (
-                    <button
-                      key={loc.postalCode}
-                      type="button"
-                      onClick={() => selectQuickLocation(loc)}
-                      className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#F68B62] text-white font-bold shadow-sm'
-                          : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-200'
-                      }`}
-                    >
-                      {loc.label} <span className="text-[10px] opacity-75">({loc.postalCode})</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
 
             {/* Trust Badges */}
             <div className="grid grid-cols-3 gap-3 pt-3 border-t border-stone-200/60 max-w-xl text-stone-700 text-xs">
