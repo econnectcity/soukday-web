@@ -91,7 +91,7 @@ export default function CartDrawer() {
               <div>
                 <h2 className="text-base font-black text-stone-900">Votre Panier Soukday</h2>
                 <p className="text-xs text-stone-500">
-                  {cartCount} article{cartCount > 1 ? 's' : ''} • Livraison à {selectedAddress.city}
+                  {cartCount} article{cartCount > 1 ? 's' : ''} • {selectedAddress ? `Livraison à ${selectedAddress.city}` : 'Livraison locale rapide'}
                 </p>
               </div>
             </div>

@@ -34,17 +34,15 @@ export default function ButcherSection({
   const allButchers = sourceStores.filter((s) => s.type === 'butcher');
 
   // Filter based on user address city or postal code
-  // If user selected Laval -> Boucherie Mamounia; Saint-Jérôme -> Boucherie Melia; etc.
-  const activeCity = selectedAddress.city?.toLowerCase() || '';
-  const localButchers = allButchers.filter((b) => {
+  const activeCity = selectedAddress?.city?.toLowerCase() || '';
+  const localButchers = activeCity ? allButchers.filter((b) => {
     if (activeCity.includes('laval')) return b.city.toLowerCase() === 'laval';
     if (activeCity.includes('jérôme') || activeCity.includes('jerome')) return b.city.toLowerCase().includes('jérôme');
     if (activeCity.includes('léonard') || activeCity.includes('leonard')) {
       return b.city.toLowerCase().includes('léonard') || b.city.toLowerCase() === 'montréal';
     }
-    // Default to Montreal butchers
     return b.city.toLowerCase() === 'montréal' || b.city.toLowerCase().includes('léonard');
-  });
+  }) : allButchers;
 
   const displayButchers = localButchers.length > 0 ? localButchers : allButchers;
 
@@ -63,10 +61,18 @@ export default function ButcherSection({
               {settings?.butcherSectionTitle || 'Boucheries livrant chez vous'}
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 mt-1">
-              {settings?.butcherSectionSubtitle || 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à'}{' '}
-              <strong className="text-stone-900 underline decoration-[#F68B62] decoration-2">
-                {selectedAddress.city} ({selectedAddress.postalCode})
-              </strong>
+              {selectedAddress ? (
+                <>
+                  {settings?.butcherSectionSubtitle || 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à'}{' '}
+                  <strong className="text-stone-900 underline decoration-[#F68B62] decoration-2">
+                    {selectedAddress.city} ({selectedAddress.postalCode})
+                  </strong>
+                </>
+              ) : (
+                <>
+                  {settings?.butcherSectionSubtitle || 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement chez vous.'}
+                </>
+              )}
             </p>
           </div>
 
@@ -76,7 +82,7 @@ export default function ButcherSection({
             onClick={() => setIsAddressModalOpen(true)}
             className="text-xs font-bold text-[#F68B62] hover:text-[#e07750] flex items-center gap-1.5 self-start sm:self-auto cursor-pointer px-3 py-1.5 rounded-xl bg-[#FCEFEA] border border-[#F68B62]/20 hover:border-[#F68B62]/40 transition-all shadow-xs"
           >
-            <span>Changer d’adresse de livraison</span>
+            <span>{selectedAddress ? 'Changer d’adresse de livraison' : 'Sélectionner mon adresse'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -85,13 +91,19 @@ export default function ButcherSection({
         <div className="flex items-center gap-2 text-xs text-stone-700 bg-white p-3 rounded-2xl border border-stone-200/70 shadow-xs">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>
-            {displayButchers.length === 1 ? (
-              <>
-                <strong>1 boucherie partenaire exclusive</strong> dessert actuellement votre secteur à {selectedAddress.city}.
-              </>
+            {selectedAddress ? (
+              displayButchers.length === 1 ? (
+                <>
+                  <strong>1 boucherie partenaire exclusive</strong> dessert actuellement votre secteur à {selectedAddress.city}.
+                </>
+              ) : (
+                <>
+                  <strong>{displayButchers.length} boucheries partenaires</strong> peuvent vous livrer aujourd’hui à {selectedAddress.city}.
+                </>
+              )
             ) : (
               <>
-                <strong>{displayButchers.length} boucheries partenaires</strong> peuvent vous livrer aujourd’hui à {selectedAddress.city}.
+                <strong>{allButchers.length} boucheries partenaires Halal</strong> disponibles au Québec. Sélectionnez votre adresse pour filtrer par proximité.
               </>
             )}
           </span>

@@ -5,13 +5,13 @@ import ButcherSection from '../components/ButcherSection';
 import OtherStoresSection from '../components/OtherStoresSection';
 import PopularProductsSection from '../components/PopularProductsSection';
 import { fetchLiveCategories, fetchLiveSellers, fetchLiveProducts, fetchLiveWebSettings } from '../services/api';
-import { DEFAULT_USER_ADDRESS } from '../data/mockData';
+import { DEFAULT_SERVER_COORDS } from '../data/mockData';
 
 export default async function Home() {
   const [categories, stores, products, webSettings] = await Promise.all([
     fetchLiveCategories(),
-    fetchLiveSellers(DEFAULT_USER_ADDRESS.lat || 45.5017, DEFAULT_USER_ADDRESS.lng || -73.5673),
-    fetchLiveProducts(DEFAULT_USER_ADDRESS.lat || 45.5017, DEFAULT_USER_ADDRESS.lng || -73.5673),
+    fetchLiveSellers(DEFAULT_SERVER_COORDS.lat, DEFAULT_SERVER_COORDS.lng),
+    fetchLiveProducts(DEFAULT_SERVER_COORDS.lat, DEFAULT_SERVER_COORDS.lng),
     fetchLiveWebSettings(),
   ]);
 

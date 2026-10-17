@@ -1,12 +1,12 @@
 import { Store, Category, Product, UserAddress } from '../types';
 
-export const DEFAULT_USER_ADDRESS: UserAddress = {
-  address: 'Montréal, QC',
-  city: 'Montréal',
-  postalCode: 'H3S 1R7',
+export const DEFAULT_SERVER_COORDS = {
   lat: 45.5017,
   lng: -73.5673,
 };
+
+export const DEFAULT_USER_ADDRESS: UserAddress | null = null;
+
 
 export const POPULAR_LOCATIONS = [
   { city: 'Montréal', postalCode: 'H3S 1R7', label: 'Montréal (Côte-des-Neiges)' },

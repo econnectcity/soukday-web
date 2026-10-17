@@ -14,8 +14,8 @@ interface CartContextType {
   cartSubtotal: number;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  selectedAddress: UserAddress;
-  setSelectedAddress: (addr: UserAddress) => void;
+  selectedAddress: UserAddress | null;
+  setSelectedAddress: (addr: UserAddress | null) => void;
   isAddressModalOpen: boolean;
   setIsAddressModalOpen: (open: boolean) => void;
   searchQuery: string;
@@ -29,19 +29,27 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState<UserAddress>(DEFAULT_USER_ADDRESS);
+  const [selectedAddress, setSelectedAddress] = useState<UserAddress | null>(null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Load cart from localStorage on mount
+  // Load cart and selected address from localStorage on mount
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem('soukday_cart');
       if (savedCart) setCart(JSON.parse(savedCart));
 
-      const savedAddress = localStorage.getItem('soukday_address');
-      if (savedAddress) setSelectedAddress(JSON.parse(savedAddress));
+      // Remove legacy auto-saved default address
+      localStorage.removeItem('soukday_address');
+
+      const savedAddress = localStorage.getItem('soukday_user_selected_address');
+      if (savedAddress) {
+        const parsed = JSON.parse(savedAddress);
+        if (parsed && (parsed.city || parsed.postalCode)) {
+          setSelectedAddress(parsed);
+        }
+      }
     } catch {
       // Ignore storage errors
     }
@@ -54,10 +62,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } catch {}
   }, [cart]);
 
-  // Save address to localStorage
+  // Save address to localStorage only if user explicitly selected one
   useEffect(() => {
     try {
-      localStorage.setItem('soukday_address', JSON.stringify(selectedAddress));
+      if (selectedAddress) {
+        localStorage.setItem('soukday_user_selected_address', JSON.stringify(selectedAddress));
+      } else {
+        localStorage.removeItem('soukday_user_selected_address');
+      }
     } catch {}
   }, [selectedAddress]);
 

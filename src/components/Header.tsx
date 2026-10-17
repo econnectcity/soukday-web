@@ -104,9 +104,13 @@ export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps
             </div>
             <div className="text-xs">
               <div className="text-stone-500 font-medium text-[10px]">Livraison à / Postal</div>
-              <div className="font-bold text-stone-800 flex items-center gap-1 max-w-[150px] truncate">
-                {selectedAddress.postalCode ? `${selectedAddress.postalCode} (${selectedAddress.city})` : selectedAddress.city}
-                <ChevronDown className="w-3 h-3 text-stone-400" />
+              <div className="font-bold text-stone-800 flex items-center gap-1 max-w-[170px] truncate">
+                {selectedAddress ? (
+                  selectedAddress.postalCode ? `${selectedAddress.postalCode} (${selectedAddress.city})` : selectedAddress.city
+                ) : (
+                  <span className="text-[#F68B62] font-semibold">Choisir une adresse</span>
+                )}
+                <ChevronDown className="w-3 h-3 text-stone-400 shrink-0" />
               </div>
             </div>
           </button>
@@ -180,11 +184,17 @@ export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps
             onClick={() => setIsAddressModalOpen(true)}
             className="flex items-center gap-1.5 text-stone-700 font-medium"
           >
-            <MapPin className="w-3.5 h-3.5 text-[#F68B62]" />
-            <span>Livraison à : <strong className="font-bold text-stone-900">{selectedAddress.city} ({selectedAddress.postalCode})</strong></span>
+            <MapPin className="w-3.5 h-3.5 text-[#F68B62] shrink-0" />
+            {selectedAddress ? (
+              <span>Livraison à : <strong className="font-bold text-stone-900">{selectedAddress.city} ({selectedAddress.postalCode})</strong></span>
+            ) : (
+              <span className="text-[#F68B62] font-semibold">Choisir votre adresse de livraison</span>
+            )}
             <ChevronDown className="w-3 h-3 text-stone-400" />
           </button>
-          <span className="text-[11px] font-semibold text-[#F68B62]">Changer</span>
+          <span className="text-[11px] font-semibold text-[#F68B62]">
+            {selectedAddress ? 'Changer' : 'Choisir'}
+          </span>
         </div>
       </div>
     </header>

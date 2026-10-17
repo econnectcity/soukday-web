@@ -7,7 +7,11 @@ import { X, MapPin, Check, ArrowRight } from 'lucide-react';
 
 export default function AddressModal() {
   const { isAddressModalOpen, setIsAddressModalOpen, selectedAddress, setSelectedAddress } = useCart();
-  const [postalInput, setPostalInput] = useState(selectedAddress.postalCode || '');
+  const [postalInput, setPostalInput] = useState(selectedAddress?.postalCode || '');
+
+  React.useEffect(() => {
+    setPostalInput(selectedAddress?.postalCode || '');
+  }, [selectedAddress, isAddressModalOpen]);
 
   // Prevent background scrolling when modal is open
   React.useEffect(() => {
@@ -101,13 +105,27 @@ export default function AddressModal() {
                 <p className="text-xs text-stone-500">Pour afficher les magasins et boucheries qui vous livrent</p>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => setIsAddressModalOpen(false)}
-              className="w-8 h-8 rounded-full hover:bg-stone-100 active:scale-95 flex items-center justify-center text-stone-400 hover:text-stone-700 hover:rotate-90 transition-all duration-200 cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              {selectedAddress && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedAddress(null);
+                    setPostalInput('');
+                  }}
+                  className="text-[11px] font-semibold text-stone-500 hover:text-red-500 underline mr-2"
+                >
+                  Effacer
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setIsAddressModalOpen(false)}
+                className="w-8 h-8 rounded-full hover:bg-stone-100 active:scale-95 flex items-center justify-center text-stone-400 hover:text-stone-700 hover:rotate-90 transition-all duration-200 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
 
@@ -141,7 +159,7 @@ export default function AddressModal() {
             </div>
             <div className="grid grid-cols-1 gap-1.5 max-h-56 overflow-y-auto pr-1">
               {POPULAR_LOCATIONS.map((loc) => {
-                const isSelected = selectedAddress.postalCode === loc.postalCode;
+                const isSelected = selectedAddress?.postalCode === loc.postalCode;
                 return (
                   <button
                     key={loc.postalCode}

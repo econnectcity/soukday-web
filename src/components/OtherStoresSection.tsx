@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useCart } from '../context/CartContext';
 import { STORES } from '../data/mockData';
 import { Store } from '../types';
 import { LiveWebSettings } from '../types';
@@ -25,8 +24,6 @@ export default function OtherStoresSection({
   stores = STORES,
   settings = DEFAULT_LIVE_SETTINGS 
 }: OtherStoresSectionProps) {
-  const { selectedAddress } = useCart();
-
   const sourceStores = stores && stores.length > 0 ? stores : STORES;
 
   // Non-butcher stores: Supermarkets, Bakeries, Specialty Markets

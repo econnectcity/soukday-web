@@ -13,8 +13,16 @@ interface HeroBannerProps {
 
 export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBannerProps) {
   const { selectedAddress, setSelectedAddress } = useCart();
-  const [inputVal, setInputVal] = useState(selectedAddress.postalCode || '');
+  const [inputVal, setInputVal] = useState(selectedAddress?.postalCode || '');
   const [successNotice, setSuccessNotice] = useState(false);
+
+  React.useEffect(() => {
+    if (selectedAddress?.postalCode) {
+      setInputVal(selectedAddress.postalCode);
+    } else {
+      setInputVal('');
+    }
+  }, [selectedAddress]);
 
   const handleApplyAddress = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -100,7 +108,7 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
               </form>
 
               {/* Success Notification Feedback */}
-              {successNotice && (
+              {successNotice && selectedAddress && (
                 <div className="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5 px-2 animate-fade-in">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Magasins mis à jour pour {selectedAddress.city} ({selectedAddress.postalCode}) !</span>
