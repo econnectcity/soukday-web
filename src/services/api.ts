@@ -41,12 +41,13 @@ export async function fetchLiveSellers(lat: number, lng: number): Promise<Store[
     });
     if (!res.ok) throw new Error('Failed to fetch sellers');
     const json = await res.json();
-    if (json.status === 1 && Array.isArray(json.data)) {
+    if (json.status === 1 && Array.isArray(json.data) && json.data.length > 0) {
       return json.data.map((item: any) => {
-        const isButcher = item.store_name?.toLowerCase().includes('boucherie');
+        const storeName = item.translations?.store_name || item.translations?.name || item.store_name || item.name || 'Boutique Partenaire';
+        const isButcher = storeName.toLowerCase().includes('boucherie');
         return {
           id: item.id,
-          name: item.store_name || item.name,
+          name: storeName,
           slug: item.slug || `store-${item.id}`,
           type: isButcher ? 'butcher' : 'grocery',
           typeLabel: isButcher ? 'Boucherie Halal' : 'Supermarché & Épicerie',
@@ -60,7 +61,7 @@ export async function fetchLiveSellers(lat: number, lng: number): Promise<Store[
           deliveryFee: 'Gratuite dès 50$',
           minOrder: 25,
           distanceKm: parseFloat(item.distance || '3.5'),
-          image: item.logo_url || getStoreImage(item.store_name),
+          image: item.logo_url || getStoreImage(storeName),
           tags: isButcher ? ['Halal Certifié', 'Viande Fraîche'] : ['Épicerie', 'Frais du jour'],
           isHalalCertified: isButcher,
           isOpenNow: true,
@@ -83,26 +84,28 @@ export async function fetchLiveProducts(lat: number, lng: number): Promise<Produ
         'Content-Type': 'application/json',
         'Accept': 'application/json' 
       },
-      body: JSON.stringify({ latitude: lat, longitude: lng }),
+      body: JSON.stringify({ latitude: lat, longitude: lng, limit: 100 }),
     });
     if (!res.ok) throw new Error('Failed to fetch products');
     const json = await res.json();
     if (json.status === 1 && Array.isArray(json.data) && json.data.length > 0) {
       return json.data.map((item: any) => {
         const variant = item.variants?.[0] || {};
-        const isSoukday = item.seller_id === 0 || item.seller_name?.toLowerCase().includes('soukday');
+        const sellerName = item.seller?.translations?.store_name || item.seller?.store_name || item.seller?.name || item.seller_name;
+        const isSoukday = item.seller_id === 0 || item.seller_id === 11 || sellerName?.toLowerCase().includes('soukday');
+        const unitName = variant.stock_unit_name || (typeof variant.unit === 'object' ? variant.unit?.name : variant.unit) || '1 unité';
         return {
           id: item.id,
           name: item.translations?.name || item.name,
           slug: item.slug || `product-${item.id}`,
           brand: item.brand?.name || 'Soukday',
           storeId: item.seller_id,
-          storeName: item.seller_name || (isSoukday ? 'Soukday Épicerie Directe' : 'Boutique Partenaire'),
+          storeName: sellerName || (isSoukday ? 'Soukday Épicerie Directe' : 'Boutique Partenaire'),
           storeType: isSoukday ? 'soukday_direct' : 'local_store',
           price: parseFloat(variant.discounted_price || variant.price || '0'),
           originalPrice: variant.discounted_price ? parseFloat(variant.price || '0') : undefined,
-          unit: variant.unit || '1 unité',
-          weightOrVolume: variant.measurement ? `${variant.measurement} ${variant.unit}` : undefined,
+          unit: unitName,
+          weightOrVolume: variant.measurement ? `${variant.measurement} ${unitName}` : undefined,
           image: item.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
           categorySlug: item.category?.slug || 'epicerie-maghrebine',
           isPopular: true,
