@@ -3,6 +3,7 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { STORES } from '../data/mockData';
+import { Store } from '../types';
 import { 
   Store as StoreIcon, 
   MapPin, 
@@ -13,11 +14,17 @@ import {
   ShoppingBag
 } from 'lucide-react';
 
-export default function OtherStoresSection() {
+interface OtherStoresSectionProps {
+  stores?: Store[];
+}
+
+export default function OtherStoresSection({ stores = STORES }: OtherStoresSectionProps) {
   const { selectedAddress } = useCart();
 
+  const sourceStores = stores && stores.length > 0 ? stores : STORES;
+
   // Non-butcher stores: Supermarkets, Bakeries, Specialty Markets
-  const otherStores = STORES.filter((s) => s.type !== 'butcher');
+  const otherStores = sourceStores.filter((s) => s.type !== 'butcher');
 
   return (
     <section className="py-10 px-4 sm:px-6 lg:px-8 bg-white">
@@ -105,7 +112,7 @@ export default function OtherStoresSection() {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
-                    {store.tags.map((tag) => (
+                    {(store.tags || []).map((tag: string) => (
                       <span
                         key={tag}
                         className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-stone-200/60 text-stone-700"

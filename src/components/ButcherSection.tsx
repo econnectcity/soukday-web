@@ -15,11 +15,17 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
-export default function ButcherSection() {
+interface ButcherSectionProps {
+  stores?: Store[];
+}
+
+export default function ButcherSection({ stores = STORES }: ButcherSectionProps) {
   const { selectedAddress, setIsAddressModalOpen } = useCart();
 
+  const sourceStores = stores && stores.length > 0 ? stores : STORES;
+
   // All butchers
-  const allButchers = STORES.filter((s) => s.type === 'butcher');
+  const allButchers = sourceStores.filter((s) => s.type === 'butcher');
 
   // Filter based on user address city or postal code
   // If user selected Laval -> Boucherie Mamounia; Saint-Jérôme -> Boucherie Melia; etc.
@@ -158,7 +164,7 @@ export default function ButcherSection() {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
-                    {butcher.tags.map((tag) => (
+                    {(butcher.tags || []).map((tag: string) => (
                       <span
                         key={tag}
                         className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-stone-100 text-stone-600"

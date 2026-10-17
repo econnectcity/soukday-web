@@ -2,12 +2,19 @@
 
 import React, { useRef } from 'react';
 import { useCart } from '../context/CartContext';
+import { Category } from '../types';
 import { MAIN_CATEGORIES } from '../data/mockData';
 import { ChevronLeft, ChevronRight, Layers } from 'lucide-react';
 
-export default function CategorySlider() {
+interface CategorySliderProps {
+  categories?: Category[];
+}
+
+export default function CategorySlider({ categories = MAIN_CATEGORIES }: CategorySliderProps) {
   const { selectedCategory, setSelectedCategory } = useCart();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const displayCategories = categories && categories.length > 0 ? categories : MAIN_CATEGORIES;
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -85,7 +92,7 @@ export default function CategorySlider() {
           </button>
 
           {/* Categories List */}
-          {MAIN_CATEGORIES.map((cat) => {
+          {displayCategories.map((cat) => {
             const isSelected = selectedCategory === cat.slug;
             return (
               <button
