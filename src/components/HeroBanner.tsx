@@ -47,12 +47,12 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
 
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#FCEFEA] via-[#FCEFEA]/35 to-stone-50 pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#FCEFEA] via-[#FCEFEA]/35 to-stone-50 pt-10 sm:pt-14 pb-14 sm:pb-20">
       {/* Decorative background blurs */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#F68B62]/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-10 w-80 h-80 bg-[#FCEFEA] rounded-full blur-2xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* Left Column: Headline & Address Input */}
@@ -129,7 +129,7 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
           </div>
 
           {/* Right Column: Hero Visual Card */}
-          <div className="lg:col-span-5 relative">
+          <div className="lg:col-span-5 relative mt-4 lg:mt-0">
             <div className="relative mx-auto max-w-md lg:max-w-none">
               
               {/* Main Card Image */}
@@ -139,25 +139,32 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                   alt="Épicerie et produits frais Soukday"
                   className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 opacity-80 group-hover:opacity-90 transition-opacity" />
                 
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <span className="inline-block px-2.5 py-1 rounded-md bg-[#F68B62] text-[11px] font-bold uppercase tracking-wider mb-1 shadow-sm">
-                    Épicerie & Boucherie
+                {/* Clean Top-Left Partner Counter Badge */}
+                <div className="absolute top-3.5 left-3.5 z-10">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900/80 backdrop-blur-md text-white text-xs font-bold border border-white/20 shadow-md">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>10+ Magasins & Boucheries Partenaires</span>
+                  </div>
+                </div>
+
+                {/* Clean Bottom-Right Fresh Guarantee Badge */}
+                <div className="absolute bottom-3.5 right-3.5 z-10 text-right">
+                  <span className="inline-block px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-md text-stone-900 text-[11px] font-bold border border-white shadow-sm">
+                    Frais du jour garantis
                   </span>
-                  <div className="text-lg font-bold">10 Magasins partenaires au Québec</div>
-                  <div className="text-xs text-white/80">Montréal, Saint-Laurent, Laval, Brossard, Terrebonne, Saint-Jérôme</div>
                 </div>
               </div>
 
-              {/* Floating Badge 1: Local Butcher Highlight */}
-              <div className="absolute -bottom-5 -left-4 sm:-left-6 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-stone-100 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-lg shadow-xs">
+              {/* Floating Badge 1: Local Halal Butcher Highlight */}
+              <div className="absolute -bottom-5 -left-3 sm:-left-5 z-20 bg-white/98 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-100 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xl shadow-xs shrink-0">
                   🥩
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-stone-900">Boucheries Halal Locales</div>
-                  <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                  <div className="text-xs font-black text-stone-900 leading-tight">Boucheries Halal Locales</div>
+                  <div className="text-[11px] text-emerald-600 font-bold flex items-center gap-1.5 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     Livraison en 30-45 min
                   </div>
@@ -165,13 +172,13 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
               </div>
 
               {/* Floating Badge 2: Nationwide Grocery */}
-              <div className="absolute -top-4 -right-4 sm:-right-6 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-stone-100 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-bold text-lg border border-[#F68B62]/20 shadow-xs">
+              <div className="absolute -top-4 -right-3 sm:-right-5 z-20 bg-white/98 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-100 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-bold text-lg border border-[#F68B62]/20 shadow-xs shrink-0">
                   🇨🇦
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-stone-900">Expédition Nationale</div>
-                  <div className="text-[11px] text-stone-500 font-medium">Partout au Canada & USA</div>
+                  <div className="text-xs font-black text-stone-900 leading-tight">Expédition Nationale</div>
+                  <div className="text-[11px] text-stone-500 font-medium mt-0.5">Partout au Canada & USA</div>
                 </div>
               </div>
 

@@ -34,8 +34,8 @@ export default function Header({ settings = DEFAULT_LIVE_SETTINGS }: HeaderProps
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-100 shadow-xs">
       {/* Top micro announcement bar */}
-      <div className="bg-gradient-to-r from-[#F68B62] via-[#f79d79] to-[#F68B62] text-white text-xs py-1.5 px-4 font-medium">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="bg-gradient-to-r from-[#F68B62] via-[#f79d79] to-[#F68B62] text-white text-xs py-1.5 font-medium">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {settings?.headerAnnouncementTag && (
               <span className="bg-white/20 px-2 py-0.5 rounded-full text-[11px] font-semibold flex items-center gap-1">

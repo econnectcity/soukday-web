@@ -32,8 +32,8 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
   };
 
   return (
-    <section className="py-8 sm:py-10 px-4 sm:px-6 lg:px-8 border-b border-stone-200/60 bg-white">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-8 sm:py-10 border-b border-stone-200/60 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="flex items-center justify-between mb-6">
