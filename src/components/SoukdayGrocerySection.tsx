@@ -39,46 +39,50 @@ export default function SoukdayGrocerySection({ products = PRODUCTS }: SoukdayGr
   };
 
   return (
-    <section className="py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-stone-50 via-white to-stone-50">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <section className="w-full bg-gradient-to-b from-stone-50 via-white to-stone-50">
+      {/* 1. Full-Width Edge-to-Edge Highlight Banner (No space left or right) */}
+      <div className="w-full bg-gradient-to-r from-stone-950 via-stone-900 to-stone-950 text-white py-12 sm:py-16 border-y border-stone-800 relative overflow-hidden shadow-lg">
+        {/* Ambient atmospheric glows */}
+        <div className="absolute -right-16 -bottom-16 w-96 h-96 bg-[#F68B62]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -left-16 -top-16 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Highlight Banner / Card */}
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-stone-900 via-stone-850 to-stone-900 text-white p-6 sm:p-8 shadow-xl">
-          <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-[#F68B62]/20 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F68B62]/20 text-[#F68B62] border border-[#F68B62]/30 text-xs font-bold tracking-wide">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="space-y-3 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F68B62]/20 text-[#F68B62] border border-[#F68B62]/30 text-xs font-bold tracking-wide">
                 <Globe2 className="w-3.5 h-3.5" />
                 <span>Expédition Nationale & Internationale</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white flex items-center gap-2">
                 Épicerie Directe <span className="text-[#F68B62]">Soukday</span>
               </h2>
-              <p className="text-stone-300 text-xs sm:text-sm leading-relaxed">
-                Les produits d’épicerie fine vendus directement par <strong>Soukday</strong> peuvent être expédiés 
-                partout au <strong>Canada (10 provinces)</strong> et vers les <strong>destinations éligibles aux États-Unis</strong>. 
+              <p className="text-stone-300 text-xs sm:text-sm lg:text-base leading-relaxed">
+                Les produits d’épicerie fine vendus directement par <strong className="text-white">Soukday</strong> peuvent être expédiés 
+                partout au <strong className="text-white">Canada (10 provinces)</strong> et vers les <strong className="text-white">destinations éligibles aux États-Unis</strong>. 
                 Emballage soigné, arrivages réguliers et marques authentiques.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 shrink-0 text-xs">
-              <div className="bg-white/10 backdrop-blur-xs p-3 rounded-2xl border border-white/10">
-                <Truck className="w-4 h-4 text-[#F68B62] mb-1" />
-                <div className="font-bold text-white">Canada & USA</div>
-                <div className="text-[10px] text-stone-300">Postes Canada / UPS</div>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 shrink-0 text-xs">
+              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:border-[#F68B62]/40 transition-colors">
+                <Truck className="w-5 h-5 text-[#F68B62] mb-1.5" />
+                <div className="font-bold text-white text-sm">Canada & USA</div>
+                <div className="text-[11px] text-stone-300">Postes Canada / UPS</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-xs p-3 rounded-2xl border border-white/10">
-                <ShieldCheck className="w-4 h-4 text-[#F68B62] mb-1" />
-                <div className="font-bold text-white">Fraîcheur 100%</div>
-                <div className="text-[10px] text-stone-300">Garantie Soukday</div>
+              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 hover:border-[#F68B62]/40 transition-colors">
+                <ShieldCheck className="w-5 h-5 text-[#F68B62] mb-1.5" />
+                <div className="font-bold text-white text-sm">Fraîcheur 100%</div>
+                <div className="text-[11px] text-stone-300">Garantie Soukday</div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
+      {/* 2. Subcategories & Products Grid Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-7">
         {/* Subcategories Horizontal Swipe Bar */}
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Rayons épicerie directe :

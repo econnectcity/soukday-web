@@ -41,7 +41,7 @@ export default function HeroBanner() {
 
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#fff7f4] via-stone-50 to-stone-100/60 pt-8 pb-14 px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#fff7f4] via-stone-50 to-stone-100/60 pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8">
       {/* Decorative background blurs */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#F68B62]/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-10 w-80 h-80 bg-amber-200/20 rounded-full blur-2xl pointer-events-none" />

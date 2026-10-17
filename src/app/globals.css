@@ -13,6 +13,10 @@
   --success: #16a34a;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #fafaf9;
   color: var(--foreground);

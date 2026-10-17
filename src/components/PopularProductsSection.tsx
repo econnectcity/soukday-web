@@ -45,8 +45,8 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
   };
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-stone-50/50">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 bg-stone-50/80 border-t border-stone-200/60">
+      <div className="max-w-7xl mx-auto space-y-8">
 
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
