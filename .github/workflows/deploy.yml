@@ -1,0 +1,61 @@
+name: Deploy Customer Web to new.soukday.ca
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: Build & Deploy to new.soukday.ca
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Next.js Static Export
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: https://admin.soukday.ca
+
+      - name: Copy .htaccess to Export Directory
+        run: |
+          cat << 'EOF' > out/.htaccess
+          <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteBase /
+            RewriteCond %{HTTPS} !=on
+            RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+            RewriteCond %{REQUEST_FILENAME} -f [OR]
+            RewriteCond %{REQUEST_FILENAME} -d
+            RewriteRule ^ - [L]
+            RewriteRule ^ index.html [L]
+          </IfModule>
+          <IfModule mod_deflate.c>
+            AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
+          </IfModule>
+          <IfModule mod_expires.c>
+            ExpiresActive On
+            ExpiresDefault "access plus 1 month"
+            ExpiresByType text/html "access plus 0 seconds"
+            ExpiresByType application/json "access plus 0 seconds"
+          </IfModule>
+          EOF
+
+      - name: Sync to new.soukday.ca via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER || '67.215.11.226' }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/domains/new.soukday.ca/public_html/' }}
+          local-dir: ./out/
