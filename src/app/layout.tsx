@@ -21,6 +21,16 @@ export const metadata: Metadata = {
   title: 'Soukday - Épiceries orientales, Boucheries Halal & Marchés locaux',
   description: 'Commandez en ligne auprès de vos boucheries halal et épiceries locales au Québec. Épicerie directe expédiée partout au Canada et aux États-Unis.',
   keywords: 'Soukday, épicerie orientale, boucherie halal, couscous, viande halal Montréal, épicerie Canada',
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
 };
 
 export default function RootLayout({
