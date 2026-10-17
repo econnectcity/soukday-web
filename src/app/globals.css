@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
 :root {
+  --primary: #F68B62;
+  --primary-hover: #e07750;
+  --primary-light: #fff4f0;
+  --primary-gradient: linear-gradient(135deg, #F68B62 0%, #ff9e7a 100%);
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: #1c1917;
+  --card-bg: #ffffff;
+  --card-border: #f3f4f6;
+  --text-muted: #6b7280;
+  --success: #16a34a;
 }
 
 body {
-  background: var(--background);
+  background-color: #fafaf9;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom hide scrollbar utility for horizontal swipe sections */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Subtle micro-animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Product card hover effect */
+.product-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -8px rgba(246, 139, 98, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Store card hover effect */
+.store-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.store-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.08);
 }
