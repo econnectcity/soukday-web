@@ -114,7 +114,7 @@ export default function SoukdayGrocerySection({ products = PRODUCTS }: SoukdayGr
                   className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     isSelected
                       ? 'bg-[#F68B62] text-white shadow-sm font-bold'
-                      : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-200'
+                      : 'bg-white hover:bg-[#FCEFEA] text-stone-700 hover:text-[#F68B62] border border-stone-200 hover:border-[#F68B62]/30'
                   }`}
                 >
                   <span>{sub.icon}</span>
@@ -137,7 +137,7 @@ export default function SoukdayGrocerySection({ products = PRODUCTS }: SoukdayGr
                 <div>
                   {/* Badge */}
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#F68B62]/10 text-[#F68B62] truncate">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/20 truncate">
                       {product.badge || 'Expédition Canada'}
                     </span>
                     {product.brand && (
@@ -182,7 +182,7 @@ export default function SoukdayGrocerySection({ products = PRODUCTS }: SoukdayGr
                     <button
                       type="button"
                       onClick={() => addToCart(product, 1)}
-                      className="w-full py-1.5 px-3 rounded-xl bg-stone-100 hover:bg-[#F68B62] text-stone-800 hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      className="w-full py-1.5 px-3 rounded-xl bg-[#FCEFEA]/80 hover:bg-[#F68B62] text-stone-900 hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-[#F68B62]/20 hover:border-transparent"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Ajouter</span>

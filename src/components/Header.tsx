@@ -78,13 +78,13 @@ export default function Header() {
           <button 
             type="button"
             onClick={() => setIsAddressModalOpen(true)}
-            className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-stone-50 hover:bg-[#F68B62]/10 border border-stone-200/80 hover:border-[#F68B62]/40 text-left transition-all shrink-0 cursor-pointer"
+            className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FCEFEA]/60 hover:bg-[#FCEFEA] border border-[#F68B62]/25 hover:border-[#F68B62]/50 text-left transition-all shrink-0 cursor-pointer shadow-xs"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#F68B62]/10 flex items-center justify-center text-[#F68B62]">
+            <div className="w-8 h-8 rounded-lg bg-[#FCEFEA] flex items-center justify-center text-[#F68B62] border border-[#F68B62]/20">
               <MapPin className="w-4 h-4" />
             </div>
             <div className="text-xs">
-              <div className="text-stone-400 font-medium text-[10px]">Livraison à / Postal</div>
+              <div className="text-stone-500 font-medium text-[10px]">Livraison à / Postal</div>
               <div className="font-bold text-stone-800 flex items-center gap-1 max-w-[150px] truncate">
                 {selectedAddress.postalCode ? `${selectedAddress.postalCode} (${selectedAddress.city})` : selectedAddress.city}
                 <ChevronDown className="w-3 h-3 text-stone-400" />

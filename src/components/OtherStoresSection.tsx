@@ -33,7 +33,7 @@ export default function OtherStoresSection({ stores = STORES }: OtherStoresSecti
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F68B62] mb-1">
+            <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F68B62] mb-1.5 px-3 py-1 rounded-full bg-[#FCEFEA] border border-[#F68B62]/25 shadow-xs">
               <StoreIcon className="w-3.5 h-3.5" />
               <span>Commerces de proximité & Supermarchés</span>
             </div>
@@ -101,7 +101,7 @@ export default function OtherStoresSection({ stores = STORES }: OtherStoresSecti
                   </p>
 
                   {/* Delivery info */}
-                  <div className="flex items-center justify-between text-xs text-stone-600 bg-white p-2.5 rounded-xl border border-stone-200/70">
+                  <div className="flex items-center justify-between text-xs text-stone-600 bg-[#FCEFEA]/45 p-2.5 rounded-xl border border-[#F68B62]/15">
                     <div className="flex items-center gap-1 font-semibold text-stone-900">
                       <Truck className="w-3.5 h-3.5 text-[#F68B62]" />
                       <span>{store.deliveryFee}</span>
@@ -115,7 +115,7 @@ export default function OtherStoresSection({ stores = STORES }: OtherStoresSecti
                     {(store.tags || []).map((tag: string) => (
                       <span
                         key={tag}
-                        className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-stone-200/60 text-stone-700"
+                        className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#FCEFEA]/60 text-stone-700 border border-[#F68B62]/10"
                       >
                         {tag}
                       </span>

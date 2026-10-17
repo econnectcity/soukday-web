@@ -61,7 +61,7 @@ export default function AddressModal() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-[#F68B62]/10 text-[#F68B62] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/20 flex items-center justify-center shadow-xs">
                 <MapPin className="w-4 h-4" />
               </div>
               <div>
@@ -116,8 +116,8 @@ export default function AddressModal() {
                     onClick={() => handleSelectLocation(loc)}
                     className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-[#F68B62]/10 text-[#F68B62] border border-[#F68B62]/30'
-                        : 'bg-stone-50 hover:bg-stone-100 text-stone-800'
+                        ? 'bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/40 font-bold shadow-xs'
+                        : 'bg-stone-50 hover:bg-[#FCEFEA]/50 hover:text-stone-900 text-stone-800'
                     }`}
                   >
                     <div className="flex items-center gap-2">

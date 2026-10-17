@@ -67,7 +67,7 @@ export default function ButcherSection({ stores = STORES }: ButcherSectionProps)
           <button
             type="button"
             onClick={() => setIsAddressModalOpen(true)}
-            className="text-xs font-bold text-[#F68B62] hover:text-[#e07750] flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+            className="text-xs font-bold text-[#F68B62] hover:text-[#e07750] flex items-center gap-1.5 self-start sm:self-auto cursor-pointer px-3 py-1.5 rounded-xl bg-[#FCEFEA] border border-[#F68B62]/20 hover:border-[#F68B62]/40 transition-all shadow-xs"
           >
             <span>Changer d’adresse de livraison</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -75,7 +75,7 @@ export default function ButcherSection({ stores = STORES }: ButcherSectionProps)
         </div>
 
         {/* Notice for number of butchers */}
-        <div className="flex items-center gap-2 text-xs text-stone-600 bg-white p-2.5 rounded-xl border border-stone-200/70">
+        <div className="flex items-center gap-2 text-xs text-stone-700 bg-white p-3 rounded-2xl border border-stone-200/70 shadow-xs">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>
             {displayButchers.length === 1 ? (
@@ -153,7 +153,7 @@ export default function ButcherSection({ stores = STORES }: ButcherSectionProps)
                   </div>
 
                   {/* Delivery & Min order pills */}
-                  <div className="flex items-center gap-3 text-xs text-stone-600 bg-stone-50 p-2.5 rounded-xl border border-stone-100">
+                  <div className="flex items-center gap-3 text-xs text-stone-600 bg-[#FCEFEA]/45 p-2.5 rounded-xl border border-[#F68B62]/15">
                     <div className="flex items-center gap-1 font-semibold text-stone-800">
                       <Truck className="w-3.5 h-3.5 text-[#F68B62]" />
                       <span>{butcher.deliveryFee}</span>
@@ -167,7 +167,7 @@ export default function ButcherSection({ stores = STORES }: ButcherSectionProps)
                     {(butcher.tags || []).map((tag: string) => (
                       <span
                         key={tag}
-                        className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-stone-100 text-stone-600"
+                        className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#FCEFEA]/60 text-stone-700 border border-[#F68B62]/10"
                       >
                         {tag}
                       </span>

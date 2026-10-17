@@ -38,7 +38,7 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
         {/* Section Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#F68B62]/10 flex items-center justify-center text-[#F68B62]">
+            <div className="w-8 h-8 rounded-xl bg-[#FCEFEA] border border-[#F68B62]/20 flex items-center justify-center text-[#F68B62]">
               <Layers className="w-4 h-4" />
             </div>
             <div>
@@ -56,7 +56,7 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
             <button
               type="button"
               onClick={() => scroll('left')}
-              className="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:border-[#F68B62] transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 transition-colors cursor-pointer"
               aria-label="Précédent"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -64,7 +64,7 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
             <button
               type="button"
               onClick={() => scroll('right')}
-              className="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:border-[#F68B62] transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 transition-colors cursor-pointer"
               aria-label="Suivant"
             >
               <ChevronRight className="w-4 h-4" />
@@ -84,7 +84,7 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
             className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
               selectedCategory === null
                 ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/20 scale-[1.02]'
-                : 'bg-stone-50 hover:bg-stone-100 text-stone-700 border-stone-200/80'
+                : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/40 text-stone-700 border-stone-200/80'
             }`}
           >
             <span className="text-base">✨</span>
@@ -102,7 +102,7 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
                 className={`group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left transition-all cursor-pointer ${
                   isSelected
                     ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/20 scale-[1.02]'
-                    : 'bg-stone-50 hover:bg-stone-100 text-stone-800 border-stone-200/80'
+                    : 'bg-stone-50 hover:bg-[#FCEFEA]/60 hover:border-[#F68B62]/40 text-stone-800 border-stone-200/80'
                 }`}
               >
                 <div className="w-11 h-11 rounded-xl overflow-hidden bg-stone-200 shrink-0 relative">

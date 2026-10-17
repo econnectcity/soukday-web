@@ -41,10 +41,10 @@ export default function HeroBanner() {
 
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#fff7f4] via-stone-50 to-stone-100/60 pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#FCEFEA] via-[#FCEFEA]/35 to-stone-50 pt-10 sm:pt-14 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8">
       {/* Decorative background blurs */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#F68B62]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-10 w-80 h-80 bg-amber-200/20 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute bottom-0 left-10 w-80 h-80 bg-[#FCEFEA] rounded-full blur-2xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -53,7 +53,7 @@ export default function HeroBanner() {
           <div className="lg:col-span-7 space-y-6">
             
             {/* Pill tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F68B62]/10 text-[#F68B62] border border-[#F68B62]/20 text-xs font-bold tracking-wide">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/30 text-xs font-bold tracking-wide shadow-xs">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Votre marché oriental & local à portée de clic</span>
             </div>
@@ -156,7 +156,7 @@ export default function HeroBanner() {
 
               {/* Floating Badge 2: Nationwide Grocery */}
               <div className="absolute -top-4 -right-4 sm:-right-6 bg-white p-3 rounded-2xl shadow-xl border border-stone-100 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#F68B62] flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-bold text-lg border border-[#F68B62]/20">
                   🇨🇦
                 </div>
                 <div>

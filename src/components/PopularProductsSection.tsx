@@ -51,8 +51,8 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-amber-600 mb-1">
-              <Sparkles className="w-3.5 h-3.5 fill-amber-500" />
+            <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F68B62] mb-1.5 px-3 py-1 rounded-full bg-[#FCEFEA] border border-[#F68B62]/25 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 fill-[#F68B62] text-[#F68B62]" />
               <span>Coups de cœur de nos clients</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
@@ -84,7 +84,7 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
                   <div className="flex items-center justify-between gap-1 mb-2">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md truncate ${
                       isSoukdayDirect
-                        ? 'bg-amber-50 text-amber-800 border border-amber-200/60'
+                        ? 'bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/25'
                         : 'bg-red-50 text-red-700 border border-red-200/60'
                     }`}>
                       {product.badge || (isSoukdayDirect ? 'Épicerie Directe' : 'Boucherie Locale')}
