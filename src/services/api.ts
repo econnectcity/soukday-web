@@ -140,6 +140,28 @@ function getStoreImage(name: string): string {
   return match?.image || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=700&q=80';
 }
 
+export function parseLocalized(value: any, lang: string = 'fr'): string {
+  if (!value) return '';
+  if (typeof value === 'object') {
+    return value[lang] || value['en'] || Object.values(value)[0] || '';
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed && typeof parsed === 'object') {
+          return parsed[lang] || parsed['en'] || Object.values(parsed)[0] || '';
+        }
+      } catch {
+        // Fall through
+      }
+    }
+    return value;
+  }
+  return String(value);
+}
+
 export const DEFAULT_LIVE_SETTINGS: LiveWebSettings = {
   siteTitle: 'Soukday - Épiceries orientales & Boucheries Halal',
   websiteUrl: 'https://soukday.ca',
@@ -201,7 +223,7 @@ export const DEFAULT_LIVE_SETTINGS: LiveWebSettings = {
 export async function fetchLiveWebSettings(): Promise<LiveWebSettings> {
   try {
     const res = await fetch(`${API_BASE_URL}/customer/settings?is_web_setting=1`, {
-      next: { revalidate: 60 },
+      next: { revalidate: 5 },
       headers: { 
         'Accept': 'application/json',
         'x-access-key': '903361',
@@ -217,7 +239,7 @@ export async function fetchLiveWebSettings(): Promise<LiveWebSettings> {
       const ws = decoded.web_settings || {};
 
       return {
-        siteTitle: ws.site_title || DEFAULT_LIVE_SETTINGS.siteTitle,
+        siteTitle: parseLocalized(ws.site_title) || DEFAULT_LIVE_SETTINGS.siteTitle,
         websiteUrl: ws.website_url || DEFAULT_LIVE_SETTINGS.websiteUrl,
         color: ws.color || DEFAULT_LIVE_SETTINGS.color,
         lightColor: ws.light_color || DEFAULT_LIVE_SETTINGS.lightColor,
@@ -229,49 +251,49 @@ export async function fetchLiveWebSettings(): Promise<LiveWebSettings> {
         placeholderImage: ws.placeholder_image || DEFAULT_LIVE_SETTINGS.placeholderImage,
         loading: ws.loading || DEFAULT_LIVE_SETTINGS.loading,
 
-        headerAnnouncementText: ws.header_announcement_text || DEFAULT_LIVE_SETTINGS.headerAnnouncementText,
-        headerAnnouncementTag: ws.header_announcement_tag || DEFAULT_LIVE_SETTINGS.headerAnnouncementTag,
-        headerPartnerText: ws.header_partner_text || DEFAULT_LIVE_SETTINGS.headerPartnerText,
+        headerAnnouncementText: parseLocalized(ws.header_announcement_text) || DEFAULT_LIVE_SETTINGS.headerAnnouncementText,
+        headerAnnouncementTag: parseLocalized(ws.header_announcement_tag) || DEFAULT_LIVE_SETTINGS.headerAnnouncementTag,
+        headerPartnerText: parseLocalized(ws.header_partner_text) || DEFAULT_LIVE_SETTINGS.headerPartnerText,
         headerPartnerUrl: ws.header_partner_url || DEFAULT_LIVE_SETTINGS.headerPartnerUrl,
-        headerSupportText: ws.header_support_text || DEFAULT_LIVE_SETTINGS.headerSupportText,
+        headerSupportText: parseLocalized(ws.header_support_text) || DEFAULT_LIVE_SETTINGS.headerSupportText,
         headerSupportPhone: ws.header_support_phone || DEFAULT_LIVE_SETTINGS.headerSupportPhone,
 
-        heroTagline: ws.hero_tagline || DEFAULT_LIVE_SETTINGS.heroTagline,
-        heroTitle: ws.hero_title || DEFAULT_LIVE_SETTINGS.heroTitle,
-        heroSubtitle: ws.hero_subtitle || DEFAULT_LIVE_SETTINGS.heroSubtitle,
-        heroBadge1: ws.hero_badge_1 || DEFAULT_LIVE_SETTINGS.heroBadge1,
-        heroBadge2: ws.hero_badge_2 || DEFAULT_LIVE_SETTINGS.heroBadge2,
-        heroBadge3: ws.hero_badge_3 || DEFAULT_LIVE_SETTINGS.heroBadge3,
+        heroTagline: parseLocalized(ws.hero_tagline) || DEFAULT_LIVE_SETTINGS.heroTagline,
+        heroTitle: parseLocalized(ws.hero_title) || DEFAULT_LIVE_SETTINGS.heroTitle,
+        heroSubtitle: parseLocalized(ws.hero_subtitle) || DEFAULT_LIVE_SETTINGS.heroSubtitle,
+        heroBadge1: parseLocalized(ws.hero_badge_1) || DEFAULT_LIVE_SETTINGS.heroBadge1,
+        heroBadge2: parseLocalized(ws.hero_badge_2) || DEFAULT_LIVE_SETTINGS.heroBadge2,
+        heroBadge3: parseLocalized(ws.hero_badge_3) || DEFAULT_LIVE_SETTINGS.heroBadge3,
 
-        directGroceryTag: ws.direct_grocery_tag || DEFAULT_LIVE_SETTINGS.directGroceryTag,
-        directGroceryTitle: ws.direct_grocery_title || DEFAULT_LIVE_SETTINGS.directGroceryTitle,
-        directGroceryDescription: ws.direct_grocery_description || DEFAULT_LIVE_SETTINGS.directGroceryDescription,
-        directGroceryFeature1Title: ws.direct_grocery_feature_1_title || DEFAULT_LIVE_SETTINGS.directGroceryFeature1Title,
-        directGroceryFeature1Subtitle: ws.direct_grocery_feature_1_subtitle || DEFAULT_LIVE_SETTINGS.directGroceryFeature1Subtitle,
-        directGroceryFeature2Title: ws.direct_grocery_feature_2_title || DEFAULT_LIVE_SETTINGS.directGroceryFeature2Title,
-        directGroceryFeature2Subtitle: ws.direct_grocery_feature_2_subtitle || DEFAULT_LIVE_SETTINGS.directGroceryFeature2Subtitle,
+        directGroceryTag: parseLocalized(ws.direct_grocery_tag) || DEFAULT_LIVE_SETTINGS.directGroceryTag,
+        directGroceryTitle: parseLocalized(ws.direct_grocery_title) || DEFAULT_LIVE_SETTINGS.directGroceryTitle,
+        directGroceryDescription: parseLocalized(ws.direct_grocery_description) || DEFAULT_LIVE_SETTINGS.directGroceryDescription,
+        directGroceryFeature1Title: parseLocalized(ws.direct_grocery_feature_1_title) || DEFAULT_LIVE_SETTINGS.directGroceryFeature1Title,
+        directGroceryFeature1Subtitle: parseLocalized(ws.direct_grocery_feature_1_subtitle) || DEFAULT_LIVE_SETTINGS.directGroceryFeature1Subtitle,
+        directGroceryFeature2Title: parseLocalized(ws.direct_grocery_feature_2_title) || DEFAULT_LIVE_SETTINGS.directGroceryFeature2Title,
+        directGroceryFeature2Subtitle: parseLocalized(ws.direct_grocery_feature_2_subtitle) || DEFAULT_LIVE_SETTINGS.directGroceryFeature2Subtitle,
 
-        butcherSectionTag: ws.butcher_section_tag || DEFAULT_LIVE_SETTINGS.butcherSectionTag,
-        butcherSectionTitle: ws.butcher_section_title || DEFAULT_LIVE_SETTINGS.butcherSectionTitle,
-        butcherSectionSubtitle: ws.butcher_section_subtitle || DEFAULT_LIVE_SETTINGS.butcherSectionSubtitle,
+        butcherSectionTag: parseLocalized(ws.butcher_section_tag) || DEFAULT_LIVE_SETTINGS.butcherSectionTag,
+        butcherSectionTitle: parseLocalized(ws.butcher_section_title) || DEFAULT_LIVE_SETTINGS.butcherSectionTitle,
+        butcherSectionSubtitle: parseLocalized(ws.butcher_section_subtitle) || DEFAULT_LIVE_SETTINGS.butcherSectionSubtitle,
 
-        otherStoresSectionTag: ws.other_stores_section_tag || DEFAULT_LIVE_SETTINGS.otherStoresSectionTag,
-        otherStoresSectionTitle: ws.other_stores_section_title || DEFAULT_LIVE_SETTINGS.otherStoresSectionTitle,
-        otherStoresSectionSubtitle: ws.other_stores_section_subtitle || DEFAULT_LIVE_SETTINGS.otherStoresSectionSubtitle,
+        otherStoresSectionTag: parseLocalized(ws.other_stores_section_tag) || DEFAULT_LIVE_SETTINGS.otherStoresSectionTag,
+        otherStoresSectionTitle: parseLocalized(ws.other_stores_section_title) || DEFAULT_LIVE_SETTINGS.otherStoresSectionTitle,
+        otherStoresSectionSubtitle: parseLocalized(ws.other_stores_section_subtitle) || DEFAULT_LIVE_SETTINGS.otherStoresSectionSubtitle,
 
-        footerAboutText: ws.footer_about_text || DEFAULT_LIVE_SETTINGS.footerAboutText,
+        footerAboutText: parseLocalized(ws.footer_about_text) || DEFAULT_LIVE_SETTINGS.footerAboutText,
         footerAddress: ws.footer_address || DEFAULT_LIVE_SETTINGS.footerAddress,
         footerEmail: ws.footer_email || DEFAULT_LIVE_SETTINGS.footerEmail,
         footerPhone: ws.footer_phone || DEFAULT_LIVE_SETTINGS.footerPhone,
-        copyrightDetails: ws.copyright_details || DEFAULT_LIVE_SETTINGS.copyrightDetails,
+        copyrightDetails: parseLocalized(ws.copyright_details) || DEFAULT_LIVE_SETTINGS.copyrightDetails,
 
         isAndroidApp: ws.is_android_app === '1' || ws.is_android_app === 1,
         androidAppUrl: ws.android_app_url || '',
         isIosApp: ws.is_ios_app === '1' || ws.is_ios_app === 1,
         iosAppUrl: ws.ios_app_url || '',
 
-        commonMetaTitle: ws.common_meta_title || DEFAULT_LIVE_SETTINGS.commonMetaTitle,
-        commonMetaDescription: ws.common_meta_description || DEFAULT_LIVE_SETTINGS.commonMetaDescription,
+        commonMetaTitle: parseLocalized(ws.common_meta_title) || DEFAULT_LIVE_SETTINGS.commonMetaTitle,
+        commonMetaDescription: parseLocalized(ws.common_meta_description) || DEFAULT_LIVE_SETTINGS.commonMetaDescription,
       };
     }
   } catch (err) {
