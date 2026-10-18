@@ -77,60 +77,56 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
             return (
               <div
                 key={product.id}
-                className="product-card group bg-white rounded-3xl p-3 sm:p-4 border border-stone-200/70 hover:border-[#F68B62]/50 flex flex-col justify-between cursor-pointer"
+                className="product-card group bg-white rounded-2xl p-3.5 sm:p-4 border border-stone-200/80 hover:border-[#F68B62]/60 hover:shadow-xl hover:shadow-[#F68B62]/10 transition-all duration-300 flex flex-col justify-between cursor-pointer"
               >
                 <div>
                   {/* Store & Badges row */}
-                  <div className="flex items-center justify-between gap-1 mb-2">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md truncate ${
+                  <div className="flex items-center justify-between gap-1 mb-2.5">
+                    <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-2xs ${
                       isSoukdayDirect
-                        ? 'bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/25'
-                        : 'bg-red-50 text-red-700 border border-red-200/60'
+                        ? 'bg-orange-50 text-[#F68B62] border border-orange-200/60'
+                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
                     }`}>
-                      {product.badge || (isSoukdayDirect ? 'Épicerie Directe' : 'Boucherie Locale')}
+                      {isSoukdayDirect ? <Truck className="w-2.5 h-2.5" /> : <StoreIcon className="w-2.5 h-2.5" />}
+                      <span>{isSoukdayDirect ? 'Canada &amp; USA' : 'Boutique Locale'}</span>
                     </span>
                     {product.isHalal && (
-                      <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5 shrink-0">
-                        <ShieldCheck className="w-3 h-3" /> Halal
+                      <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 shadow-2xs">
+                        <ShieldCheck className="w-2.5 h-2.5" /> Halal
                       </span>
                     )}
                   </div>
 
                   {/* Product Visual */}
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-stone-50 mb-3 relative">
+                  <div className="aspect-square rounded-xl overflow-hidden bg-stone-50/70 border border-stone-100/80 p-2.5 sm:p-3 mb-2.5 relative flex items-center justify-center group-hover:bg-white transition-colors duration-300">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300 ease-out"
                     />
-                    {isSoukdayDirect && (
-                      <div className="absolute bottom-1.5 left-1.5 bg-black/60 backdrop-blur-xs text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
-                        <Truck className="w-2.5 h-2.5 text-[#F68B62]" /> Canada & USA
-                      </div>
-                    )}
                   </div>
 
                   {/* Store Name Provenance */}
-                  <div className="text-[11px] font-semibold text-stone-500 mb-1 flex items-center gap-1 truncate">
+                  <div className="text-[10px] sm:text-[11px] font-semibold text-stone-400 mb-1 flex items-center gap-1 truncate">
                     <StoreIcon className="w-3 h-3 text-[#F68B62] shrink-0" />
                     <span className="truncate">{product.storeName}</span>
                   </div>
 
                   {/* Product Name */}
-                  <h3 className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-[#F68B62] transition-colors duration-200 line-clamp-2 leading-snug">
+                  <h3 className="text-xs sm:text-sm font-bold text-stone-900 group-hover:text-[#F68B62] transition-colors duration-200 line-clamp-2 leading-snug min-h-[2.5rem] sm:min-h-[2.75rem]">
                     {product.name}
                   </h3>
 
                   {/* Unit / Weight */}
-                  <div className="text-[11px] text-stone-500 mt-1">
-                    {product.unit} {product.weightOrVolume ? `• ${product.weightOrVolume}` : ''}
+                  <div className="text-[11px] sm:text-xs font-medium text-stone-500 mt-1">
+                    {product.unit}
                   </div>
                 </div>
 
                 {/* Bottom Pricing & Cart Action */}
-                <div className="mt-4 pt-3 border-t border-stone-100">
+                <div className="mt-3.5 pt-2.5 border-t border-stone-100">
                   <div className="flex items-baseline gap-1.5 mb-2.5">
-                    <span className="text-base sm:text-lg font-black text-stone-900">
+                    <span className="text-base sm:text-lg font-black text-stone-900 tracking-tight">
                       {product.price.toFixed(2)}$
                     </span>
                     {product.originalPrice && (
@@ -144,10 +140,10 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
                     <button
                       type="button"
                       onClick={() => addToCart(product, 1)}
-                      className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-[#F68B62] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md hover:shadow-[#F68B62]/25 active:scale-95"
+                      className="w-full py-2.5 px-3 rounded-xl bg-[#F68B62] hover:bg-[#e07047] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-[#F68B62]/25 active:scale-95 cursor-pointer"
                     >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Ajouter au panier</span>
+                      <Plus className="w-4 h-4 stroke-[2.5]" />
+                      <span>Ajouter</span>
                     </button>
                   ) : (
                     <div className="flex items-center justify-between bg-[#F68B62] text-white rounded-xl p-1 shadow-sm">
@@ -158,7 +154,7 @@ export default function PopularProductsSection({ products = PRODUCTS }: PopularP
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="text-xs font-black px-2">{qty} dans le panier</span>
+                      <span className="text-xs sm:text-sm font-black px-2">{qty}</span>
                       <button
                         type="button"
                         onClick={() => updateQuantity(product.id, qty + 1)}

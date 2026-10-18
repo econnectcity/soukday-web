@@ -37,26 +37,26 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
         
         {/* Section Header */}
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#FCEFEA] border border-[#F68B62]/20 flex items-center justify-center text-[#F68B62]">
-              <Layers className="w-4 h-4" />
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-[#FCEFEA] border border-[#F68B62]/30 flex items-center justify-center text-[#F68B62] shadow-xs shrink-0">
+              <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <h2 className="text-lg sm:text-xl font-black text-stone-900 tracking-tight">
-                Rayons & Catégories
+            <div className="min-w-0">
+              <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight leading-tight">
+                Rayons &amp; Catégories
               </h2>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs sm:text-sm text-stone-500 font-medium truncate sm:whitespace-normal">
                 Parcourez tous les rayons frais, épiceries et spécialités
               </p>
             </div>
           </div>
 
           {/* Navigation Arrows */}
-          <div className="hidden sm:flex items-center gap-1.5">
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => scroll('left')}
-              className="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 transition-colors cursor-pointer"
+              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 shadow-xs transition-colors cursor-pointer"
               aria-label="Précédent"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -64,7 +64,7 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
             <button
               type="button"
               onClick={() => scroll('right')}
-              className="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 transition-colors cursor-pointer"
+              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 shadow-xs transition-colors cursor-pointer"
               aria-label="Suivant"
             >
               <ChevronRight className="w-4 h-4" />
@@ -77,18 +77,35 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
           ref={scrollContainerRef}
           className="flex items-center gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
-          {/* 'All' button */}
+          {/* 'All' button - styled with identical height & layout as category cards */}
           <button
             type="button"
             onClick={() => setSelectedCategory(null)}
-            className={`category-chip shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
+            className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
               selectedCategory === null
-                ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25 scale-[1.02]'
-                : 'bg-stone-50 hover:bg-[#FCEFEA]/80 hover:border-[#F68B62]/50 text-stone-700 border-stone-200/80'
+                ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25'
+                : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/50 text-stone-800 border-stone-200/80'
             }`}
           >
-            <span className="text-base group-hover:rotate-12 transition-transform duration-300">✨</span>
-            <span>Tous les rayons</span>
+            <div className={`w-11 h-11 rounded-xl overflow-hidden shrink-0 flex items-center justify-center transition-all ${
+              selectedCategory === null
+                ? 'bg-white/20 text-white'
+                : 'bg-[#FCEFEA] text-[#F68B62] group-hover:bg-[#F68B62] group-hover:text-white'
+            }`}>
+              <Layers className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+            </div>
+            <div>
+              <div className={`text-xs font-bold leading-tight transition-colors ${
+                selectedCategory === null ? 'text-white' : 'text-stone-900 group-hover:text-[#F68B62]'
+              }`}>
+                Tous les rayons
+              </div>
+              <div className={`text-[10px] leading-snug transition-colors ${
+                selectedCategory === null ? 'text-white/80' : 'text-stone-400 group-hover:text-stone-600'
+              }`}>
+                Tout le catalogue
+              </div>
+            </div>
           </button>
 
           {/* Categories List */}
@@ -99,9 +116,9 @@ export default function CategorySlider({ categories = MAIN_CATEGORIES }: Categor
                 key={cat.id}
                 type="button"
                 onClick={() => handleSelect(cat.slug)}
-                className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer ${
+                className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
                   isSelected
-                    ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25 scale-[1.02]'
+                    ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25'
                     : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/50 text-stone-800 border-stone-200/80'
                 }`}
               >

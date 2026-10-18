@@ -75,6 +75,40 @@ export async function fetchLiveSellers(lat: number, lng: number): Promise<Store[
   return STORES;
 }
 
+export function formatProductUnitAndWeight(name: string, rawUnit?: any, measurement?: any): { unit: string; weightOrVolume?: string } {
+  // Check if weight/volume/quantity is in the product title (e.g. 500 g, 2.27 kg, 300g, 1kg, 10 feuilles, 2 unités, 1 L, 540 ml, 40 g)
+  const regex = /(?:^|[\s\-,(])(\d+(?:[.,]\d+)?\s*(?:kg|g|lb|lbs|oz|ml|cl|l|litres?|feuilles?|unités?|pièces?|morceaux?|sachets?|capsules?|canettes?))\b/i;
+  const match = name.match(regex);
+  if (match) {
+    let clean = match[1].trim();
+    // Normalize spacing, e.g. 300g -> 300 g, 1kg -> 1 kg
+    clean = clean.replace(/^(\d+(?:[.,]\d+)?)([a-zA-Z\u00C0-\u017F]+)$/, '$1 $2');
+    return { unit: clean, weightOrVolume: undefined };
+  }
+
+  const unitStr = (typeof rawUnit === 'string' ? rawUnit.toLowerCase().trim() : '') || '';
+  if (unitStr === 'u' || unitStr === 'unit' || unitStr === 'unite' || unitStr === 'unité' || !unitStr) {
+    const qty = parseInt(measurement, 10) || 1;
+    return {
+      unit: qty > 1 ? `${qty} unités` : '1 unité',
+      weightOrVolume: undefined,
+    };
+  }
+
+  if (unitStr === 'kg' || unitStr === 'g' || unitStr === 'lb' || unitStr === 'ml' || unitStr === 'l') {
+    const qty = measurement || 1;
+    return {
+      unit: `${qty} ${unitStr}`,
+      weightOrVolume: undefined,
+    };
+  }
+
+  return {
+    unit: (measurement ? `${measurement} ` : '') + unitStr,
+    weightOrVolume: undefined,
+  };
+}
+
 export async function fetchLiveProducts(lat: number, lng: number): Promise<Product[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/customer/products`, {
@@ -93,10 +127,13 @@ export async function fetchLiveProducts(lat: number, lng: number): Promise<Produ
         const variant = item.variants?.[0] || {};
         const sellerName = item.seller?.translations?.store_name || item.seller?.store_name || item.seller?.name || item.seller_name;
         const isSoukday = item.seller_id === 0 || item.seller_id === 11 || sellerName?.toLowerCase().includes('soukday');
-        const unitName = variant.stock_unit_name || (typeof variant.unit === 'object' ? variant.unit?.name : variant.unit) || '1 unité';
+        const rawUnit = variant.stock_unit_name || (typeof variant.unit === 'object' ? variant.unit?.name : variant.unit) || 'u';
+        const productName = item.translations?.name || item.name;
+        const formattedUnits = formatProductUnitAndWeight(productName, rawUnit, variant.measurement);
+
         return {
           id: item.id,
-          name: item.translations?.name || item.name,
+          name: productName,
           slug: item.slug || `product-${item.id}`,
           brand: item.brand?.name || 'Soukday',
           storeId: item.seller_id,
@@ -104,8 +141,8 @@ export async function fetchLiveProducts(lat: number, lng: number): Promise<Produ
           storeType: isSoukday ? 'soukday_direct' : 'local_store',
           price: parseFloat(variant.discounted_price || variant.price || '0'),
           originalPrice: variant.discounted_price ? parseFloat(variant.price || '0') : undefined,
-          unit: unitName,
-          weightOrVolume: variant.measurement ? `${variant.measurement} ${unitName}` : undefined,
+          unit: formattedUnits.unit,
+          weightOrVolume: formattedUnits.weightOrVolume,
           image: item.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
           categorySlug: item.category?.slug || 'epicerie-maghrebine',
           isPopular: true,
