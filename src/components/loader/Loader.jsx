@@ -1,48 +1,59 @@
 import React from 'react';
-import { isRtl } from "@/lib/utils";
+
 const Loader = ({ background, height, width, screen }) => {
-  const rtl = isRtl();
-  const outerAnimation = rtl ? "animate-reverseRotation" : "animate-rotation";
-  const innerAnimation = rtl ? "animate-rotation" : "animate-reverseRotation";
+  const isFullScreen = screen === 'full';
+
+  const spinnerContent = (
+    <div className="relative flex items-center justify-center w-24 h-24">
+      {/* Outer subtle ring track */}
+      <div className="absolute inset-0 w-24 h-24 rounded-full border-4 border-stone-200/40 dark:border-stone-800"></div>
+
+      {/* Main rotating orange spinner ring around the favicon */}
+      <div className="absolute inset-0 w-24 h-24 rounded-full border-4 border-transparent border-t-[#FF7A45] border-r-[#FF7A45] animate-spin"></div>
+
+      {/* Inner subtle reverse rotating dashed ring */}
+      <div
+        className="absolute inset-1.5 w-[84px] h-[84px] rounded-full border-2 border-dashed border-[#FF7A45]/30 animate-spin"
+        style={{ animationDirection: 'reverse', animationDuration: '4s' }}
+      ></div>
+
+      {/* Centered Favicon Image */}
+      <div className="relative z-10 w-12 h-12 rounded-full overflow-hidden shadow-md ring-2 ring-white/90 bg-[#F48B60] flex items-center justify-center select-none pointer-events-none">
+        <img
+          src="/favicon.png"
+          alt="Soukday Loading"
+          className="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+  );
+
+  if (isFullScreen) {
+    return (
+      <div
+        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300"
+        style={{ background: background === 'none' ? 'transparent' : undefined }}
+      >
+        <div className="flex flex-col items-center justify-center p-6 bg-white/95 dark:bg-stone-900/95 rounded-3xl shadow-2xl border border-stone-100 dark:border-stone-800 animate-scale-up">
+          {spinnerContent}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <>
-      {screen !== undefined && screen === 'full' ? (
-        <div
-          className={`  fixed inset-0 flex items-center justify-center z-[999] ${background === 'none' ? '' : ''
-            }`}
-        >
-          <div className="flex items-center justify-center p-5 w-24 h-24 bg-gray-700/80 rounded-md">
-            <div className="relative w-12 h-12">
-              {/* Outer rotating ring */}
-              <span className={`absolute inset-0 w-full h-full border-t-4 border-r-4 border-white border-transparent rounded-full ${outerAnimation}`}></span>
-              {/* Inner counter-rotating ring */}
-              <span className={`absolute inset-0 w-8 h-8 border-l-4 border-b-4 primaryColorBorder rounded-full ${innerAnimation} top-2 ${rtl ? "right-2" : "left-2"}`}></span>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div
-          className={`flex items-center justify-center ${background ? '' : 'bg-gray-100'
-            }`}
-          style={{
-            width: width,
-            height: height,
-            background: background || 'transparent',
-          }}
-        >
-          <div className="flex items-center justify-center p-5 w-24 h-24 bg-gray-700/80 rounded-md">
-            <div className="relative w-12 h-12">
-              {/* Outer rotating ring (white) */}
-              <span className={`absolute inset-0 w-full h-full border-t-4 border-r-4 border-white rounded-full ${outerAnimation}`}></span>
-
-              {/* Inner counter-rotating ring (black) */}
-              <span className={`absolute inset-0 w-8 h-8 border-l-4 border-b-4 primaryColorBorder rounded-full ${innerAnimation} top-2 left-2 ${rtl ? "right-2" : "left-2" }`}></span>
-            </div>
-          </div>
-
-        </div>
-      )}
-    </>
+    <div
+      className="flex items-center justify-center py-6"
+      style={{
+        width: width || '100%',
+        height: height || 'auto',
+        background: background || 'transparent',
+      }}
+    >
+      <div className="flex items-center justify-center p-4">
+        {spinnerContent}
+      </div>
+    </div>
   );
 };
 

@@ -97,7 +97,9 @@ const MetaData = ({
       {/* <link rel="manifest" href={manifestUrl} />
       <link rel="apple-touch-icon" href={appleTouchIcon} /> */}
 
-      <link rel="icon" href={finalFavicon ? finalFavicon : "/favicon.ico"} />
+      <link rel="icon" type="image/png" href={finalFavicon ? finalFavicon : "/favicon.png"} />
+      <link rel="shortcut icon" href={finalFavicon ? finalFavicon : "/favicon.png"} />
+      <link rel="apple-touch-icon" href="/favicon.png" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       <meta name="apple-mobile-web-app-title" content={title} />
