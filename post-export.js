@@ -5,11 +5,19 @@ const outDir = path.join(__dirname, 'out');
 const oldDir = path.join(outDir, '_next');
 const newDir = path.join(outDir, 'next-assets');
 
+const fse = require('fs-extra');
+
 // 1. Rename physical folder
-if (fs.existsSync(oldDir)) {
-  if (fs.existsSync(newDir)) fs.rmSync(newDir, { recursive: true, force: true });
-  fs.renameSync(oldDir, newDir);
-  console.log('Renamed _next folder to next-assets');
+if (fse.existsSync(oldDir)) {
+  try {
+    fse.moveSync(oldDir, newDir, { overwrite: true });
+    console.log('Successfully moved _next folder to next-assets');
+  } catch (err) {
+    console.warn('moveSync retry fallback:', err.message);
+    fse.copySync(oldDir, newDir, { overwrite: true });
+    fse.removeSync(oldDir);
+    console.log('Copied and removed _next folder to next-assets');
+  }
 }
 
 // 2. Safe URL replacement (avoids breaking JS variables like self.__next_f)
