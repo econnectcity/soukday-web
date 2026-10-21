@@ -98,32 +98,29 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
           >
             {/* The Rounded Square Card */}
             <div
-              className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
+              className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-2 sm:p-2.5 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
                 selectedCategory === null
                   ? 'bg-[#FFF8F4] shadow-md -translate-y-1 border border-stone-300/80'
                   : 'bg-[#FAF7F2] hover:bg-[#F6F2EC] hover:shadow-md border border-stone-200/60'
               }`}
             >
-              {/* Organic Pastel Blob */}
+              {/* Organic Pastel Blob as the Clipping Mask Shape */}
               <div
-                className="absolute inset-2.5 rounded-full pointer-events-none opacity-90 transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full relative overflow-hidden flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
                 style={{
                   backgroundColor: '#EDE9F6',
                   borderRadius: '50% 60% 40% 70% / 60% 40% 60% 40%',
                 }}
-              />
-
-              {/* Accent Dot */}
-              <span className="absolute top-3 right-3 w-2.5 h-2.5 rounded-full bg-[#FF7A45] shadow-xs" />
-
-              {/* Packshot Image */}
-              <div className="relative z-10 w-full h-full flex items-center justify-center p-1 sm:p-2">
+              >
                 <img
-                  src="/images/categories/all-aisles.jpg"
+                  src="/images/categories/all-aisles.png"
                   alt={isFrench ? "Tous les rayons" : "All Aisles"}
-                  className="w-full h-full object-contain max-h-[82px] sm:max-h-[102px] mix-blend-multiply group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
+                  className="w-full h-full object-contain p-2 sm:p-2.5 group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
                 />
               </div>
+
+              {/* Accent Dot */}
+              <span className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-2.5 h-2.5 rounded-full bg-[#FF7A45] shadow-xs pointer-events-none z-10" />
             </div>
 
             {/* Title Underneath Card */}
@@ -150,36 +147,34 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
               >
                 {/* The Rounded Square Card */}
                 <div
-                  className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
+                  className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-2 sm:p-2.5 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
                     isSelected
                       ? 'bg-[#FFF8F4] shadow-md -translate-y-1 border border-stone-300/80'
                       : 'bg-[#FAF7F2] hover:bg-[#F6F2EC] hover:shadow-md border border-stone-200/60'
                   }`}
                 >
-                  {/* Organic Pastel Blob */}
+                  {/* Organic Pastel Blob as the Clipping Mask Shape */}
                   <div
-                    className="absolute inset-2.5 rounded-full pointer-events-none opacity-90 transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full relative overflow-hidden flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
                     style={{
                       backgroundColor: palette.bg,
                       borderRadius: palette.blobRadius,
                     }}
-                  />
-
-                  {/* Accent Dot */}
-                  <span className="absolute top-3 right-3 w-2.5 h-2.5 rounded-full bg-[#FF7A45] shadow-xs" />
-
-                  {/* Category Image From Admin Panel or Default Packshot */}
-                  <div className="relative z-10 w-full h-full flex items-center justify-center p-1 sm:p-2">
+                  >
+                    {/* Category Image Clipped Directly Inside the Blob */}
                     <img
-                      src={cat.image || '/images/categories/all-aisles.jpg'}
+                      src={cat.image || '/images/categories/all-aisles.png'}
                       alt={cat.name}
                       onError={(e) => {
                         e.currentTarget.onerror = null;
-                        e.currentTarget.src = '/images/categories/all-aisles.jpg';
+                        e.currentTarget.src = '/images/categories/all-aisles.png';
                       }}
-                      className="w-full h-full object-contain max-h-[82px] sm:max-h-[102px] mix-blend-multiply group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
+                      className="w-full h-full object-contain p-2 sm:p-2.5 group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
                     />
                   </div>
+
+                  {/* Accent Dot */}
+                  <span className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-2.5 h-2.5 rounded-full bg-[#FF7A45] shadow-xs pointer-events-none z-10" />
                 </div>
 
                 {/* Title Underneath Card */}

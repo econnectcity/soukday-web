@@ -109,26 +109,26 @@ export function getCategoryIcon(slug: string): string {
 
 export function getCategoryImage(slug: string): string {
   const map: Record<string, string> = {
-    'all': '/images/categories/all-aisles.jpg',
-    'viandes-et-volailles': '/images/categories/halal-meats.jpg',
-    'boucherie-halal': '/images/categories/halal-meats.jpg',
-    'boucherie-halal-fraiche': '/images/categories/halal-meats.jpg',
-    'epicerie-maghrebine': '/images/categories/grocery.jpg',
-    'epicerie-orientale': '/images/categories/grocery.jpg',
-    'boulangerie-et-patisserie': '/images/categories/bakery.jpg',
-    'boulangerie-patisserie': '/images/categories/bakery.jpg',
-    'fruits-et-legumes': '/images/categories/produce.jpg',
-    'fruits-legumes-frais': '/images/categories/produce.jpg',
-    'poissons-et-fruits-de-mer': '/images/categories/seafood.jpg',
-    'epices-et-herbes': '/images/categories/spices.jpg',
-    'epices-fruits-secs': '/images/categories/spices.jpg',
-    'noix-et-fruits-secs': '/images/categories/nuts-dates.jpg',
-    'plats-cuisines': '/images/categories/prepared-dishes.jpg',
-    'surgeles-plats-prepares': '/images/categories/prepared-dishes.jpg',
-    'produits-laitiers-fromages': '/images/categories/grocery.jpg',
-    'thes-cafes-boissons': '/images/categories/grocery.jpg',
+    'all': '/images/categories/all-aisles.png',
+    'viandes-et-volailles': '/images/categories/halal-meats.png',
+    'boucherie-halal': '/images/categories/halal-meats.png',
+    'boucherie-halal-fraiche': '/images/categories/halal-meats.png',
+    'epicerie-maghrebine': '/images/categories/grocery.png',
+    'epicerie-orientale': '/images/categories/grocery.png',
+    'boulangerie-et-patisserie': '/images/categories/bakery.png',
+    'boulangerie-patisserie': '/images/categories/bakery.png',
+    'fruits-et-legumes': '/images/categories/produce.png',
+    'fruits-legumes-frais': '/images/categories/produce.png',
+    'poissons-et-fruits-de-mer': '/images/categories/seafood.png',
+    'epices-et-herbes': '/images/categories/spices.png',
+    'epices-fruits-secs': '/images/categories/spices.png',
+    'noix-et-fruits-secs': '/images/categories/nuts-dates.png',
+    'plats-cuisines': '/images/categories/prepared-dishes.png',
+    'surgeles-plats-prepares': '/images/categories/prepared-dishes.png',
+    'produits-laitiers-fromages': '/images/categories/grocery.png',
+    'thes-cafes-boissons': '/images/categories/grocery.png',
   };
-  return map[slug] || '/images/categories/all-aisles.jpg';
+  return map[slug] || '/images/categories/all-aisles.png';
 }
 
 export function getStoreImage(name: string): string {
