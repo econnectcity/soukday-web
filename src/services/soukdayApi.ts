@@ -109,25 +109,26 @@ export function getCategoryIcon(slug: string): string {
 
 export function getCategoryImage(slug: string): string {
   const map: Record<string, string> = {
-    'viandes-et-volailles': 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=400&q=80',
-    'boucherie-halal': 'https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=400&q=80',
-    'boucherie-halal-fraiche': 'https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=400&q=80',
-    'epicerie-maghrebine': 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80',
-    'epicerie-orientale': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80',
-    'boulangerie-et-patisserie': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80',
-    'boulangerie-patisserie': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80',
-    'fruits-et-legumes': 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80',
-    'fruits-legumes-frais': 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80',
-    'poissons-et-fruits-de-mer': 'https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=400&q=80',
-    'epices-et-herbes': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80',
-    'noix-et-fruits-secs': 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=400&q=80',
-    'epices-fruits-secs': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80',
-    'plats-cuisines': 'https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&w=400&q=80',
-    'produits-laitiers-fromages': 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&w=400&q=80',
-    'thes-cafes-boissons': 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=400&q=80',
-    'surgeles-plats-prepares': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80',
+    'all': '/images/categories/all-aisles.jpg',
+    'viandes-et-volailles': '/images/categories/halal-meats.jpg',
+    'boucherie-halal': '/images/categories/halal-meats.jpg',
+    'boucherie-halal-fraiche': '/images/categories/halal-meats.jpg',
+    'epicerie-maghrebine': '/images/categories/grocery.jpg',
+    'epicerie-orientale': '/images/categories/grocery.jpg',
+    'boulangerie-et-patisserie': '/images/categories/bakery.jpg',
+    'boulangerie-patisserie': '/images/categories/bakery.jpg',
+    'fruits-et-legumes': '/images/categories/produce.jpg',
+    'fruits-legumes-frais': '/images/categories/produce.jpg',
+    'poissons-et-fruits-de-mer': '/images/categories/seafood.jpg',
+    'epices-et-herbes': '/images/categories/spices.jpg',
+    'epices-fruits-secs': '/images/categories/spices.jpg',
+    'noix-et-fruits-secs': '/images/categories/nuts-dates.jpg',
+    'plats-cuisines': '/images/categories/prepared-dishes.jpg',
+    'surgeles-plats-prepares': '/images/categories/prepared-dishes.jpg',
+    'produits-laitiers-fromages': '/images/categories/grocery.jpg',
+    'thes-cafes-boissons': '/images/categories/grocery.jpg',
   };
-  return map[slug] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80';
+  return map[slug] || '/images/categories/all-aisles.jpg';
 }
 
 export function getStoreImage(name: string): string {
@@ -186,7 +187,9 @@ export async function fetchLiveCategories(): Promise<Category[]> {
     if (json.status === 1 && Array.isArray(json.data) && json.data.length > 0) {
       return json.data.map((item: any) => {
         const resolved = resolveImageUrl(item.image_url || item.image || item.web_image);
-        const validImg = resolved && resolved.trim() !== '' ? resolved : getCategoryImage(item.slug);
+        // If image in DB is legacy unsplash placeholder, use modern cutout image; if admin uploaded an image, prioritize admin's image!
+        const isUnsplash = resolved && resolved.includes('unsplash.com');
+        const validImg = resolved && resolved.trim() !== '' && !isUnsplash ? resolved : getCategoryImage(item.slug);
         return {
           id: item.id,
           name: item.translations?.name || item.name || (item.slug ? item.slug.replace(/-/g, ' ') : `Catégorie ${item.id}`),
@@ -206,7 +209,6 @@ export async function fetchLiveCategories(): Promise<Category[]> {
   } catch (err) {
     console.error('Error fetching categories from API:', err);
   }
-  return [];
 }
 
 export async function fetchLiveSellers(lat: number = 45.5017, lng: number = -73.5673): Promise<Store[]> {

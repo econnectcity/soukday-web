@@ -56,10 +56,10 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
             </div>
             <div className="min-w-0">
               <h2 className="text-xl sm:text-2xl font-black text-stone-900 tracking-tight leading-tight">
-                {isFrench ? "Rayons & Catégories" : "Aisles & Categories"}
+                {isFrench ? "Tout un souk à découvrir" : "A whole souk to discover"}
               </h2>
               <p className="text-xs sm:text-sm text-stone-500 font-medium truncate sm:whitespace-normal">
-                {isFrench ? "Parcourez nos rayons frais, boucheries halal et épiceries fines" : "Browse all fresh aisles, halal butcheries, and fine groceries"}
+                {isFrench ? "Épicerie, viandes halal, pâtisseries et bien plus." : "Groceries, halal meats, pastries and much more."}
               </p>
             </div>
           </div>
@@ -98,9 +98,9 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
           >
             {/* The Rounded Square Card */}
             <div
-              className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
+              className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
                 selectedCategory === null
-                  ? 'bg-[#FFF5EF] ring-2 ring-[#FF7A45] shadow-lg shadow-[#FF7A45]/20 border-transparent'
+                  ? 'bg-[#FFF8F4] shadow-md -translate-y-1 border border-stone-300/80'
                   : 'bg-[#FAF7F2] hover:bg-[#F6F2EC] hover:shadow-md border border-stone-200/60'
               }`}
             >
@@ -116,16 +116,20 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
               {/* Accent Dot */}
               <span className="absolute top-3 right-3 w-2.5 h-2.5 rounded-full bg-[#FF7A45] shadow-xs" />
 
-              {/* Icon / Artwork */}
-              <div className="relative z-10 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white shadow-xs flex items-center justify-center text-[#FF7A45] group-hover:scale-110 transition-transform duration-300">
-                <Sparkles className="w-6 h-6 text-[#FF7A45]" />
+              {/* Packshot Image */}
+              <div className="relative z-10 w-full h-full flex items-center justify-center p-1 sm:p-2">
+                <img
+                  src="/images/categories/all-aisles.jpg"
+                  alt={isFrench ? "Tous les rayons" : "All Aisles"}
+                  className="w-full h-full object-contain max-h-[82px] sm:max-h-[102px] mix-blend-multiply group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
+                />
               </div>
             </div>
 
             {/* Title Underneath Card */}
             <div
               className={`mt-2.5 sm:mt-3 text-xs sm:text-sm font-bold tracking-tight transition-colors line-clamp-2 px-1 ${
-                selectedCategory === null ? 'text-[#FF7A45]' : 'text-stone-900 group-hover:text-[#FF7A45]'
+                selectedCategory === null ? 'text-[#FF7A45] font-extrabold' : 'text-stone-900 group-hover:text-[#FF7A45]'
               }`}
             >
               {isFrench ? "Tous les rayons" : "All Aisles"}
@@ -146,9 +150,9 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
               >
                 {/* The Rounded Square Card */}
                 <div
-                  className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
+                  className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
                     isSelected
-                      ? 'bg-[#FFF5EF] ring-2 ring-[#FF7A45] shadow-lg shadow-[#FF7A45]/20 border-transparent'
+                      ? 'bg-[#FFF8F4] shadow-md -translate-y-1 border border-stone-300/80'
                       : 'bg-[#FAF7F2] hover:bg-[#F6F2EC] hover:shadow-md border border-stone-200/60'
                   }`}
                 >
@@ -164,16 +168,16 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                   {/* Accent Dot */}
                   <span className="absolute top-3 right-3 w-2.5 h-2.5 rounded-full bg-[#FF7A45] shadow-xs" />
 
-                  {/* Category Image From Admin Panel */}
+                  {/* Category Image From Admin Panel or Default Packshot */}
                   <div className="relative z-10 w-full h-full flex items-center justify-center p-1 sm:p-2">
                     <img
-                      src={cat.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80'}
+                      src={cat.image || '/images/categories/all-aisles.jpg'}
                       alt={cat.name}
                       onError={(e) => {
                         e.currentTarget.onerror = null;
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80';
+                        e.currentTarget.src = '/images/categories/all-aisles.jpg';
                       }}
-                      className="w-full h-full object-contain max-h-[82px] sm:max-h-[102px] group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
+                      className="w-full h-full object-contain max-h-[82px] sm:max-h-[102px] mix-blend-multiply group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
                     />
                   </div>
                 </div>
@@ -181,7 +185,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                 {/* Title Underneath Card */}
                 <div
                   className={`mt-2.5 sm:mt-3 text-xs sm:text-sm font-bold tracking-tight transition-colors line-clamp-2 px-1 ${
-                    isSelected ? 'text-[#FF7A45]' : 'text-stone-900 group-hover:text-[#FF7A45]'
+                    isSelected ? 'text-[#FF7A45] font-extrabold' : 'text-stone-900 group-hover:text-[#FF7A45]'
                   }`}
                 >
                   {cat.name}
