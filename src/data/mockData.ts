@@ -323,10 +323,13 @@ export const SOUKDAY_GROCERY_SUBCATEGORIES = [
 // Harvested directly from https://soukday.ca/ (1 product per category per store)
 export const PRODUCTS: Product[] = [
   {
-    "id": 55835,
+    "id": 9,
+    "variantId": 9,
+    "variant_id": 9,
     "name": "Makrout - 500 g",
-    "slug": "makrout-500-g",
-    "storeId": 1,
+    "slug": "makrout-500-g-2-889",
+    "storeId": 2,
+    "seller_id": 2,
     "storeName": "Marché Yasmine Montréal",
     "storeType": "local_store",
     "price": 15.27,
@@ -339,10 +342,13 @@ export const PRODUCTS: Product[] = [
     "inStock": true
   },
   {
-    "id": 54863,
+    "id": 10,
+    "variantId": 10,
+    "variant_id": 10,
     "name": "Shawarma NutriVilla 40 g",
-    "slug": "shawarma-nutrivilla-40-g",
-    "storeId": 1,
+    "slug": "shawarma-nutrivilla-40-g-2-997",
+    "storeId": 2,
+    "seller_id": 2,
     "storeName": "Marché Yasmine Montréal",
     "storeType": "local_store",
     "price": 4.41,
@@ -355,10 +361,13 @@ export const PRODUCTS: Product[] = [
     "inStock": true
   },
   {
-    "id": 54919,
+    "id": 11,
+    "variantId": 11,
+    "variant_id": 11,
     "name": "Ail moulu NutriVilla 375 g",
-    "slug": "ail-moulu-nutrivilla-375-g",
-    "storeId": 1,
+    "slug": "ail-moulu-nutrivilla-375-g-2-201",
+    "storeId": 2,
+    "seller_id": 2,
     "storeName": "Marché Yasmine Montréal",
     "storeType": "local_store",
     "price": 15.85,
@@ -371,10 +380,13 @@ export const PRODUCTS: Product[] = [
     "inStock": true
   },
   {
-    "id": 55868,
+    "id": 12,
+    "variantId": 12,
+    "variant_id": 12,
     "name": "Amandes en poudre Miro 300g",
-    "slug": "amandes-en-poudre-miro-300g",
-    "storeId": 1,
+    "slug": "amandes-en-poudre-miro-300g-2-439",
+    "storeId": 2,
+    "seller_id": 2,
     "storeName": "Marché Yasmine Montréal",
     "storeType": "local_store",
     "price": 7.62,
@@ -387,10 +399,13 @@ export const PRODUCTS: Product[] = [
     "inStock": true
   },
   {
-    "id": 52958,
-    "name": "Thon sandwich å la sauce tomate pımentée Joly 3x80G",
-    "slug": "thon-sandwich-la-sauce-tomate-p-ment-e-joly-3x80g",
-    "storeId": 1,
+    "id": 13,
+    "variantId": 13,
+    "variant_id": 13,
+    "name": "Thon sandwich à la sauce tomate pimentée Joly 3x80G",
+    "slug": "thon-sandwich-a-la-sauce-tomate-pimentee-joly-3x80g-2-389",
+    "storeId": 2,
+    "seller_id": 2,
     "storeName": "Marché Yasmine Montréal",
     "storeType": "local_store",
     "price": 7.04,
@@ -403,10 +418,13 @@ export const PRODUCTS: Product[] = [
     "inStock": true
   },
   {
-    "id": 52224,
+    "id": 14,
+    "variantId": 14,
+    "variant_id": 14,
     "name": "Saucisses fumées poulet halal Harvest Creek 450g",
-    "slug": "saucisses-fum-es-poulet-halal-harvest-creek-450g",
-    "storeId": 1,
+    "slug": "saucisses-fumees-poulet-halal-harvest-creek-450g-2-948",
+    "storeId": 2,
+    "seller_id": 2,
     "storeName": "Marché Yasmine Montréal",
     "storeType": "local_store",
     "price": 2.95,
@@ -419,10 +437,13 @@ export const PRODUCTS: Product[] = [
     "inStock": true
   },
   {
-    "id": 52009,
+    "id": 15,
+    "variantId": 15,
+    "variant_id": 15,
     "name": "Cigars aux amandes Riyad Al Basha 500g",
-    "slug": "cigars-aux-amandes-riyad-al-basha-500g",
-    "storeId": 2,
+    "slug": "cigars-aux-amandes-riyad-al-basha-500g-3-130",
+    "storeId": 3,
+    "seller_id": 3,
     "storeName": "Marché Yasmine Brossard",
     "storeType": "local_store",
     "price": 18.2,
@@ -435,10 +456,13 @@ export const PRODUCTS: Product[] = [
     "inStock": true
   },
   {
-    "id": 54883,
+    "id": 16,
+    "variantId": 16,
+    "variant_id": 16,
     "name": "Thym NutriVilla 30 g",
-    "slug": "thym-nutrivilla-30-g",
-    "storeId": 2,
+    "slug": "thym-nutrivilla-30-g-3-709",
+    "storeId": 3,
+    "seller_id": 3,
     "storeName": "Marché Yasmine Brossard",
     "storeType": "local_store",
     "price": 3.51,
@@ -1059,3 +1083,54 @@ export const PRODUCTS: Product[] = [
     "badge": "Expédition Canada & USA"
   }
 ];
+
+
+export const DEFAULT_LIVE_SETTINGS = {
+  siteTitle: 'Soukday - Épiceries orientales & Boucheries Halal',
+  websiteUrl: 'https://soukday.ca',
+  color: '#F68B62',
+  lightColor: '#FCEFEA',
+  darkColor: '#1c1917',
+  favicon: '',
+  webLogo: '/images/logo.png',
+  webHeaderLogo: '/images/logo.png',
+  webFooterLogo: '/images/logo.png',
+  placeholderImage: '',
+  loading: '',
+
+  headerAnnouncementText: 'Épicerie Soukday expédiée partout au Canada et vers les États-Unis éligibles !',
+  headerAnnouncementTag: 'Nouveau',
+  headerPartnerText: 'Devenir vendeur partenaire',
+  headerPartnerUrl: 'https://admin.soukday.ca/#/seller/register',
+  headerSupportText: 'Support client 7j/7',
+  headerSupportPhone: '',
+
+  heroTagline: 'Votre marché oriental & local à portée de clic',
+  heroTitle: 'Vos épiceries fines & boucheries locales livrées à votre porte.',
+  heroSubtitle: 'Entrez votre code postal pour découvrir les boucheries halal et magasins qui livrent chez vous. Les produits d’épicerie directe Soukday sont expédiés partout au Canada et aux États-Unis !',
+  heroBadge1: 'Livraison le jour même',
+  heroBadge2: 'Boucheries 100% Halal',
+  heroBadge3: 'Épicerie Canada & USA',
+
+  directGroceryTag: 'Expédition Nationale & Internationale',
+  directGroceryTitle: 'Épicerie Directe Soukday',
+  directGroceryDescription: 'Les produits d’épicerie fine vendus directement par Soukday peuvent être expédiés partout au Canada (10 provinces) et vers les destinations éligibles aux États-Unis. Emballage soigné, arrivages réguliers et marques authentiques.',
+  directGroceryFeature1Title: 'Canada & USA',
+  directGroceryFeature1Subtitle: 'Postes Canada / UPS',
+  directGroceryFeature2Title: 'Fraîcheur 100%',
+  directGroceryFeature2Subtitle: 'Garantie Soukday',
+
+  butcherSectionTag: 'Viandes fraîches & artisanales',
+  butcherSectionTitle: 'Boucheries livrant chez vous',
+  butcherSectionSubtitle: 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à votre porte',
+
+  otherStoresSectionTag: 'Commerces de proximité & Supermarchés',
+  otherStoresSectionTitle: 'Autres magasins disponibles',
+  otherStoresSectionSubtitle: 'Supermarchés orientaux, pâtisseries fines, épiceries de quartier et traiteurs pour votre adresse',
+
+  footerAboutText: 'Soukday est la première plateforme au Québec dédiée aux épiceries orientales, boucheries halal certifiées et commerces de spécialités avec livraison locale et expédition nationale.',
+  footerAddress: 'Montréal, Québec, Canada',
+  footerEmail: 'support@soukday.ca',
+  footerPhone: '+1 (514) 000-0000',
+  copyrightDetails: '© 2026 Soukday Inc. Tous droits réservés. Plateforme de commerce multi-vendeurs.',
+};

@@ -38,10 +38,13 @@ export interface Category {
 
 export interface Product {
   id: number;
+  variantId?: number;
+  variant_id?: number;
   name: string;
   slug: string;
   brand?: string;
   storeId?: number;
+  seller_id?: number;
   storeName: string;
   storeType: 'soukday_direct' | 'local_store';
   price: number;
