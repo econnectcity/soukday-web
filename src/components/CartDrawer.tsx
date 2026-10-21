@@ -139,7 +139,7 @@ export default function CartDrawer() {
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         isSoukdayDirect
                           ? 'bg-amber-100 text-amber-800'
-                          : 'bg-emerald-100 text-emerald-800'
+                          : 'bg-[#FCEFEA] text-orange-800 border border-orange-200/60'
                       }`}>
                         {isSoukdayDirect ? 'Expédition Canada & USA' : 'Livraison Locale'}
                       </span>
@@ -215,7 +215,7 @@ export default function CartDrawer() {
                   <span>Frais de livraison estimés</span>
                   <span className="font-bold text-stone-900">
                     {deliveryFee === 0 ? (
-                      <span className="text-emerald-600 font-bold">Gratuite</span>
+                      <span className="text-[#F68B62] font-bold">Gratuite</span>
                     ) : (
                       `${deliveryFee.toFixed(2)}$`
                     )}
@@ -242,7 +242,7 @@ export default function CartDrawer() {
               </button>
 
               <div className="flex items-center justify-center gap-2 text-[11px] text-stone-400">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <ShieldCheck className="w-3.5 h-3.5 text-[#F68B62]" />
                 <span>Paiement 100% sécurisé via Stripe / Cartes</span>
               </div>
             </div>

@@ -109,7 +109,7 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
 
               {/* Success Notification Feedback */}
               {successNotice && selectedAddress && (
-                <div className="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5 px-2 animate-fade-in">
+                <div className="mt-2 text-xs font-semibold text-[#F68B62] flex items-center gap-1.5 px-2 animate-fade-in">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Magasins mis à jour pour {selectedAddress.city} ({selectedAddress.postalCode}) !</span>
                 </div>
@@ -152,7 +152,7 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                 {/* Clean Top-Left Partner Counter Badge */}
                 <div className="absolute top-3.5 left-3.5 z-10">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900/80 backdrop-blur-md text-white text-xs font-bold border border-white/20 shadow-md">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-[#F68B62] animate-pulse" />
                     <span>10+ Magasins & Boucheries Partenaires</span>
                   </div>
                 </div>
@@ -172,8 +172,8 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                 </div>
                 <div>
                   <div className="text-xs font-black text-stone-900 leading-tight">Boucheries Halal Locales</div>
-                  <div className="text-[11px] text-emerald-600 font-bold flex items-center gap-1.5 mt-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <div className="text-[11px] text-[#F68B62] font-bold flex items-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#F68B62]"></span>
                     Livraison en 30-45 min
                   </div>
                 </div>

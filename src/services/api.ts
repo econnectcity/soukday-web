@@ -126,7 +126,7 @@ export async function fetchLiveProducts(lat: number, lng: number): Promise<Produ
       return json.data.map((item: any) => {
         const variant = item.variants?.[0] || {};
         const sellerName = item.seller?.translations?.store_name || item.seller?.store_name || item.seller?.name || item.seller_name;
-        const isSoukday = item.seller_id === 0 || item.seller_id === 11 || sellerName?.toLowerCase().includes('soukday');
+        const isSoukday = item.seller_id === 0 || item.seller_id === 11 || item.seller_id === 12 || sellerName?.toLowerCase().includes('soukday');
         const rawUnit = variant.stock_unit_name || (typeof variant.unit === 'object' ? variant.unit?.name : variant.unit) || 'u';
         const productName = item.translations?.name || item.name;
         const formattedUnits = formatProductUnitAndWeight(productName, rawUnit, variant.measurement);
