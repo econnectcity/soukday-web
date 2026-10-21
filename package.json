@@ -1,6 +1,6 @@
 {
-  "name": "egrocer-nextjs",
-  "version": "3.0.0",
+  "name": "soukday-web",
+  "version": "3.0.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
