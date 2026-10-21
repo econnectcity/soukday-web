@@ -84,8 +84,8 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
             onClick={() => setSelectedCategory(null)}
             className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
               selectedCategory === null
-                ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25'
-                : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/50 text-stone-800 border-stone-200/80'
+                ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/30'
+                : 'bg-[#FFF8F5] text-stone-800 border-[#F68B62]/40 shadow-md shadow-[#F68B62]/20 hover:shadow-lg hover:shadow-[#F68B62]/35 hover:border-[#F68B62]/70 hover:-translate-y-0.5'
             }`}
           >
             <div className={`w-11 h-11 rounded-xl overflow-hidden shrink-0 flex items-center justify-center transition-all ${
@@ -97,7 +97,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
             </div>
             <div>
               <div className={`text-xs font-bold leading-tight transition-colors ${
-                selectedCategory === null ? 'text-white' : 'text-stone-900 group-hover:text-[#F68B62]'
+                selectedCategory === null ? 'text-white' : 'text-[#F68B62]'
               }`}>
                 Tous les rayons
               </div>
@@ -119,8 +119,8 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                 onClick={() => handleSelect(cat.slug)}
                 className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
                   isSelected
-                    ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25'
-                    : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/50 text-stone-800 border-stone-200/80'
+                    ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/30'
+                    : 'bg-[#FFF8F5] text-stone-800 border-[#F68B62]/40 shadow-md shadow-[#F68B62]/20 hover:shadow-lg hover:shadow-[#F68B62]/35 hover:border-[#F68B62]/70 hover:-translate-y-0.5'
                 }`}
               >
                 <div className="w-11 h-11 rounded-xl overflow-hidden bg-stone-200 shrink-0 relative">
@@ -138,7 +138,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                   </span>
                 </div>
                 <div>
-                  <div className={`text-xs font-bold leading-tight transition-colors ${isSelected ? 'text-white' : 'text-stone-900 group-hover:text-[#F68B62]'}`}>
+                  <div className={`text-xs font-bold leading-tight transition-colors ${isSelected ? 'text-white' : 'text-[#F68B62]'}`}>
                     {cat.name}
                   </div>
                   <div className={`text-[10px] leading-snug truncate max-w-[120px] transition-colors ${isSelected ? 'text-white/80' : 'text-stone-400 group-hover:text-stone-600'}`}>

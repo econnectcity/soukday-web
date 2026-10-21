@@ -175,7 +175,7 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
               </div>
 
               {/* Floating Badge 1: Local Halal Butcher Highlight */}
-              <div className="absolute -bottom-5 -left-3 sm:-left-5 z-20 bg-white/98 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-100 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+              <div className="absolute -bottom-5 -left-3 sm:-left-5 z-20 bg-white px-4 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-200/80 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
                 <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xl shadow-xs shrink-0">
                   🥩
                 </div>
@@ -191,7 +191,7 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
               </div>
 
               {/* Floating Badge 2: Nationwide Grocery */}
-              <div className="absolute -top-4 -right-3 sm:-right-5 z-20 bg-white/98 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-100 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+              <div className="absolute -top-4 -right-3 sm:-right-5 z-20 bg-white px-4 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-200/80 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
                 <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-bold text-lg border border-[#F68B62]/20 shadow-xs shrink-0">
                   🇨🇦
                 </div>
