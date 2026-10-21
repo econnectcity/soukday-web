@@ -185,8 +185,8 @@ export async function fetchLiveCategories(): Promise<Category[]> {
     const json = await res.json();
     if (json.status === 1 && Array.isArray(json.data) && json.data.length > 0) {
       return json.data.map((item: any) => {
-        const rawImg = item.web_image || resolveImageUrl(item.image_url) || item.image;
-        const validImg = rawImg && !rawImg.includes('/categories/cat_') ? rawImg : getCategoryImage(item.slug);
+        const resolved = resolveImageUrl(item.image_url || item.image || item.web_image);
+        const validImg = resolved && resolved.trim() !== '' ? resolved : getCategoryImage(item.slug);
         return {
           id: item.id,
           name: item.translations?.name || item.name || (item.slug ? item.slug.replace(/-/g, ' ') : `Catégorie ${item.id}`),
