@@ -4,23 +4,11 @@ import React, { useRef } from 'react';
 import { useCart } from '@/context/SoukdayCartContext';
 import { Category } from '@/types';
 import { useTranslation } from '@/utils/translation';
-import { ChevronLeft, ChevronRight, Layers, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Layers } from 'lucide-react';
 
 interface CategorySliderProps {
   categories?: Category[];
 }
-
-// Pastel palettes & organic blob styling matching the reference design
-const PASTEL_PALETTE = [
-  { bg: '#EFE9F8', dot: '#FF7A45', blobRadius: '60% 40% 70% 30% / 50% 60% 40% 50%' }, // Soft Lavender
-  { bg: '#FEEAE1', dot: '#FF7A45', blobRadius: '50% 60% 40% 70% / 60% 40% 60% 40%' }, // Soft Peach
-  { bg: '#EBF1E9', dot: '#FF7A45', blobRadius: '70% 30% 60% 40% / 40% 60% 40% 60%' }, // Soft Sage
-  { bg: '#FEEBF0', dot: '#FF7A45', blobRadius: '40% 60% 50% 50% / 50% 40% 60% 50%' }, // Soft Rose
-  { bg: '#E8F0F8', dot: '#FF7A45', blobRadius: '60% 40% 40% 60% / 50% 50% 50% 50%' }, // Soft Sky
-  { bg: '#FEF5E7', dot: '#FF7A45', blobRadius: '50% 50% 60% 40% / 60% 40% 50% 50%' }, // Soft Amber
-  { bg: '#F3E8FF', dot: '#FF7A45', blobRadius: '45% 55% 65% 35% / 45% 55% 45% 55%' }, // Soft Violet
-  { bg: '#E6F4EA', dot: '#FF7A45', blobRadius: '55% 45% 45% 55% / 55% 45% 55% 45%' }, // Soft Mint
-];
 
 export default function CategorySlider({ categories = [] }: CategorySliderProps) {
   const { selectedCategory, setSelectedCategory } = useCart();
@@ -31,7 +19,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
-      const offset = direction === 'left' ? -320 : 320;
+      const offset = direction === 'left' ? -280 : 280;
       scrollContainerRef.current.scrollBy({ left: offset, behavior: 'smooth' });
     }
   };
@@ -45,21 +33,21 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
   };
 
   return (
-    <section className="py-8 sm:py-12 border-b border-stone-200/60 bg-white">
+    <section className="py-8 sm:py-10 border-b border-stone-200/60 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-[#FCEFEA] border border-[#F68B62]/30 flex items-center justify-center text-[#F68B62] shadow-xs shrink-0">
-              <Layers className="w-5 h-5" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-[#FCEFEA] border border-[#F68B62]/30 flex items-center justify-center text-[#F68B62] shadow-xs shrink-0">
+              <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
-              <h2 className="text-xl sm:text-2xl font-black text-stone-900 tracking-tight leading-tight">
-                {isFrench ? "Tout un souk à découvrir" : "A whole souk to discover"}
+              <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight leading-tight">
+                {isFrench ? "Rayons & Catégories" : "Aisles & Categories"}
               </h2>
               <p className="text-xs sm:text-sm text-stone-500 font-medium truncate sm:whitespace-normal">
-                {isFrench ? "Épicerie, viandes halal, pâtisseries et bien plus." : "Groceries, halal meats, pastries and much more."}
+                {isFrench ? "Parcourez tous les rayons frais, épiceries et spécialités" : "Browse all fresh aisles, groceries, and specialties"}
               </p>
             </div>
           </div>
@@ -69,121 +57,93 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
             <button
               type="button"
               onClick={() => scroll('left')}
-              className="w-10 h-10 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-600 hover:text-[#FF7A45] hover:bg-[#FCEFEA] hover:border-[#FF7A45]/40 shadow-xs transition-all cursor-pointer active:scale-95"
+              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 shadow-xs transition-colors cursor-pointer"
               aria-label="Précédent"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               type="button"
               onClick={() => scroll('right')}
-              className="w-10 h-10 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-600 hover:text-[#FF7A45] hover:bg-[#FCEFEA] hover:border-[#FF7A45]/40 shadow-xs transition-all cursor-pointer active:scale-95"
+              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 shadow-xs transition-colors cursor-pointer"
               aria-label="Suivant"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Horizontal Category Cards Track */}
+        {/* Horizontal Swipeable Track */}
         <div
           ref={scrollContainerRef}
-          className="flex items-start gap-4 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-3 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0"
+          className="flex items-center gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
-          {/* Card 1: 'All' / 'Tous les rayons' */}
+          {/* 'All' button - styled with identical height & layout as category cards */}
           <button
             type="button"
             onClick={() => setSelectedCategory(null)}
-            className="w-[124px] sm:w-[142px] md:w-[154px] shrink-0 flex flex-col items-center group cursor-pointer text-center outline-none"
+            className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
+              selectedCategory === null
+                ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25'
+                : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/50 text-stone-800 border-stone-200/80'
+            }`}
           >
-            {/* The Rounded Square Card */}
-            <div
-              className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-2 sm:p-2.5 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
-                selectedCategory === null
-                  ? 'bg-[#FFF8F4] shadow-md -translate-y-1 border border-stone-300/80'
-                  : 'bg-[#FAF7F2] hover:bg-[#F6F2EC] hover:shadow-md border border-stone-200/60'
-              }`}
-            >
-              {/* Organic Pastel Blob as the Clipping Mask Shape */}
-              <div
-                className="w-full h-full relative overflow-hidden flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
-                style={{
-                  backgroundColor: '#EDE9F6',
-                  borderRadius: '50% 60% 40% 70% / 60% 40% 60% 40%',
-                }}
-              >
-                <img
-                  src="/images/categories/all-aisles.png"
-                  alt={isFrench ? "Tous les rayons" : "All Aisles"}
-                  className="w-full h-full object-contain p-2 sm:p-2.5 group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
-                />
-              </div>
-
-              {/* Accent Dot */}
-              <span className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-2.5 h-2.5 rounded-full bg-[#FF7A45] shadow-xs pointer-events-none z-10" />
+            <div className={`w-11 h-11 rounded-xl overflow-hidden shrink-0 flex items-center justify-center transition-all ${
+              selectedCategory === null
+                ? 'bg-white/20 text-white'
+                : 'bg-[#FCEFEA] text-[#F68B62] group-hover:bg-[#F68B62] group-hover:text-white'
+            }`}>
+              <Layers className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
             </div>
-
-            {/* Title Underneath Card */}
-            <div
-              className={`mt-2.5 sm:mt-3 text-xs sm:text-sm font-bold tracking-tight transition-colors line-clamp-2 px-1 ${
-                selectedCategory === null ? 'text-[#FF7A45] font-extrabold' : 'text-stone-900 group-hover:text-[#FF7A45]'
-              }`}
-            >
-              {isFrench ? "Tous les rayons" : "All Aisles"}
+            <div>
+              <div className={`text-xs font-bold leading-tight transition-colors ${
+                selectedCategory === null ? 'text-white' : 'text-stone-900 group-hover:text-[#F68B62]'
+              }`}>
+                Tous les rayons
+              </div>
+              <div className={`text-[10px] leading-snug transition-colors ${
+                selectedCategory === null ? 'text-white/80' : 'text-stone-400 group-hover:text-stone-600'
+              }`}>
+                Tout le catalogue
+              </div>
             </div>
           </button>
 
-          {/* Dynamic Categories From Live Admin API */}
-          {displayCategories.map((cat, index) => {
+          {/* Categories List */}
+          {displayCategories.map((cat) => {
             const isSelected = selectedCategory === cat.slug;
-            const palette = PASTEL_PALETTE[index % PASTEL_PALETTE.length];
-
             return (
               <button
-                key={cat.id || index}
+                key={cat.id}
                 type="button"
                 onClick={() => handleSelect(cat.slug)}
-                className="w-[124px] sm:w-[142px] md:w-[154px] shrink-0 flex flex-col items-center group cursor-pointer text-center outline-none"
+                className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
+                  isSelected
+                    ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/25'
+                    : 'bg-stone-50 hover:bg-[#FCEFEA]/70 hover:border-[#F68B62]/50 text-stone-800 border-stone-200/80'
+                }`}
               >
-                {/* The Rounded Square Card */}
-                <div
-                  className={`w-full aspect-square rounded-2xl sm:rounded-3xl p-2 sm:p-2.5 flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:-translate-y-1.5 ${
-                    isSelected
-                      ? 'bg-[#FFF8F4] shadow-md -translate-y-1 border border-stone-300/80'
-                      : 'bg-[#FAF7F2] hover:bg-[#F6F2EC] hover:shadow-md border border-stone-200/60'
-                  }`}
-                >
-                  {/* Organic Pastel Blob as the Clipping Mask Shape */}
-                  <div
-                    className="w-full h-full relative overflow-hidden flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
-                    style={{
-                      backgroundColor: palette.bg,
-                      borderRadius: palette.blobRadius,
+                <div className="w-11 h-11 rounded-xl overflow-hidden bg-stone-200 shrink-0 relative">
+                  <img
+                    src={cat.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80'}
+                    alt={cat.name}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80';
                     }}
-                  >
-                    {/* Category Image Clipped Directly Inside the Blob */}
-                    <img
-                      src={cat.image || '/images/categories/all-aisles.png'}
-                      alt={cat.name}
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = '/images/categories/all-aisles.png';
-                      }}
-                      className="w-full h-full object-contain p-2 sm:p-2.5 group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm pointer-events-none select-none"
-                    />
-                  </div>
-
-                  {/* Accent Dot */}
-                  <span className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-2.5 h-2.5 rounded-full bg-[#FF7A45] shadow-xs pointer-events-none z-10" />
+                    className="w-full h-full object-cover group-hover:scale-115 transition-transform duration-500 ease-out"
+                  />
+                  <span className="absolute bottom-0.5 right-0.5 text-xs drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
+                    {cat.icon}
+                  </span>
                 </div>
-
-                {/* Title Underneath Card */}
-                <div
-                  className={`mt-2.5 sm:mt-3 text-xs sm:text-sm font-bold tracking-tight transition-colors line-clamp-2 px-1 ${
-                    isSelected ? 'text-[#FF7A45] font-extrabold' : 'text-stone-900 group-hover:text-[#FF7A45]'
-                  }`}
-                >
-                  {cat.name}
+                <div>
+                  <div className={`text-xs font-bold leading-tight transition-colors ${isSelected ? 'text-white' : 'text-stone-900 group-hover:text-[#F68B62]'}`}>
+                    {cat.name}
+                  </div>
+                  <div className={`text-[10px] leading-snug truncate max-w-[120px] transition-colors ${isSelected ? 'text-white/80' : 'text-stone-400 group-hover:text-stone-600'}`}>
+                    {cat.subtitle}
+                  </div>
                 </div>
               </button>
             );
