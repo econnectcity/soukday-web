@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -169,7 +169,7 @@ export default function SoukdayGrocerySection({
                       <span>Canada &amp; USA</span>
                     </span>
                     {product.isHalal && (
-                      <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 shadow-2xs">
+                      <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-[#e06836] bg-[#FFF5EF] px-2 py-0.5 rounded-full border border-[#FF7A45]/30/60 shadow-2xs">
                         <ShieldCheck className="w-2.5 h-2.5" />
                         <span>Halal</span>
                       </span>

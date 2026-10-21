@@ -1,4 +1,4 @@
-import { t } from "@/utils/translation";
+﻿import { t } from "@/utils/translation";
 import React, { useState } from "react";
 
 import { useSelector } from "react-redux";
@@ -118,7 +118,7 @@ const FinalCheckoutSummary = ({ orderDetail }) => {
               <span className="font-bold text-base">
                 {t("total")} {t("amount")}
               </span>
-              <span className="text-green-600 font-bold">
+              <span className="text-[#FF7A45] font-bold">
                 {setting?.currency}
                 {Number(orderDetail?.remaining_final)}
               </span>

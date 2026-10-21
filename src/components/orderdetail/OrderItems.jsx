@@ -1,4 +1,4 @@
-import { t } from "@/utils/translation";
+﻿import { t } from "@/utils/translation";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import CancelReasonModal from "./CancelReasonModal";
@@ -178,7 +178,7 @@ const OrderItems = ({
                               onClick={() => handleShowUpdateRating(product)}
                             >
                               <button
-                                className="px-4 py-2 hover:bg-[#6ac8931f] text-[#141A1F] bg-[#DB93051F] rounded-md flex gap-1 items-center font-medium text-sm "
+                                className="px-4 py-2 hover:bg-[#F68B6226] text-[#141A1F] bg-[#DB93051F] rounded-md flex gap-1 items-center font-medium text-sm "
                                 onClick={() => handleShowUpdateRating(product)}
                               >
                                 {t("edit_review")} | {userRating?.rate}
@@ -188,7 +188,7 @@ const OrderItems = ({
                           ) : (
                             <div>
                               <button
-                                className="px-4 py-2 hover:bg-[#6ac8931f] text-[#55AE7B] bg-[#55AE7B1F] rounded-md flex gap-1 items-center font-medium text-base"
+                                className="px-4 py-2 hover:bg-[#F68B6226] text-[#F68B62] bg-[#F68B621F] rounded-md flex gap-1 items-center font-medium text-base"
                                 onClick={() => handleShowRating(product)}
                               >
                                 <MdOutlineStar size={20} />
@@ -345,7 +345,7 @@ const OrderItems = ({
                           onClick={() => handleShowUpdateRating(product)}
                         >
                           <button
-                            className="px-4 py-2 hover:bg-[#6ac8931f] text-[#141A1F] bg-[#DB93051F] rounded-md flex gap-1 w-full items-center font-medium  text-sm justify-center"
+                            className="px-4 py-2 hover:bg-[#F68B6226] text-[#141A1F] bg-[#DB93051F] rounded-md flex gap-1 w-full items-center font-medium  text-sm justify-center"
                             onClick={() => handleShowUpdateRating(product)}
                           >
                             {t("edit_review")} | {userRating?.rate}
@@ -355,7 +355,7 @@ const OrderItems = ({
                       ) : (
                         <div className="">
                           <button
-                            className="px-4 py-2 hover:bg-[#6ac8931f] text-[#55AE7B] bg-[#55AE7B1F] rounded-md flex gap-1 items-center font-medium text-base justify-center"
+                            className="px-4 py-2 hover:bg-[#F68B6226] text-[#F68B62] bg-[#F68B621F] rounded-md flex gap-1 items-center font-medium text-base justify-center"
                             onClick={() => handleShowRating(product)}
                           >
                             <MdOutlineStar size={20} />

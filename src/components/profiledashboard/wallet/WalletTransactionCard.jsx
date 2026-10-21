@@ -1,4 +1,4 @@
-import { t } from "@/utils/translation";
+﻿import { t } from "@/utils/translation";
 import React from "react";
 import { formatCustomDate } from "@/lib/utils";
 import { useSelector } from "react-redux";
@@ -43,7 +43,7 @@ const WalletTransactionCard = ({ transaction }) => {
           </div>
           <div>
             {transaction?.type == "credit" ? (
-              <span className="border border-green-500 text-green-500 font-bold text-sm py-1 px-2 rounded">
+              <span className="border border-[#FF7A45] text-[#FF7A45] font-bold text-sm py-1 px-2 rounded">
                 {t("credit")}
               </span>
             ) : (

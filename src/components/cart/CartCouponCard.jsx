@@ -1,4 +1,4 @@
-import { t } from "@/utils/translation";
+﻿import { t } from "@/utils/translation";
 import React from "react";
 import { MdOutlineCelebration } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
@@ -90,7 +90,7 @@ const CartCouponCard = ({
               {t("delete")}
             </button>
           </div>
-          <div className="flex items-center justify-between p-2 mt-2 bg-[#55AE7B0A] primaryBorder  rounded-md">
+          <div className="flex items-center justify-between p-2 mt-2 bg-[#F68B620A] primaryBorder  rounded-md">
             <div className="flex items-center space-x-2">
               <span className="primaryColor">
                 <MdOutlineCelebration className="primaryColor" size={20} />

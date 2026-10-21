@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -16,7 +16,7 @@
   --font-family: "Nunito", sans-serif;
   --swiper-background-color: #f2f5f7;
   --button-border-color: #8ba2b3;
-  /* --cart-button-bg: #55ae7b26; */
+  /* --cart-button-bg: #F68B6226; */
   --bs-body-bg: #fff;
   --shimmer-highlight-color: #dddddd;
   --brand-bg-color: #F2F5F7;
@@ -35,7 +35,7 @@
   --order-status-cancelled:#db3232;
   --order-status-returned:#458ae6;
   --order-status-ready_to_pickup:#458ae6;
-  --order-status-picked:#59AC77;
+  --order-status-picked:#F68B62;
 
   /* Gray color scale */
   --gray-50: #f2f5f7;
@@ -55,7 +55,7 @@
   --category-card-bg: #000;
   --body-background-color: #141414;
   --button-background-color: #141414;
-  --primary-color: #55ae7b;
+  --primary-color: #F68B62;
   --sub-text-color: #8b8b8b;
   --second-cards-color: #202934;
   --text-field-color: white;
@@ -79,7 +79,7 @@
   --order-status-cancelled:#db3232;
   --order-status-returned:#458ae6;
   --order-status-ready_to_pickup:#458ae6;
-  --order-status-picked:#59AC77;
+  --order-status-picked:#F68B62;
 }
 
 

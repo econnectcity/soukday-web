@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { useSelector, useDispatch } from 'react-redux';
 import { t } from '@/utils/translation';
@@ -73,7 +73,7 @@ const SingleSellerConfirmationModal = ({ showSingleSellerModal, setSingleSellerM
                             {t("cancel")}
                         </button>
                         <button
-                            className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
+                            className="px-4 py-1 bg-[#FF7A45] hover:bg-[#e06836] text-white font-bold rounded-sm"
                             onClick={handleAddToCart}
                         >
                             {t("Ok")}

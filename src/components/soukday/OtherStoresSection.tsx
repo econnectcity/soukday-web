@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { Store } from '@/types';
@@ -80,7 +80,7 @@ export default function OtherStoresSection({
                       <span>{store.city}</span>
                     </div>
                     <div className="flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded-md backdrop-blur-xs text-[11px]">
-                      <Clock className="w-3 h-3 text-emerald-400" />
+                      <Clock className="w-3 h-3 text-[#FF7A45]" />
                       <span>{store.deliveryTime}</span>
                     </div>
                   </div>
@@ -111,7 +111,7 @@ export default function OtherStoresSection({
                       <span>{store.deliveryFee}</span>
                     </div>
                     <div>Min. : <strong className="text-stone-900">{store.minOrder}$</strong></div>
-                    <div className="text-emerald-600 font-semibold text-[11px]">Ouvert jusqu’à 21h</div>
+                    <div className="text-[#FF7A45] font-semibold text-[11px]">Ouvert jusqu’à 21h</div>
                   </div>
 
                   {/* Tags */}

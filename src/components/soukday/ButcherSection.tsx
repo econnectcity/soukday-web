@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { useCart } from '@/context/SoukdayCartContext';
@@ -93,7 +93,7 @@ export default function ButcherSection({
 
         {/* Notice for number of butchers */}
         <div className="flex items-center gap-2 text-xs text-stone-700 bg-white p-3 rounded-2xl border border-stone-200/70 shadow-xs">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <CheckCircle2 className="w-4 h-4 text-[#FF7A45] shrink-0" />
           <span>
             {selectedAddress ? (
               displayButchers.length === 1 ? (
@@ -148,7 +148,7 @@ export default function ButcherSection({
                   
                   {/* Badges on image */}
                   <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                    <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                    <span className="bg-[#FF7A45] text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                       <ShieldCheck className="w-3 h-3" /> 100% Halal
                     </span>
                     <span className="bg-white/90 backdrop-blur-xs text-stone-800 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
@@ -162,7 +162,7 @@ export default function ButcherSection({
                       <span>{butcher.city}</span>
                     </div>
                     <div className="flex items-center gap-1 font-bold bg-black/40 px-2 py-0.5 rounded-md backdrop-blur-xs">
-                      <Clock className="w-3 h-3 text-emerald-400" />
+                      <Clock className="w-3 h-3 text-[#FF7A45]" />
                       <span>{butcher.deliveryTime}</span>
                     </div>
                   </div>

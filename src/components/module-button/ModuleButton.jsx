@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 
 /**
  * ModuleButton — toggle pill for app modules (e.g. Groceries / Pharmacy).
@@ -22,7 +22,7 @@ const ModuleButton = ({ label, icon, isActive = false, onClick, className = "" }
     >
       <span
         className={`size-8 relative flex items-center justify-center ${
-          isActive ? "text-white" : "text-green-400 group-hover:text-white"
+          isActive ? "text-white" : "text-[#FF7A45] group-hover:text-white"
         }`}
       >
         {/* SVG icons follow the text color (white on active/hover via fill-current).

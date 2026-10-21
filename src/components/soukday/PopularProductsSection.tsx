@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -89,13 +89,13 @@ export default function PopularProductsSection({ products = [] }: PopularProduct
                     <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-2xs ${
                       isSoukdayDirect
                         ? 'bg-orange-50 text-[#F68B62] border border-orange-200/60'
-                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                        : 'bg-[#FFF5EF] text-[#e06836] border border-[#FF7A45]/30/60'
                     }`}>
                       {isSoukdayDirect ? <Truck className="w-2.5 h-2.5" /> : <StoreIcon className="w-2.5 h-2.5" />}
                       <span>{isSoukdayDirect ? 'Canada &amp; USA' : 'Boutique Locale'}</span>
                     </span>
                     {product.isHalal && (
-                      <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 shadow-2xs">
+                      <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-[#e06836] bg-[#FFF5EF] px-2 py-0.5 rounded-full border border-[#FF7A45]/30/60 shadow-2xs">
                         <ShieldCheck className="w-2.5 h-2.5" /> Halal
                       </span>
                     )}

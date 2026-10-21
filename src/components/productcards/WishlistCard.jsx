@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { FaMinus, FaPlus, FaShoppingBasket } from "react-icons/fa";
 import { BiTrash } from "react-icons/bi";
 import * as api from "@/api/apiRoutes";
@@ -281,7 +281,7 @@ const WishlistCard = ({
             </div>
           ) : (
             <button
-              className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold bg-[#55AE7B1F]"
+              className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold bg-[#F68B621F]"
               onClick={handleIntialAddToCart}
             >
               <FaShoppingBasket size={22} />
@@ -395,7 +395,7 @@ const WishlistCard = ({
               </div>
             ) : (
               <button
-                className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold bg-[#55AE7B1F]"
+                className="flex gap-2 w-[100px] h-full  justify-center items-center primaryColor py-2 px-3 rounded-sm text-base font-semibold bg-[#F68B621F]"
                 onClick={handleIntialAddToCart}
               >
                 <FaShoppingBasket size={22} />

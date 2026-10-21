@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/SoukdayCartContext';
@@ -163,7 +163,7 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
 
             {/* Address Applied Success Badge */}
             {successNotice && selectedAddress && (
-              <div className="mt-2 text-xs sm:text-sm font-semibold text-emerald-400 flex items-center gap-1.5 px-1 animate-fade-in">
+              <div className="mt-2 text-xs sm:text-sm font-semibold text-[#FF7A45] flex items-center gap-1.5 px-1 animate-fade-in">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>
                   Adresse sélectionnée : {selectedAddress.city} {selectedAddress.postalCode ? `(${selectedAddress.postalCode})` : ''}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setSelectedAddresForEdit,
@@ -72,7 +72,7 @@ const AddressCard = ({
                 <input
                   type="checkbox"
                   id={`default-address-${address.id}`}
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-[#FF7A45] focus:ring-[#FF7A45] border-gray-300 rounded"
                   checked={checkout?.address?.id === address?.id}
                   onChange={handleCheckboxChange}
                 />
@@ -176,7 +176,7 @@ const AddressCard = ({
             <h1 className="font-bold">{t("delete_address_message")}</h1>
             <div className="flex gap-2 mt-3">
               <button
-                className="px-4 py-1 bg-green-700 text-white font-bold rounded-sm"
+                className="px-4 py-1 bg-[#FF7A45] hover:bg-[#e06836] text-white font-bold rounded-sm"
                 onClick={handleDeleteAdress}
               >
                 {t("Ok")}

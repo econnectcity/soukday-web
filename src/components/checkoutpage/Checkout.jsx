@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../breadcrumb/BreadCrumb";
 import Stepper from "./Stepper";
@@ -1075,7 +1075,7 @@ const Checkout = () => {
         ) : (
           <div className="flex justify-center flex-col items-center">
             <div className="w-full flex justify-end mb-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-3.5 py-1.5 rounded-full border border-emerald-200 dark:border-emerald-800/60 w-fit">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#e06836] dark:text-[#FF7A45] bg-[#FFF5EF] dark:bg-emerald-950/60 px-3.5 py-1.5 rounded-full border border-[#FF7A45]/30 dark:border-emerald-800/60 w-fit">
                 <span>🔒</span>
                 <span>{t("secure_checkout_guaranteed") || "Paiement sécurisé SSL 256-bit"}</span>
               </div>
@@ -1178,7 +1178,7 @@ const Checkout = () => {
                             <button
                               type="button"
                               onClick={() => setIsEnteringNewAddress(!isEnteringNewAddress)}
-                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md border border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors"
+                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md border border-[#FF7A45] text-[#FF7A45] hover:bg-[#FFF5EF] dark:hover:bg-emerald-950 transition-colors"
                             >
                               {isEnteringNewAddress ? (
                                 <>
@@ -1215,7 +1215,7 @@ const Checkout = () => {
                               <button
                                 type="button"
                                 onClick={() => setIsEnteringNewAddress(true)}
-                                className="text-sm font-medium text-emerald-600 hover:underline flex items-center gap-1"
+                                className="text-sm font-medium text-[#FF7A45] hover:underline flex items-center gap-1"
                               >
                                 <GoPlus /> {t("enter_different_address") || "Enter a different address"}
                               </button>
@@ -1234,7 +1234,7 @@ const Checkout = () => {
                             {/* Contact Information Section */}
                             <div>
                               <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-zinc-800">
-                                <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">1</span>
+                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-emerald-900/40 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">1</span>
                                 <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100">
                                   {t("contact_information") || "Contact Information"}
                                 </h3>
@@ -1257,7 +1257,7 @@ const Checkout = () => {
                                       className={`w-full pl-9 pr-3 py-2 rounded-md border text-sm outline-none transition-all ${
                                         formErrors.name
                                           ? "border-red-500 bg-red-50/20"
-                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                       }`}
                                     />
                                   </div>
@@ -1283,7 +1283,7 @@ const Checkout = () => {
                                       className={`w-full pl-9 pr-3 py-2 rounded-md border text-sm outline-none transition-all ${
                                         formErrors.phone
                                           ? "border-red-500 bg-red-50/20"
-                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                       }`}
                                     />
                                   </div>
@@ -1310,7 +1310,7 @@ const Checkout = () => {
                                       className={`w-full pl-9 pr-3 py-2 rounded-md border text-sm outline-none transition-all ${
                                         formErrors.email
                                           ? "border-red-500 bg-red-50/20"
-                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                       }`}
                                     />
                                   </div>
@@ -1324,7 +1324,7 @@ const Checkout = () => {
                             {/* Delivery Address Section */}
                             <div>
                               <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-zinc-800">
-                                <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">2</span>
+                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-emerald-900/40 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">2</span>
                                 <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100">
                                   {t("delivery_address") || "Delivery Address"}
                                 </h3>
@@ -1348,7 +1348,7 @@ const Checkout = () => {
                                       className={`w-full pl-9 pr-3 py-2 rounded-md border text-sm outline-none transition-all ${
                                         formErrors.street
                                           ? "border-red-500 bg-red-50/20"
-                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                       }`}
                                     />
                                   </div>
@@ -1371,7 +1371,7 @@ const Checkout = () => {
                                       value={deliveryForm.apartment}
                                       onChange={handleDeliveryFormChange}
                                       placeholder="e.g. Apt 4B, Buzzer #1042"
-                                      className="w-full pl-9 pr-3 py-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                                      className="w-full pl-9 pr-3 py-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm outline-none focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45] transition-all"
                                     />
                                   </div>
                                 </div>
@@ -1390,7 +1390,7 @@ const Checkout = () => {
                                       className={`w-full px-3 py-2 rounded-md border text-sm outline-none transition-all ${
                                         formErrors.city
                                           ? "border-red-500 bg-red-50/20"
-                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                       }`}
                                     />
                                     {formErrors.city && (
@@ -1408,7 +1408,7 @@ const Checkout = () => {
                                       value={deliveryForm.state}
                                       onChange={handleDeliveryFormChange}
                                       placeholder="e.g. QC"
-                                      className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                                      className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm outline-none focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45] transition-all"
                                     />
                                   </div>
 
@@ -1425,7 +1425,7 @@ const Checkout = () => {
                                       className={`w-full px-3 py-2 rounded-md border text-sm outline-none uppercase transition-all ${
                                         formErrors.postalCode
                                           ? "border-red-500 bg-red-50/20"
-                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                          : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                       }`}
                                     />
                                     {formErrors.postalCode && (
@@ -1439,7 +1439,7 @@ const Checkout = () => {
                             {/* Delivery Instructions Section */}
                             <div>
                               <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-zinc-800">
-                                <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">3</span>
+                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-emerald-900/40 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">3</span>
                                 <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100">
                                   {t("delivery_instructions") || "Delivery Instructions & Notes"}
                                 </h3>
@@ -1452,7 +1452,7 @@ const Checkout = () => {
                                   onChange={handleDeliveryFormChange}
                                   placeholder={t("delivery_instructions_placeholder") || "e.g. Leave at front door, ring doorbell, call upon arrival, gate code 1234"}
                                   maxLength={256}
-                                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
+                                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm outline-none focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45] transition-all resize-none"
                                 />
                                 <p className="text-[11px] text-gray-400 text-right mt-1">
                                   {(deliveryForm.deliveryNotes || "").length}/256
@@ -1468,7 +1468,7 @@ const Checkout = () => {
                         {/* Store Information Card */}
                         <div className="flex flex-col cardBorder rounded-lg bg-white dark:bg-zinc-900 overflow-hidden shadow-sm">
                           <div className="flex items-center gap-2 border-b border-gray-200 dark:border-zinc-700 p-4 backgroundColor">
-                            <MdOutlineStorefront size={24} className="text-emerald-600" />
+                            <MdOutlineStorefront size={24} className="text-[#FF7A45]" />
                             <span className="font-bold text-base md:text-lg text-gray-900 dark:text-gray-100">
                               {t("pickup_from_store") || "Store Pickup Location"}
                             </span>
@@ -1476,7 +1476,7 @@ const Checkout = () => {
                           <div className="flex flex-col p-5 gap-5">
                             <div className="flex justify-between items-start gap-4">
                               <div className="flex gap-3 items-start">
-                                <IoLocationOutline size={24} className="text-emerald-600 mt-0.5 flex-shrink-0" />
+                                <IoLocationOutline size={24} className="text-[#FF7A45] mt-0.5 flex-shrink-0" />
                                 <div className="flex flex-col gap-1">
                                   <h3 className="font-bold text-base text-gray-900 dark:text-gray-100">
                                     {checkoutData?.seller_self_pickup?.seller_name || t("pickup_from_store") || "Soukday Partner Store"}
@@ -1511,7 +1511,7 @@ const Checkout = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-gray-100 dark:border-zinc-800 text-sm">
                               {checkoutData?.seller_self_pickup?.seller_mobile && (
                                 <div className="flex gap-2.5 items-center">
-                                  <FiPhoneCall size={18} className="text-emerald-600 flex-shrink-0" />
+                                  <FiPhoneCall size={18} className="text-[#FF7A45] flex-shrink-0" />
                                   <div>
                                     <span className="text-xs text-gray-500 font-medium block">{t("phone") || "Store Phone"}</span>
                                     <span className="font-medium text-gray-800 dark:text-gray-200">{checkoutData.seller_self_pickup.seller_mobile}</span>
@@ -1519,7 +1519,7 @@ const Checkout = () => {
                                 </div>
                               )}
                               <div className="flex gap-2.5 items-center">
-                                <MdOutlineWatchLater size={18} className="text-emerald-600 flex-shrink-0" />
+                                <MdOutlineWatchLater size={18} className="text-[#FF7A45] flex-shrink-0" />
                                 <div>
                                   <span className="text-xs text-gray-500 font-medium block">{t("open_hours") || "Store Hours"}</span>
                                   <span className="font-medium text-gray-800 dark:text-gray-200">
@@ -1538,7 +1538,7 @@ const Checkout = () => {
                         {/* Pickup Contact Information Form */}
                         <div className="flex flex-col cardBorder rounded-lg bg-white dark:bg-zinc-900 overflow-hidden shadow-sm p-4 md:p-6 space-y-4">
                           <div className="flex items-center gap-2 pb-2 border-b border-gray-100 dark:border-zinc-800">
-                            <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">1</span>
+                            <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-emerald-900/40 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">1</span>
                             <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100">
                               {t("pickup_contact_information") || "Who will pick up this order?"}
                             </h3>
@@ -1562,7 +1562,7 @@ const Checkout = () => {
                                   className={`w-full pl-9 pr-3 py-2 rounded-md border text-sm outline-none transition-all ${
                                     formErrors.name
                                       ? "border-red-500 bg-red-50/20"
-                                      : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                      : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                   }`}
                                 />
                               </div>
@@ -1588,7 +1588,7 @@ const Checkout = () => {
                                   className={`w-full pl-9 pr-3 py-2 rounded-md border text-sm outline-none transition-all ${
                                     formErrors.phone
                                       ? "border-red-500 bg-red-50/20"
-                                      : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                      : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                   }`}
                                 />
                               </div>
@@ -1615,7 +1615,7 @@ const Checkout = () => {
                                   className={`w-full pl-9 pr-3 py-2 rounded-md border text-sm outline-none transition-all ${
                                     formErrors.email
                                       ? "border-red-500 bg-red-50/20"
-                                      : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                      : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45]"
                                   }`}
                                 />
                               </div>
@@ -1636,7 +1636,7 @@ const Checkout = () => {
                               onChange={handleDeliveryFormChange}
                               placeholder={t("order_note") || "Add any specific instructions for store staff..."}
                               maxLength={256}
-                              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
+                              className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm outline-none focus:border-[#FF7A45] focus:ring-1 focus:ring-[#FF7A45] transition-all resize-none"
                             />
                           </div>
 
@@ -1682,7 +1682,7 @@ const Checkout = () => {
                                 }
                               >
                                 {formatDate(checkout?.selectedDate)}
-                                <FaRegCalendarAlt className="text-emerald-600" />
+                                <FaRegCalendarAlt className="text-[#FF7A45]" />
                               </PopoverTrigger>
                               {timeSlotsData?.time_slots_is_enabled ==
                                 "true" && (
@@ -1760,7 +1760,7 @@ const Checkout = () => {
                                             <p className="font-medium">
                                               {slot?.translations?.title || slot?.title}
                                             </p>
-                                            <p className="whitespace-nowrap text-xs text-emerald-600 font-semibold">
+                                            <p className="whitespace-nowrap text-xs text-[#FF7A45] font-semibold">
                                               {slot?.is_free_delivery
                                                 ? t("freedelivery")
                                                 : ""}

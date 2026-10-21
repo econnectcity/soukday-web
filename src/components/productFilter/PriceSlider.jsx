@@ -1,4 +1,4 @@
-import * as Slider from "@radix-ui/react-slider";
+﻿import * as Slider from "@radix-ui/react-slider";
 import Skeleton from "react-loading-skeleton";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -45,7 +45,7 @@ const PriceSlider = ({
             }}
           >
             <Slider.Track className="relative h-[15px] w-full grow rounded-full bg-white border border-gray-200">
-              <Slider.Range className="absolute h-full rounded-full bg-green-600" />
+              <Slider.Range className="absolute h-full rounded-full bg-[#FF7A45]" />
             </Slider.Track>
 
             <Slider.Thumb

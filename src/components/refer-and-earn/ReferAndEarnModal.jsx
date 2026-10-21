@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { IoClose, IoCopy, IoPersonAdd } from "react-icons/io5";
 import { FaFacebook, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import {
@@ -132,7 +132,7 @@ const ReferAndEarnModal = ({ showReferAndEarn, setShowReferAndEarn }) => {
             </button>
             <button
               onClick={() => handleShare("whatsapp")}
-              className="bg-green-500 text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-600 transition-colors"
+              className="bg-[#FF7A45] text-white py-3 px-4 rounded-lg flex items-center justify-center space-x-2 hover:bg-[#FF7A45] transition-colors"
             >
               <FaWhatsapp size={20} />
               <span>{t("whatsapp")}</span>
