@@ -31,6 +31,7 @@ import NoOrderSvg from "@/assets/not_found_images/No_Orders.svg";
 import Image from "next/image";
 import SubCategorySwiper from "./SubCategorySwiper";
 import { isRtl } from "@/lib/utils";
+import { getTranslatedCategoryName } from "@/utils/categoryTranslation";
 
 const CategoryDetail = () => {
   const dispatch = useDispatch();
@@ -96,12 +97,14 @@ const CategoryDetail = () => {
         .replace(/-/g, " ")
         .replace(/\b\w/g, (char) => char.toUpperCase())
     : "";
+  const isFrench = (language?.code || "fr").toLowerCase() === "fr";
   const categoryName = categoryBreadcrumb?.find(
     (c) => c.slug === currentSlug
   )?.name;
+  const rawTitle = fetchedCategoryName || categoryName || formattedSlug;
   const breadcrumbTitle = isAll
     ? t("all")
-    : fetchedCategoryName || categoryName || formattedSlug;
+    : getTranslatedCategoryName({ name: rawTitle, slug: currentSlug }, isFrench);
 
   // ─── Fetch the current category's own name for the breadcrumb/heading ───────
   // (avoids showing the humanized slug for names with characters a slug can't
@@ -118,14 +121,16 @@ const CategoryDetail = () => {
         const matchedCategory = Array.isArray(data)
           ? data.find((c) => c.slug === currentSlug)
           : data;
-        const name = matchedCategory?.translations?.name || matchedCategory?.name;
-        if (name) setFetchedCategoryName(name);
+        if (matchedCategory) {
+          const name = getTranslatedCategoryName(matchedCategory, (language?.code || "fr").toLowerCase() === "fr");
+          if (name) setFetchedCategoryName(name);
+        }
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [currentSlug, isAll, language?.id]);
+  }, [currentSlug, isAll, language?.id, language?.code]);
 
   // ─── Reset category page when slug changes ─────────────────────────────────
   useEffect(() => {

@@ -1,11 +1,15 @@
 import React from "react";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
+import { useTranslation } from "@/utils/translation";
+import { getTranslatedCategoryName } from "@/utils/categoryTranslation";
 
 const PASTEL_COLORS = ['#EFE9F8', '#FEEAE1', '#EBF1E9', '#FEEBF0', '#E8F0F8', '#FEF5E7', '#F3E8FF', '#E6F4EA'];
 
 const CategoryCard = ({ category, bgColor }) => {
+  const { isFrench } = useTranslation();
   const catId = category?.id || 0;
   const pastelBg = bgColor || PASTEL_COLORS[catId % PASTEL_COLORS.length];
+  const displayName = getTranslatedCategoryName(category, isFrench);
 
   return (
     <div className="flex flex-col items-center cursor-pointer w-full max-w-[130px] md:max-w-[150px] group">
@@ -29,7 +33,7 @@ const CategoryCard = ({ category, bgColor }) => {
             src={category.image_url || category.image}
             width={300}
             height={300}
-            alt={category?.translations?.name ?? category?.name ?? "Category Image"}
+            alt={displayName || "Category Image"}
             className="w-full h-full object-contain max-h-[85px] md:max-h-[105px] group-hover:scale-110 transition-transform duration-300 ease-out drop-shadow-sm select-none"
           />
         </div>
@@ -37,7 +41,7 @@ const CategoryCard = ({ category, bgColor }) => {
 
       {/* Centered Title Underneath */}
       <div className="text-center font-bold text-xs md:text-sm text-stone-900 group-hover:text-[#FF7A45] transition-colors mt-2.5 md:mt-3 line-clamp-2 leading-tight px-1">
-        {category?.translations?.name ?? category?.name}
+        {displayName}
       </div>
     </div>
   );

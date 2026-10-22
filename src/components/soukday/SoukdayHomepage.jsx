@@ -13,6 +13,7 @@ import {
   fetchLiveCategories,
   fetchLiveSellers,
   fetchLiveProducts,
+  fetchLiveSoukdayProducts,
   fetchLiveWebSettings,
 } from '@/services/soukdayApi';
 import { DEFAULT_LIVE_SETTINGS } from '@/data/mockData';
@@ -24,6 +25,7 @@ export default function SoukdayHomepage() {
   const [categories, setCategories] = useState([]);
   const [stores, setStores] = useState([]);
   const [products, setProducts] = useState([]);
+  const [soukdayProducts, setSoukdayProducts] = useState([]);
   const [webSettings, setWebSettings] = useState(DEFAULT_LIVE_SETTINGS || {});
   const [loading, setLoading] = useState(true);
 
@@ -50,6 +52,9 @@ export default function SoukdayHomepage() {
     }
   }, [reduxSetting]);
 
+  const selectedLanguage = useSelector((state) => state.Language?.selectedLanguage);
+  const currentLang = (selectedLanguage?.code || 'fr').toLowerCase();
+
   // Fetch Live Data from Admin API
   useEffect(() => {
     let isMounted = true;
@@ -58,10 +63,11 @@ export default function SoukdayHomepage() {
 
     async function loadData() {
       try {
-        const [liveCats, liveStores, liveProds, liveSettings] = await Promise.all([
-          fetchLiveCategories(),
+        const [liveCats, liveStores, liveProds, liveSoukdayProds, liveSettings] = await Promise.all([
+          fetchLiveCategories(currentLang),
           fetchLiveSellers(lat, lng),
           fetchLiveProducts(lat, lng),
+          fetchLiveSoukdayProducts(currentLang),
           fetchLiveWebSettings(),
         ]);
 
@@ -69,6 +75,14 @@ export default function SoukdayHomepage() {
           if (liveCats && liveCats.length > 0) setCategories(liveCats);
           if (liveStores && liveStores.length > 0) setStores(liveStores);
           if (liveProds && liveProds.length > 0) setProducts(liveProds);
+          if (liveSoukdayProds && liveSoukdayProds.length > 0) {
+            setSoukdayProducts(liveSoukdayProds);
+          } else if (liveProds && liveProds.length > 0) {
+            const adminOnly = liveProds.filter(
+              (p) => p.storeType === 'soukday_direct' || p.seller_id === 11 || p.seller_id === 0
+            );
+            setSoukdayProducts(adminOnly);
+          }
           if (liveSettings) {
             setWebSettings((prev) => ({
               ...(prev || DEFAULT_LIVE_SETTINGS || {}),
@@ -88,7 +102,7 @@ export default function SoukdayHomepage() {
     return () => {
       isMounted = false;
     };
-  }, [city?.latitude, city?.longitude]);
+  }, [city?.latitude, city?.longitude, currentLang]);
 
   return (
     <div className="flex flex-col min-h-screen bg-stone-50">
@@ -98,8 +112,8 @@ export default function SoukdayHomepage() {
       {/* 2. Product Categories (Live from Admin API) */}
       <CategorySlider categories={categories} />
 
-      {/* 3. Soukday Grocery (Sold directly by Soukday, shipped across Canada & USA) */}
-      <SoukdayGrocerySection products={products} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
+      {/* 3. Dedicated Soukday Grocery (Only products sold by Soukday / Admin) */}
+      <SoukdayGrocerySection products={soukdayProducts} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
 
       {/* 4. Butchers Delivering to You (Based on customer address / postal code) */}
       <ButcherSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />

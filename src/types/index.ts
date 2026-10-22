@@ -59,6 +59,10 @@ export interface Product {
   canShipNationwide?: boolean; // Soukday direct grocery products
   inStock: boolean;
   badge?: string;
+  salesCount?: number;
+  orderCounter?: number;
+  rowOrder?: number;
+  isTopSeller?: boolean;
 }
 
 export interface CartItem {

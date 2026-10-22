@@ -1,4 +1,5 @@
 import { Store, Category, Product, UserAddress, LiveWebSettings } from '../types';
+import { getTranslatedCategoryName } from '../utils/categoryTranslation';
 
 export const DEFAULT_LIVE_SETTINGS = {
   siteTitle: 'Soukday - Épiceries orientales & Boucheries Halal',
@@ -173,12 +174,16 @@ export function formatProductUnitAndWeight(name: string, rawUnit?: any, measurem
   };
 }
 
-export async function fetchLiveCategories(): Promise<Category[]> {
+export async function fetchLiveCategories(lang: string = 'fr'): Promise<Category[]> {
+  const isFr = (lang || 'fr').toLowerCase() === 'fr';
   try {
-    const res = await fetch(`${API_BASE_URL}/customer/categories`, {
+    const res = await fetch(`${API_BASE_URL}/customer/categories?lang=${lang}`, {
       headers: {
         'Accept': 'application/json',
         'x-access-key': ACCESS_KEY,
+        'Content-Language': lang,
+        'lang': lang,
+        'X-Module-Id': '1',
       },
     });
     if (!res.ok) throw new Error('Failed to fetch categories');
@@ -187,16 +192,18 @@ export async function fetchLiveCategories(): Promise<Category[]> {
       return json.data.map((item: any) => {
         const resolved = resolveImageUrl(item.image_url || item.image || item.web_image);
         const validImg = resolved && resolved.trim() !== '' ? resolved : getCategoryImage(item.slug);
+        const rawName = item.translations?.name || item.name || (item.slug ? item.slug.replace(/-/g, ' ') : `Catégorie ${item.id}`);
+        const categoryName = getTranslatedCategoryName({ ...item, name: rawName }, isFr);
         return {
           id: item.id,
-          name: item.translations?.name || item.name || (item.slug ? item.slug.replace(/-/g, ' ') : `Catégorie ${item.id}`),
+          name: categoryName,
           slug: item.slug || `cat-${item.id}`,
           subtitle: item.translations?.subtitle || item.subtitle || '',
           icon: getCategoryIcon(item.slug),
           image: validImg,
           subcategories: (item.all_active_childs || []).map((sub: any) => ({
             id: sub.id,
-            name: sub.translations?.name || sub.name,
+            name: getTranslatedCategoryName(sub, isFr),
             slug: sub.slug,
             subtitle: sub.translations?.subtitle || '',
           })),
@@ -301,6 +308,65 @@ export async function fetchLiveProducts(lat: number = 45.5017, lng: number = -73
     }
   } catch (err) {
     console.warn('Live products fetch failed:', err);
+  }
+  return [];
+}
+
+export async function fetchLiveSoukdayProducts(lang: string = 'fr'): Promise<Product[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/customer/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-access-key': ACCESS_KEY,
+        'Content-Language': lang,
+        'lang': lang,
+        'X-Module-Id': '1',
+      },
+      body: JSON.stringify({ seller_id: 11, sort: 'popular', limit: 100 }),
+    });
+    if (!res.ok) throw new Error('Failed to fetch Soukday direct products');
+    const json = await res.json();
+    if (json.status === 1 && Array.isArray(json.data) && json.data.length > 0) {
+      return json.data.map((item: any) => {
+        const variant = item.variants?.[0] || {};
+        const sellerName = item.seller?.translations?.store_name || item.seller?.store_name || item.seller?.name || 'Soukday Épicerie Directe';
+        const rawUnit = variant.stock_unit_name || (typeof variant.unit === 'object' ? variant.unit?.name : variant.unit) || 'u';
+        const productName = item.translations?.name || item.name;
+        const formattedUnits = formatProductUnitAndWeight(productName, rawUnit, variant.measurement);
+        const orderCount = parseInt(item.order_counter || '0', 10);
+
+        return {
+          id: item.id,
+          variantId: variant.id || item.id,
+          variant_id: variant.id || item.id,
+          name: productName,
+          slug: item.slug || `product-${item.id}`,
+          brand: item.brand?.name || 'Soukday',
+          storeId: item.seller_id || 11,
+          seller_id: item.seller_id || 11,
+          storeName: sellerName,
+          storeType: 'soukday_direct' as const,
+          price: parseFloat(variant.discounted_price || variant.price || '0'),
+          originalPrice: variant.discounted_price ? parseFloat(variant.price || '0') : undefined,
+          unit: formattedUnits.unit,
+          weightOrVolume: formattedUnits.weightOrVolume,
+          image: resolveImageUrl(item.image_url) || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
+          categorySlug: item.category?.slug || 'epicerie-maghrebine',
+          subcategorySlug: item.category?.parent_id ? item.category?.slug : undefined,
+          isPopular: true,
+          isHalal: true,
+          canShipNationwide: true,
+          inStock: true,
+          salesCount: orderCount,
+          orderCounter: orderCount,
+          rowOrder: item.row_order !== undefined && item.row_order !== null ? parseInt(item.row_order, 10) : undefined,
+        };
+      });
+    }
+  } catch (err) {
+    console.warn('Live Soukday direct products fetch failed:', err);
   }
   return [];
 }

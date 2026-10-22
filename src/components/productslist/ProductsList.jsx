@@ -7,6 +7,7 @@ import * as api from "@/api/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterCategory } from "@/redux/slices/productFilterSlice";
 import { useQuery } from "@tanstack/react-query";
+import { getTranslatedCategoryName } from "@/utils/categoryTranslation";
 
 import {
   setListingSource,
@@ -127,9 +128,10 @@ const Products = () => {
 
           if (!matchedCategory) return category;
 
+          const isFr = (selectedLanguage?.code || 'fr').toLowerCase() === 'fr';
           return {
             ...category,
-            name: matchedCategory?.translations?.name || matchedCategory?.name || category.name,
+            name: getTranslatedCategoryName(matchedCategory, isFr),
             translations: matchedCategory?.translations || category.translations,
           };
         } catch (error) {

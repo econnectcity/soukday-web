@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Minus } from "lucide-react";
+import { getTranslatedCategoryName } from "@/utils/categoryTranslation";
 
 const CategoryTree = ({
   categories,
@@ -10,11 +12,13 @@ const CategoryTree = ({
 }) => {
   const [treeData, setTreeData] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState([]);
+  const language = useSelector((state) => state.Language.selectedLanguage);
+  const isFrench = (language?.code || "fr").toLowerCase() === "fr";
 
   // Transform categories into tree structure
   const transformCategoryData = (categories) => {
     return categories?.map((category) => ({
-      title: category?.translations?.name ?? category?.name,
+      title: getTranslatedCategoryName(category, isFrench),
       key: category.id,
       children:
         category.cat_active_childs?.length > 0
@@ -29,7 +33,7 @@ const CategoryTree = ({
       const transformedData = transformCategoryData(categories);
       setTreeData(transformedData);
     }
-  }, [categories]);
+  }, [categories, isFrench]);
 
   // Initialize selected categories from filter
   useEffect(() => {

@@ -9,12 +9,14 @@ import {
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { isRtl } from "@/lib/utils";
 import { t } from "@/utils/translation";
+import { getTranslatedCategoryName } from "@/utils/categoryTranslation";
 
 const CategoryFlowBreadcrumb = () => {
   const dispatch = useDispatch();
   const router = useLocalizedRouter();
   const rtl = isRtl();
   const language = useSelector((state) => state.Language.selectedLanguage);
+  const isFrench = (language?.code || "fr").toLowerCase() === "fr";
 
   const categoryBreadcrumb = useSelector(
     (state) => state.ProductFilter.categoryBreadcrumb,
@@ -49,7 +51,7 @@ const CategoryFlowBreadcrumb = () => {
             onClick={() => handleBreadcrumbClick(cat, index)}
             className="hover:text-primary font-medium"
           >
-            {cat.name}
+            {getTranslatedCategoryName(cat, isFrench)}
           </button>
           {index < categoryBreadcrumb.length - 1 && (
             <span>

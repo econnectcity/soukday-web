@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { useCart } from '@/context/SoukdayCartContext';
 import { Category } from '@/types';
 import { useTranslation } from '@/utils/translation';
+import { getTranslatedCategoryName } from '@/utils/categoryTranslation';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 
 interface CategorySliderProps {
@@ -55,7 +56,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
               type="button"
               onClick={() => scroll('left')}
               className="w-9 h-9 rounded-full border border-[#F68B62] bg-[#F68B62] hover:bg-[#e07750] hover:border-[#e07750] flex items-center justify-center text-white shadow-xs hover:shadow-sm active:scale-95 transition-all duration-200 cursor-pointer"
-              aria-label="Précédent"
+              aria-label={isFrench ? "Précédent" : "Previous"}
             >
               <ChevronLeft className="w-4 h-4 text-white" />
             </button>
@@ -63,7 +64,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
               type="button"
               onClick={() => scroll('right')}
               className="w-9 h-9 rounded-full border border-[#F68B62] bg-[#F68B62] hover:bg-[#e07750] hover:border-[#e07750] flex items-center justify-center text-white shadow-xs hover:shadow-sm active:scale-95 transition-all duration-200 cursor-pointer"
-              aria-label="Suivant"
+              aria-label={isFrench ? "Suivant" : "Next"}
             >
               <ChevronRight className="w-4 h-4 text-white" />
             </button>
@@ -104,6 +105,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
           {/* Categories List */}
           {displayCategories.map((cat) => {
             const isSelected = selectedCategory === cat.slug;
+            const categoryTitle = getTranslatedCategoryName(cat, isFrench);
             return (
               <button
                 key={cat.id}
@@ -118,7 +120,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                 <div className="w-11 h-11 rounded-xl overflow-hidden bg-stone-200 shrink-0 relative">
                   <img
                     src={cat.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80'}
-                    alt={cat.name}
+                    alt={categoryTitle}
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80';
@@ -131,7 +133,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                 </div>
                 <div>
                   <div className={`text-xs font-bold leading-tight transition-colors ${isSelected ? 'text-white' : 'text-black'}`}>
-                    {cat.name}
+                    {categoryTitle}
                   </div>
                 </div>
               </button>
