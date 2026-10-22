@@ -214,13 +214,13 @@ export default function Header() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={isFrench ? "Rechercher couscous, agneau, bœuf, épices, boucheries..." : "Search couscous, lamb, beef, spices, butcher shops..."}
-                  className="w-full h-11 sm:h-12 pl-11 sm:pl-12 pr-10 rounded-full bg-stone-100/90 hover:bg-stone-100 focus:bg-white border border-stone-200/80 focus:border-[#F68B62] text-sm sm:text-base text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-3 focus:ring-[#F68B62]/20 shadow-xs transition-all duration-200"
+                  className="w-full h-11 sm:h-12 pl-11 sm:pl-12 pr-10 rounded-full bg-[#FCEFEA] hover:bg-[#fae6de] focus:bg-white border border-[#F68B62]/25 hover:border-[#F68B62]/50 focus:border-[#F68B62] text-sm sm:text-base text-stone-900 placeholder-stone-500/80 focus:outline-none focus:ring-3 focus:ring-[#F68B62]/20 shadow-xs transition-all duration-200"
                 />
-                <Search className="w-5 h-5 text-stone-400 absolute left-3.5 sm:left-4 pointer-events-none" />
+                <Search className="w-5 h-5 text-[#F68B62] absolute left-3.5 sm:left-4 pointer-events-none" />
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 text-xs text-stone-400 hover:text-stone-600 bg-stone-200 hover:bg-stone-300 rounded-full w-5 h-5 flex items-center justify-center cursor-pointer transition-colors"
+                    className="absolute right-3.5 text-xs text-[#F68B62] hover:text-[#e07750] bg-white hover:bg-stone-100 rounded-full w-5 h-5 flex items-center justify-center cursor-pointer transition-colors shadow-2xs"
                   >
                     ×
                   </button>

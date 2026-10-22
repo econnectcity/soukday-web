@@ -149,6 +149,9 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
           <div className="lg:col-span-5 relative mt-4 lg:mt-0">
             <div className="relative mx-auto max-w-md lg:max-w-none">
               
+              {/* Soft Warm Orange Glow / Shadow behind the Right Section Image */}
+              <div className="absolute -inset-6 bg-[#F68B62]/20 rounded-3xl blur-3xl -z-10 pointer-events-none" />
+
               {/* Main Card Image */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-stone-900/10 border-4 border-white aspect-[4/3] sm:aspect-[16/11] group cursor-pointer hover:shadow-3xl transition-all duration-500">
                 <img
@@ -158,24 +161,33 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 opacity-80 group-hover:opacity-90 transition-opacity" />
                 
-                {/* Clean Top-Left Partner Counter Badge */}
+                {/* Clean Top-Left Partner Counter Badge (White background) */}
                 <div className="absolute top-3.5 left-3.5 z-10">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900/80 backdrop-blur-md text-white text-xs font-bold border border-white/20 shadow-md">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <div 
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-stone-900 text-xs font-bold border border-white shadow-md"
+                    style={{ backgroundColor: '#ffffff' }}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span>{isFrench ? "10+ Magasins & Boucheries Partenaires" : "10+ Partner Stores & Butcheries"}</span>
                   </div>
                 </div>
 
-                {/* Clean Bottom-Right Fresh Guarantee Badge */}
+                {/* Clean Bottom-Right Fresh Guarantee Badge (White background) */}
                 <div className="absolute bottom-3.5 right-3.5 z-10 text-right">
-                  <span className="inline-block px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-md text-stone-900 text-[11px] font-bold border border-white shadow-sm">
+                  <span 
+                    className="inline-block px-2.5 py-1 rounded-lg bg-white text-stone-900 text-[11px] font-bold border border-white shadow-sm"
+                    style={{ backgroundColor: '#ffffff' }}
+                  >
                     {isFrench ? "Frais du jour garantis" : "Daily Fresh Guaranteed"}
                   </span>
                 </div>
               </div>
 
-              {/* Floating Badge 1: Local Halal Butcher Highlight */}
-              <div className="absolute -bottom-5 -left-3 sm:-left-5 z-20 bg-white px-4 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-200/80 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+              {/* Floating Badge 1: Local Halal Butcher Highlight (Solid White Pill) */}
+              <div 
+                className="absolute -bottom-5 -left-3 sm:-left-5 z-20 bg-white px-4 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-200/80 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: '#ffffff' }}
+              >
                 <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xl shadow-xs shrink-0">
                   🥩
                 </div>
@@ -190,10 +202,13 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                 </div>
               </div>
 
-              {/* Floating Badge 2: Nationwide Grocery */}
-              <div className="absolute -top-4 -right-3 sm:-right-5 z-20 bg-white px-4 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-200/80 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-bold text-lg border border-[#F68B62]/20 shadow-xs shrink-0">
-                  🇨🇦
+              {/* Floating Badge 2: Nationwide Grocery (Solid White Pill) */}
+              <div 
+                className="absolute -top-4 -right-3 sm:-right-5 z-20 bg-white px-4 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-200/80 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                style={{ backgroundColor: '#ffffff' }}
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-black text-xs border border-[#F68B62]/20 shadow-xs shrink-0">
+                  CA
                 </div>
                 <div>
                   <div className="text-xs font-black text-stone-900 leading-tight">
