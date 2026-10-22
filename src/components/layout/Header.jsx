@@ -10,7 +10,7 @@ import { useTranslation } from '@/utils/translation';
 import { 
   MapPin, 
   Search, 
-  ShoppingBag, 
+  ShoppingCart, 
   Globe, 
   ChevronDown, 
   User,
@@ -245,7 +245,7 @@ export default function Header() {
                   dispatch(setSelectedLanguage({ data: nextLang }));
                 }}
                 title={isFrench ? "Basculer en anglais / Switch to English" : "Passer en français / Switch to French"}
-                className="flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-[#F68B62] px-2.5 py-1.5 rounded-lg border border-stone-200/70 bg-stone-50 hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-[#F68B62] px-3.5 sm:px-4 h-11 sm:h-12 rounded-full border border-stone-200/70 bg-stone-50 hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0"
               >
                 <Globe className="w-3.5 h-3.5 text-[#F68B62]" />
                 <span>{(currentCode || 'fr').toUpperCase()}</span>
@@ -256,7 +256,7 @@ export default function Header() {
                 <Link
                   href="/profile"
                   title={user.name || (isFrench ? 'Mon compte' : 'My Account')}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200/80 bg-stone-50 hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0"
+                  className="flex items-center gap-2 px-3.5 sm:px-4.5 h-11 sm:h-12 rounded-full border border-stone-200/80 bg-stone-50 hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0"
                   aria-label={user.name || (isFrench ? 'Mon compte' : 'Account')}
                 >
                   <div className="w-6 sm:w-7 h-6 sm:h-7 rounded-full bg-[#FCEFEA] flex items-center justify-center text-[#F68B62] font-bold text-xs border border-[#F68B62]/30 shrink-0">
@@ -267,22 +267,22 @@ export default function Header() {
                   </span>
                 </Link>
               ) : (
-                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                  {/* Connexion (Log in) */}
+                <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                  {/* Connexion (Log in) - Same size top to bottom as search bar */}
                   <button
                     type="button"
                     onClick={handleOpenLogin}
-                    className="h-8.5 sm:h-9.5 px-3 sm:px-4.5 rounded-full bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 text-stone-900 font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 active:scale-95 cursor-pointer shadow-2xs whitespace-nowrap"
+                    className="h-11 sm:h-12 px-4 sm:px-6 rounded-full bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 text-stone-900 font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 active:scale-95 cursor-pointer shadow-2xs whitespace-nowrap flex items-center justify-center"
                     title={isFrench ? "Connexion" : "Log in"}
                   >
                     {isFrench ? "Connexion" : "Log in"}
                   </button>
 
-                  {/* S’inscrire (Sign up) - Orange pill matching brand */}
+                  {/* S’inscrire (Sign up) - Same size top to bottom as search bar */}
                   <button
                     type="button"
                     onClick={handleOpenRegister}
-                    className="h-8.5 sm:h-9.5 px-3 sm:px-4.5 rounded-full bg-[#F68B62] hover:bg-[#e07750] border border-[#F68B62] text-white font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-95 cursor-pointer whitespace-nowrap"
+                    className="h-11 sm:h-12 px-4 sm:px-6 rounded-full bg-[#F68B62] hover:bg-[#e07750] border border-[#F68B62] text-white font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-95 cursor-pointer whitespace-nowrap flex items-center justify-center"
                     title={isFrench ? "S’inscrire" : "Sign up"}
                   >
                     {isFrench ? "S’inscrire" : "Sign up"}
@@ -290,17 +290,17 @@ export default function Header() {
                 </div>
               )}
 
-              {/* Cart Icon */}
+              {/* Cart Icon (Red circular button matching 2nd image, same height as search bar) */}
               <button
                 type="button"
                 onClick={() => setIsCartOpen(true)}
-                className="relative flex items-center justify-center w-9 sm:w-10 h-9 sm:h-10 bg-[#F68B62] hover:bg-[#e07750] text-white rounded-xl shadow-md shadow-[#F68B62]/25 hover:shadow-lg hover:shadow-[#F68B62]/35 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
+                className="relative flex items-center justify-center w-11 sm:w-12 h-11 sm:h-12 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-full shadow-md shadow-red-500/25 hover:shadow-lg hover:shadow-red-500/35 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
                 title="Panier"
                 aria-label="Panier"
               >
-                <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                <ShoppingCart className="w-5 h-5 sm:w-5.5 sm:h-5.5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-stone-900 text-white border-2 border-white text-[10px] font-black h-5 min-w-[20px] px-1 rounded-full flex items-center justify-center shadow-xs">
+                  <span className="absolute -top-1 -right-1 bg-stone-900 text-white border-2 border-white text-[10px] font-black h-5 min-w-[20px] px-1 rounded-full flex items-center justify-center shadow-xs">
                     {cartCount}
                   </span>
                 )}
