@@ -12,7 +12,9 @@ import {
   setListingSource,
   setCategorySlug,
   setCategoryBreadcrumb,
+  setFilterSearch,
 } from "@/redux/slices/productFilterSlice";
+import { PRODUCTS } from "@/data/mockData";
 import {
   Select,
   SelectContent,
@@ -93,6 +95,12 @@ const Products = () => {
     return () => clearTimeout(timer);
   }, [filter?.search]);
 
+  useEffect(() => {
+    if (router.query?.search !== undefined && router.query.search !== filter?.search) {
+      dispatch(setFilterSearch({ data: router.query.search }));
+    }
+  }, [router.query?.search]);
+
   
 
   useEffect(() => {
@@ -169,11 +177,89 @@ const Products = () => {
       section_id: filter?.section_id,
     };
 
-    return await api.getProductByFilter({
-      latitude: city?.city?.latitude || 45.5017,
-      longitude: city?.city?.longitude || -73.5673,
-      filters: filterParams,
-    });
+    try {
+      const res = await api.getProductByFilter({
+        latitude: city?.city?.latitude || 45.5017,
+        longitude: city?.city?.longitude || -73.5673,
+        filters: filterParams,
+      });
+      if (res && Array.isArray(res.data) && res.data.length > 0) {
+        return res;
+      }
+      if (debouncedSearch && (!res?.data || res.data.length === 0)) {
+        const q = debouncedSearch.toLowerCase().trim();
+        const matched = PRODUCTS.filter((p) =>
+          (p.name && p.name.toLowerCase().includes(q)) ||
+          (p.storeName && p.storeName.toLowerCase().includes(q)) ||
+          (p.brand && p.brand.toLowerCase().includes(q)) ||
+          (p.categorySlug && p.categorySlug.toLowerCase().includes(q))
+        );
+        if (matched.length > 0) {
+          return {
+            status: 1,
+            message: "Products fetched",
+            total: matched.length,
+            data: matched.map((m) => ({
+              id: m.id,
+              name: m.name,
+              translations: { name: m.name },
+              slug: m.slug,
+              image_url: m.image,
+              price: m.price,
+              discounted_price: m.originalPrice ? m.price : 0,
+              seller_name: m.storeName,
+              seller: { store_name: m.storeName },
+              variants: [
+                {
+                  id: m.variantId || m.id,
+                  price: m.price,
+                  discounted_price: m.originalPrice ? m.price : 0,
+                  stock_unit_name: m.unit,
+                  unit: m.unit,
+                },
+              ],
+            })),
+          };
+        }
+      }
+      return res || { status: 1, total: 0, data: [] };
+    } catch (err) {
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase().trim();
+        const matched = PRODUCTS.filter((p) =>
+          (p.name && p.name.toLowerCase().includes(q)) ||
+          (p.storeName && p.storeName.toLowerCase().includes(q)) ||
+          (p.brand && p.brand.toLowerCase().includes(q)) ||
+          (p.categorySlug && p.categorySlug.toLowerCase().includes(q))
+        );
+        return {
+          status: 1,
+          message: "Products fetched fallback",
+          total: matched.length,
+          data: matched.map((m) => ({
+            id: m.id,
+            name: m.name,
+            translations: { name: m.name },
+            slug: m.slug,
+            image_url: m.image,
+            price: m.price,
+            discounted_price: m.originalPrice ? m.price : 0,
+            seller_name: m.storeName,
+            seller: { store_name: m.storeName },
+            variants: [
+              {
+                id: m.variantId || m.id,
+                price: m.price,
+                discounted_price: m.originalPrice ? m.price : 0,
+                stock_unit_name: m.unit,
+                unit: m.unit,
+              },
+            ],
+          })),
+        };
+      }
+      throw err;
+    }
   };
 
   const {
