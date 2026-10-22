@@ -16,13 +16,13 @@ import {
   fetchLiveSoukdayProducts,
   fetchLiveWebSettings,
 } from '@/services/soukdayApi';
-import { DEFAULT_LIVE_SETTINGS } from '@/data/mockData';
+import { DEFAULT_LIVE_SETTINGS, DEFAULT_CATEGORIES } from '@/data/mockData';
 
 export default function SoukdayHomepage() {
   const city = useSelector((state) => state.City?.city);
   const reduxSetting = useSelector((state) => state.Setting?.setting);
 
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(DEFAULT_CATEGORIES || []);
   const [stores, setStores] = useState([]);
   const [products, setProducts] = useState([]);
   const [soukdayProducts, setSoukdayProducts] = useState([]);

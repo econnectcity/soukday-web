@@ -18,6 +18,73 @@ export const POPULAR_LOCATIONS = [
   { city: 'Saint-Jérôme', postalCode: 'J7Z 5L2', label: 'Saint-Jérôme' },
 ];
 
+export const DEFAULT_CATEGORIES: Category[] = [
+  {
+    id: 4,
+    name: "Boulangerie et pâtisserie",
+    slug: "boulangerie-et-patisserie",
+    subtitle: "Pains frais, gâteaux et spécialités artisanales",
+    icon: "🥐",
+    image: "https://soukday.ca/wp-content/uploads/2022/03/Makrout-500-g-remove-the-price-1-rotated-280x280.jpg",
+  },
+  {
+    id: 8,
+    name: "Épicerie maghrébine",
+    slug: "epicerie-maghrebine",
+    subtitle: "Semoules, thés, harissa et douceurs orientales",
+    icon: "🌾",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    id: 21,
+    name: "Épices et herbes",
+    slug: "epices-et-herbes",
+    subtitle: "Ras el hanout, curcuma, paprika et herbes aromatiques",
+    icon: "🧂",
+    image: "https://soukday.ca/wp-content/uploads/2024/02/Curcuma-120g-280x280.png",
+  },
+  {
+    id: 22,
+    name: "Fruits et légumes",
+    slug: "fruits-et-legumes",
+    subtitle: "Fruits et légumes frais du marché",
+    icon: "🥬",
+    image: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    id: 25,
+    name: "Noix et fruits secs",
+    slug: "noix-et-fruits-secs",
+    subtitle: "Amandes, dattes, pistaches et fruits séchés",
+    icon: "🥜",
+    image: "https://soukday.ca/wp-content/uploads/2024/02/Amandes-en-poudre-300g-280x280.png",
+  },
+  {
+    id: 26,
+    name: "Plats cuisinés",
+    slug: "plats-cuisines",
+    subtitle: "Couscous, tajines et spécialités traiteur prêtes à déguster",
+    icon: "🍲",
+    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    id: 27,
+    name: "Poissons et fruits de mer",
+    slug: "poissons-et-fruits-de-mer",
+    subtitle: "Sardines fraîches, dorades et poissons de saison",
+    icon: "🐟",
+    image: "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    id: 28,
+    name: "Viandes et volailles",
+    slug: "viandes-et-volailles",
+    subtitle: "Bœuf, agneau, veau et volailles 100% Halal certifiés",
+    icon: "🥩",
+    image: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=400&q=80",
+  },
+];
+
 export const STORES: Store[] = [
   // 1. BUTCHERS (Section 4: Butchers Delivering to You)
   {

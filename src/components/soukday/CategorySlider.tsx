@@ -5,6 +5,7 @@ import { useCart } from '@/context/SoukdayCartContext';
 import { Category } from '@/types';
 import { useTranslation } from '@/utils/translation';
 import { getTranslatedCategoryName } from '@/utils/categoryTranslation';
+import { DEFAULT_CATEGORIES } from '@/data/mockData';
 import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 
 interface CategorySliderProps {
@@ -16,7 +17,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
   const { isFrench } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const displayCategories = categories || [];
+  const displayCategories = (categories && categories.length > 0) ? categories : DEFAULT_CATEGORIES;
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {

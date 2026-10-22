@@ -117,8 +117,8 @@ export default function SoukdayGrocerySection({
   };
 
   return (
-    <section className="w-full bg-gradient-to-b from-stone-50 via-white to-stone-50 border-b border-stone-200/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+    <section className="w-full bg-gradient-to-b from-stone-50 via-white to-stone-50 border-b border-stone-200/60 py-[80px]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
         {/* Section Header - Styled identically to category section with CategorySlider arrows */}
         <div className="flex items-center justify-between">
@@ -187,10 +187,10 @@ export default function SoukdayGrocerySection({
             <button
               type="button"
               onClick={() => setActiveSubcat(null)}
-              className={`shrink-0 px-4 py-2 rounded-xl text-xs font-bold hover:-translate-y-0.5 transition-all duration-200 cursor-pointer ${
+              className={`shrink-0 px-4 py-2 rounded-xl text-xs transition-all duration-200 cursor-pointer ${
                 activeSubcat === null
-                  ? 'bg-stone-900 text-white shadow-md'
-                  : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 shadow-xs'
+                  ? 'bg-[#F68B62] text-white shadow-md shadow-[#F68B62]/20 font-bold border border-[#F68B62]'
+                  : 'bg-white hover:bg-[#FCEFEA] text-stone-700 hover:text-[#F68B62] border border-stone-200 hover:border-[#F68B62]/30 shadow-xs font-semibold'
               }`}
             >
               {isFrench ? "Tous" : "All"} ({groceryProducts.length})
@@ -333,7 +333,7 @@ export default function SoukdayGrocerySection({
         )}
 
         {/* Dedicated Soukday Grocery Page CTA Button */}
-        <div className="flex justify-center pt-3 sm:pt-4">
+        <div className="flex justify-center pt-6 sm:pt-8">
           <Link
             href="/epicerie-soukday"
             className="inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl bg-[#F68B62] hover:bg-[#e07047] text-white font-black text-sm sm:text-base shadow-md hover:shadow-xl hover:shadow-[#F68B62]/30 active:scale-95 transition-all duration-200 cursor-pointer group"

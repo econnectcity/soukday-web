@@ -1,5 +1,6 @@
 import { Store, Category, Product, UserAddress, LiveWebSettings } from '../types';
 import { getTranslatedCategoryName } from '../utils/categoryTranslation';
+import { DEFAULT_CATEGORIES } from '../data/mockData';
 
 export const DEFAULT_LIVE_SETTINGS = {
   siteTitle: 'Soukday - Épiceries orientales & Boucheries Halal',
@@ -45,14 +46,20 @@ export const DEFAULT_LIVE_SETTINGS = {
   otherStoresSectionSubtitle: 'Supermarchés orientaux, pâtisseries fines, épiceries de quartier et traiteurs pour votre adresse',
 
   footerAboutText: 'Soukday est la première plateforme au Québec dédiée aux épiceries orientales, boucheries halal certifiées et commerces de spécialités avec livraison locale et expédition nationale.',
-  footerAddress: 'Montréal, Québec, Canada',
   footerEmail: 'support@soukday.ca',
   footerPhone: '+1 (514) 000-0000',
   copyrightDetails: '© 2026 Soukday Inc. Tous droits réservés. Plateforme de commerce multi-vendeurs.',
 };
 
+const getApiBaseUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl && !envUrl.includes('127.0.0.1') && !envUrl.includes('localhost') && envUrl.startsWith('http')) {
+    return envUrl;
+  }
+  return 'https://admin.soukday.ca';
+};
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+const API_BASE_URL = getApiBaseUrl();
 const ACCESS_KEY = '903361';
 
 function parseLocalized(val: any): string {
@@ -213,7 +220,10 @@ export async function fetchLiveCategories(lang: string = 'fr'): Promise<Category
   } catch (err) {
     console.error('Error fetching categories from API:', err);
   }
-  return [];
+  return DEFAULT_CATEGORIES.map((c) => ({
+    ...c,
+    name: getTranslatedCategoryName(c, isFr),
+  }));
 }
 
 export async function fetchLiveSellers(lat: number = 45.5017, lng: number = -73.5673): Promise<Store[]> {
