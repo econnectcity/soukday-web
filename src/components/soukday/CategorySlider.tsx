@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { useCart } from '@/context/SoukdayCartContext';
 import { Category } from '@/types';
 import { useTranslation } from '@/utils/translation';
-import { ChevronLeft, ChevronRight, Layers } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 
 interface CategorySliderProps {
   categories?: Category[];
@@ -38,18 +38,15 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
         
         {/* Section Header */}
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-[#FCEFEA] border border-[#F68B62]/30 flex items-center justify-center text-[#F68B62] shadow-xs shrink-0">
-              <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-            <div className="min-w-0">
-              <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight leading-tight">
-                {isFrench ? "Rayons & Catégories" : "Aisles & Categories"}
-              </h2>
-              <p className="text-xs sm:text-sm text-stone-500 font-medium truncate sm:whitespace-normal">
-                {isFrench ? "Parcourez tous les rayons frais, épiceries et spécialités" : "Browse all fresh aisles, groceries, and specialties"}
-              </p>
-            </div>
+          <div className="min-w-0">
+            <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight leading-tight">
+              {isFrench ? "Tout un souk à découvrir" : "A whole souk to discover"}
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-500 font-medium truncate sm:whitespace-normal mt-0.5">
+              {isFrench 
+                ? "Épicerie, viandes halal, pâtisseries et bien plus." 
+                : "Groceries, halal meats, pastries and much more."}
+            </p>
           </div>
 
           {/* Navigation Arrows */}
@@ -57,18 +54,18 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
             <button
               type="button"
               onClick={() => scroll('left')}
-              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 shadow-xs transition-colors cursor-pointer"
+              className="w-9 h-9 rounded-full border border-[#F68B62] bg-[#F68B62] hover:bg-[#e07750] hover:border-[#e07750] flex items-center justify-center text-white shadow-xs hover:shadow-sm active:scale-95 transition-all duration-200 cursor-pointer"
               aria-label="Précédent"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 text-white" />
             </button>
             <button
               type="button"
               onClick={() => scroll('right')}
-              className="w-9 h-9 rounded-full border border-stone-200 bg-white flex items-center justify-center text-stone-600 hover:text-[#F68B62] hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 shadow-xs transition-colors cursor-pointer"
+              className="w-9 h-9 rounded-full border border-[#F68B62] bg-[#F68B62] hover:bg-[#e07750] hover:border-[#e07750] flex items-center justify-center text-white shadow-xs hover:shadow-sm active:scale-95 transition-all duration-200 cursor-pointer"
               aria-label="Suivant"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 text-white" />
             </button>
           </div>
         </div>
@@ -93,18 +90,13 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                 ? 'bg-white/20 text-white'
                 : 'bg-[#FCEFEA] text-[#F68B62] group-hover:bg-[#F68B62] group-hover:text-white'
             }`}>
-              <Layers className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+              <Sparkles className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
             </div>
             <div>
               <div className={`text-xs font-bold leading-tight transition-colors ${
-                selectedCategory === null ? 'text-white' : 'text-[#F68B62]'
+                selectedCategory === null ? 'text-white' : 'text-black'
               }`}>
-                Tous les rayons
-              </div>
-              <div className={`text-[10px] leading-snug transition-colors ${
-                selectedCategory === null ? 'text-white/80' : 'text-stone-400 group-hover:text-stone-600'
-              }`}>
-                Tout le catalogue
+                {isFrench ? "Tous les rayons" : "All aisles"}
               </div>
             </div>
           </button>
@@ -138,11 +130,8 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                   </span>
                 </div>
                 <div>
-                  <div className={`text-xs font-bold leading-tight transition-colors ${isSelected ? 'text-white' : 'text-[#F68B62]'}`}>
+                  <div className={`text-xs font-bold leading-tight transition-colors ${isSelected ? 'text-white' : 'text-black'}`}>
                     {cat.name}
-                  </div>
-                  <div className={`text-[10px] leading-snug truncate max-w-[120px] transition-colors ${isSelected ? 'text-white/80' : 'text-stone-400 group-hover:text-stone-600'}`}>
-                    {cat.subtitle}
                   </div>
                 </div>
               </button>

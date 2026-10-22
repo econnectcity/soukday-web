@@ -70,10 +70,21 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight leading-[1.15]">
-              <span className="block">Plusieurs magasins</span>
-              <span className="block mt-1">
-                <span className="text-[#F68B62] italic">Halal</span> sur un seul site
-              </span>
+              {isFrench ? (
+                <>
+                  <span className="block">Plusieurs magasins</span>
+                  <span className="block mt-1">
+                    <span className="text-[#F68B62] italic">Halal</span> sur un seul site
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="block">Multiple stores</span>
+                  <span className="block mt-1">
+                    <span className="text-[#F68B62] italic">Halal</span> on a single site
+                  </span>
+                </>
+              )}
             </h1>
 
             <p className="text-stone-600 text-sm sm:text-base max-w-xl leading-relaxed">

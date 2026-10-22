@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -52,9 +52,9 @@ export default function SoukdayGrocerySection({
 
   return (
     <section className="w-full bg-gradient-to-b from-stone-50 via-white to-stone-50">
-      {/* 1. Full-Width Edge-to-Edge Highlight Banner (No space left or right) */}
+      {/* 1. Full-Width Edge-to-Edge Highlight Banner (Commented out for now) */}
+      {/* 
       <div className="w-full bg-gradient-to-r from-stone-950 via-stone-900 to-stone-950 text-white py-12 sm:py-16 border-y border-stone-800 relative overflow-hidden shadow-lg">
-        {/* Ambient atmospheric glows */}
         <div className="absolute -right-16 -bottom-16 w-96 h-96 bg-[#F68B62]/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -left-16 -top-16 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -104,6 +104,7 @@ export default function SoukdayGrocerySection({
           </div>
         </div>
       </div>
+      */}
 
       {/* 2. Subcategories & Products Grid Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-7">
