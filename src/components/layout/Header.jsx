@@ -21,6 +21,21 @@ import {
 
 const Login = dynamic(() => import('../login/Login'), { ssr: false });
 
+function CanadaFlag({ className = "w-4 h-3" }) {
+  return (
+    <svg 
+      viewBox="0 0 640 480" 
+      className={className} 
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path fill="#d80621" d="M0 0h640v480H0z"/>
+      <path fill="#ffffff" d="M160 0h320v480H160z"/>
+      <path fill="#d80621" d="m320 72.8 13.6 42.6 30.6-20.9-10 40 44-7.4-23.7 34.3 43.1 19.3-43 14 18.3 38.6-35.3-7.5 4.3 39-31.9-25.7-4 75.8h-12l-4-75.8-31.9 25.7 4.3-39-35.3 7.5 18.3-38.6-43-14 43.1-19.3-23.7-34.3 44 7.4-10-40 30.6 20.9z"/>
+    </svg>
+  );
+}
+
 export default function Header() {
   const dispatch = useDispatch();
   const settingState = useSelector((state) => state.Setting);
@@ -230,7 +245,7 @@ export default function Header() {
 
             {/* 4. Right Action Controls: Language, Login Icon, Cart Icon */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              {/* Language toggle (FR/EN) */}
+              {/* Language Switcher - Circular button like cart with Canadian flag & opposite target language */}
               <button 
                 type="button" 
                 onClick={() => {
@@ -244,11 +259,18 @@ export default function Header() {
                   }
                   dispatch(setSelectedLanguage({ data: nextLang }));
                 }}
-                title={isFrench ? "Basculer en anglais / Switch to English" : "Passer en français / Switch to French"}
-                className="flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-[#F68B62] px-3.5 sm:px-4 h-11 sm:h-12 rounded-full border border-stone-200/70 bg-stone-50 hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0"
+                title={isFrench ? "Passer en anglais / Switch to English" : "Passer en français / Switch to French"}
+                aria-label={isFrench ? "Passer en anglais" : "Switch to French"}
+                className="group relative flex items-center justify-center w-11 sm:w-12 h-11 sm:h-12 rounded-full border border-stone-200/80 bg-white hover:bg-stone-50 hover:border-stone-400 text-stone-900 shadow-2xs hover:shadow-xs hover:-translate-y-0.5 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
               >
-                <Globe className="w-3.5 h-3.5 text-[#F68B62]" />
-                <span>{(currentCode || 'fr').toUpperCase()}</span>
+                <div className="flex items-center justify-center gap-1 select-none">
+                  <span className="w-4 h-3 rounded-[2px] overflow-hidden border border-stone-200/60 shadow-2xs shrink-0 flex items-center justify-center">
+                    <CanadaFlag className="w-full h-full object-cover" />
+                  </span>
+                  <span className="text-[11px] sm:text-xs font-black tracking-tight text-stone-800 group-hover:text-[#F68B62] transition-colors">
+                    {isFrench ? "EN" : "FR"}
+                  </span>
+                </div>
               </button>
 
               {/* Login & Register Buttons (or User Profile when logged in) */}
