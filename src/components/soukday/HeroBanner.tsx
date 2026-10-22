@@ -6,7 +6,7 @@ import { POPULAR_LOCATIONS } from '@/data/mockData';
 import { LiveWebSettings } from '@/types';
 import { DEFAULT_LIVE_SETTINGS } from '@/services/soukdayApi';
 import { useTranslation } from '@/utils/translation';
-import { MapPin, ArrowRight, ShieldCheck, Truck, Sparkles, CheckCircle2 } from 'lucide-react';
+import { MapPin, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 interface HeroBannerProps {
   settings?: LiveWebSettings;
@@ -67,29 +67,19 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
           {/* Left Column: Headline & Address Input */}
           <div className="lg:col-span-7 space-y-6">
             
-            {/* Pill tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/30 text-xs font-bold tracking-wide shadow-xs">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>
-                {settings?.heroTagline || (isFrench ? 'Votre marché oriental & local à portée de clic' : 'Your oriental & local market at your fingertips')}
-              </span>
-            </div>
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight leading-[1.15]">
-              {isFrench ? (
-                settings?.heroTitle || (
-                  <>Vos <span className="text-[#F68B62]">épiceries fines</span> & <span className="text-[#F68B62]">boucheries locales</span> livrées à votre porte.</>
-                )
-              ) : (
-                <>Your <span className="text-[#F68B62]">fine groceries</span> & <span className="text-[#F68B62]">local butcher shops</span> delivered to your door.</>
-              )}
+              <span className="block">Plusieurs magasins</span>
+              <span className="block mt-1">
+                <span className="text-[#F68B62] italic">Halal</span> sur un seul site
+              </span>
             </h1>
 
             <p className="text-stone-600 text-sm sm:text-base max-w-xl leading-relaxed">
               {isFrench 
-                ? (settings?.heroSubtitle || 'Entrez votre code postal pour découvrir les boucheries halal et magasins qui livrent chez vous. Les produits d’épicerie directe Soukday sont expédiés partout au Canada et aux États-Unis !')
-                : 'Enter your postal code to discover halal butcher shops and stores delivering to you. Soukday direct grocery items are shipped across Canada and the United States!'}
+                ? 'Soukday regroupe plusieurs commerces sur une même plateforme. Saisissez votre adresse pour découvrir les magasins et produits disponibles en livraison chez vous.'
+                : 'Soukday brings multiple businesses together on a single platform. Enter your address to discover the stores and products available for delivery to your door.'}
             </p>
 
             {/* Address / Postal Code Form */}
@@ -101,15 +91,15 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                     type="text"
                     value={inputVal}
                     onChange={(e) => setInputVal(e.target.value)}
-                    placeholder={isFrench ? "Entrez votre code postal ou ville (ex: H4L 3M8, Montréal)" : "Enter your postal code or city (e.g. H4L 3M8, Montreal)"}
-                    className="w-full pl-11 pr-4 py-3 rounded-xl bg-stone-50 border border-transparent focus:border-[#F68B62] focus:bg-white text-stone-900 font-semibold text-sm placeholder-stone-400 focus:outline-none transition-all uppercase"
+                    placeholder={isFrench ? "Saisissez votre adresse" : "Enter your address"}
+                    className="w-full pl-11 pr-4 py-3 rounded-xl bg-stone-50 border border-transparent focus:border-[#F68B62] focus:bg-white text-stone-900 font-semibold text-sm placeholder-stone-400 placeholder:normal-case focus:outline-none transition-all"
                   />
                 </div>
                 <button
                   type="submit"
                   className="w-full sm:w-auto px-6 py-3 bg-[#F68B62] hover:bg-[#e07750] text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-md shadow-[#F68B62]/30 active:scale-95 transition-all duration-200 cursor-pointer whitespace-nowrap group hover:shadow-lg hover:shadow-[#F68B62]/40"
                 >
-                  <span>{isFrench ? "Voir les magasins" : "See stores"}</span>
+                  <span>{isFrench ? "DÉCOUVRIR" : "DISCOVER"}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
                 </button>
               </form>
@@ -126,23 +116,6 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                 </div>
               )}
             </div>
-
-            {/* Trust Badges */}
-            <div className="grid grid-cols-3 gap-3 pt-3 border-t border-stone-200/60 max-w-xl text-stone-700 text-xs">
-              <div className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-[#FCEFEA]/60 transition-colors duration-200 cursor-pointer">
-                <Truck className="w-4 h-4 text-[#F68B62] shrink-0" />
-                <span className="font-medium">{settings?.heroBadge1 || (isFrench ? 'Livraison le jour même' : 'Same-day delivery')}</span>
-              </div>
-              <div className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-[#FCEFEA]/60 transition-colors duration-200 cursor-pointer">
-                <ShieldCheck className="w-4 h-4 text-[#F68B62] shrink-0" />
-                <span className="font-medium">{settings?.heroBadge2 || (isFrench ? 'Boucheries 100% Halal' : '100% Halal Butchers')}</span>
-              </div>
-              <div className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-[#FCEFEA]/60 transition-colors duration-200 cursor-pointer">
-                <Sparkles className="w-4 h-4 text-[#F68B62] shrink-0" />
-                <span className="font-medium">{settings?.heroBadge3 || (isFrench ? 'Épicerie Canada & USA' : 'Groceries Canada & USA')}</span>
-              </div>
-            </div>
-
           </div>
 
           {/* Right Column: Hero Visual Card */}
@@ -159,65 +132,6 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
                   alt={isFrench ? "Épicerie et produits frais Soukday" : "Fresh groceries and products Soukday"}
                   className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 opacity-80 group-hover:opacity-90 transition-opacity" />
-                
-                {/* Clean Top-Left Partner Counter Badge (White background) */}
-                <div className="absolute top-3.5 left-3.5 z-10">
-                  <div 
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-stone-900 text-xs font-bold border border-white shadow-md"
-                    style={{ backgroundColor: '#ffffff' }}
-                  >
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>{isFrench ? "10+ Magasins & Boucheries Partenaires" : "10+ Partner Stores & Butcheries"}</span>
-                  </div>
-                </div>
-
-                {/* Clean Bottom-Right Fresh Guarantee Badge (White background) */}
-                <div className="absolute bottom-3.5 right-3.5 z-10 text-right">
-                  <span 
-                    className="inline-block px-2.5 py-1 rounded-lg bg-white text-stone-900 text-[11px] font-bold border border-white shadow-sm"
-                    style={{ backgroundColor: '#ffffff' }}
-                  >
-                    {isFrench ? "Frais du jour garantis" : "Daily Fresh Guaranteed"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Floating Badge 1: Local Halal Butcher Highlight (Solid White Pill) */}
-              <div 
-                className="absolute -bottom-5 -left-3 sm:-left-5 z-20 bg-white px-4 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-200/80 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer"
-                style={{ backgroundColor: '#ffffff' }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xl shadow-xs shrink-0">
-                  🥩
-                </div>
-                <div>
-                  <div className="text-xs font-black text-stone-900 leading-tight">
-                    {isFrench ? "Boucheries Halal Locales" : "Local Halal Butcheries"}
-                  </div>
-                  <div className="text-[11px] text-emerald-600 font-bold flex items-center gap-1.5 mt-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    {isFrench ? "Livraison en 30-45 min" : "Delivery in 30-45 min"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Badge 2: Nationwide Grocery (Solid White Pill) */}
-              <div 
-                className="absolute -top-4 -right-3 sm:-right-5 z-20 bg-white px-4 py-2.5 rounded-2xl shadow-xl shadow-stone-900/10 border border-stone-200/80 flex items-center gap-3 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer"
-                style={{ backgroundColor: '#ffffff' }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center font-black text-xs border border-[#F68B62]/20 shadow-xs shrink-0">
-                  CA
-                </div>
-                <div>
-                  <div className="text-xs font-black text-stone-900 leading-tight">
-                    {isFrench ? "Expédition Nationale" : "Nationwide Shipping"}
-                  </div>
-                  <div className="text-[11px] text-stone-500 font-medium mt-0.5">
-                    {isFrench ? "Partout au Canada & USA" : "All across Canada & USA"}
-                  </div>
-                </div>
               </div>
 
             </div>
