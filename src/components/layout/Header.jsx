@@ -29,6 +29,17 @@ export default function Header() {
   const { currentCode, isFrench } = useTranslation();
   
   const [showLogin, setShowLogin] = useState(false);
+  const [initialRegister, setInitialRegister] = useState(false);
+
+  const handleOpenLogin = () => {
+    setInitialRegister(false);
+    setShowLogin(true);
+  };
+
+  const handleOpenRegister = () => {
+    setInitialRegister(true);
+    setShowLogin(true);
+  };
 
   const setting = settingState?.setting || {};
   const webSettings = setting?.web_settings || {};
@@ -71,32 +82,32 @@ export default function Header() {
             {/* Half 1 (50% of track) */}
             <div className="flex items-center shrink-0">
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Truck className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Truck className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Livraison gratuite sur tout achat de 150$ et plus" : "Free delivery on all orders over $150"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Clock className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Clock className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Délai de livraison 24 - 48 h" : "Delivery time: 24 - 48 hrs"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Calendar className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Calendar className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Livraison sur la Rive-sud seulement les fins de semaines" : "South Shore delivery on weekends only"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Truck className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Truck className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Livraison gratuite sur tout achat de 150$ et plus" : "Free delivery on all orders over $150"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Clock className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Clock className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Délai de livraison 24 - 48 h" : "Delivery time: 24 - 48 hrs"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Calendar className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Calendar className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Livraison sur la Rive-sud seulement les fins de semaines" : "South Shore delivery on weekends only"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
@@ -105,32 +116,32 @@ export default function Header() {
             {/* Half 2 (Exact identical 50% duplicate for seamless infinite loop) */}
             <div className="flex items-center shrink-0" aria-hidden="true">
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Truck className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Truck className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Livraison gratuite sur tout achat de 150$ et plus" : "Free delivery on all orders over $150"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Clock className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Clock className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Délai de livraison 24 - 48 h" : "Delivery time: 24 - 48 hrs"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Calendar className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Calendar className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Livraison sur la Rive-sud seulement les fins de semaines" : "South Shore delivery on weekends only"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Truck className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Truck className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Livraison gratuite sur tout achat de 150$ et plus" : "Free delivery on all orders over $150"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Clock className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Clock className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Délai de livraison 24 - 48 h" : "Delivery time: 24 - 48 hrs"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
               <span className="inline-flex items-center gap-2 px-8 font-semibold tracking-wide">
-                <Calendar className="w-3.5 h-3.5 opacity-90 shrink-0" />
+                <Calendar className="w-3.5 h-3.5 text-black shrink-0" />
                 {isFrench ? "Livraison sur la Rive-sud seulement les fins de semaines" : "South Shore delivery on weekends only"}
               </span>
               <span className="text-white/40 text-xs">✦</span>
@@ -240,30 +251,43 @@ export default function Header() {
                 <span>{(currentCode || 'fr').toUpperCase()}</span>
               </button>
 
-              {/* Login / Profile Icon */}
+              {/* Login & Register Buttons (or User Profile when logged in) */}
               {user ? (
                 <Link
                   href="/profile"
-                  title={user.name || 'Mon Compte'}
-                  className="flex items-center justify-center w-9 sm:w-10 h-9 sm:h-10 rounded-xl text-stone-700 hover:text-[#F68B62] hover:bg-[#FCEFEA]/60 border border-stone-200/70 hover:border-[#F68B62]/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
-                  aria-label="Mon Compte"
+                  title={user.name || (isFrench ? 'Mon compte' : 'My Account')}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200/80 bg-stone-50 hover:bg-[#FCEFEA] hover:border-[#F68B62]/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer shrink-0"
+                  aria-label={user.name || (isFrench ? 'Mon compte' : 'Account')}
                 >
-                  <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-[#FCEFEA] flex items-center justify-center text-[#F68B62] font-bold text-xs border border-[#F68B62]/30 shrink-0">
-                    {user.name ? user.name.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
+                  <div className="w-6 sm:w-7 h-6 sm:h-7 rounded-full bg-[#FCEFEA] flex items-center justify-center text-[#F68B62] font-bold text-xs border border-[#F68B62]/30 shrink-0">
+                    {user.name ? user.name.charAt(0).toUpperCase() : <User className="w-3.5 h-3.5" />}
                   </div>
+                  <span className="hidden md:inline text-xs font-semibold text-stone-800 max-w-[110px] truncate">
+                    {user.name || (isFrench ? 'Mon compte' : 'Account')}
+                  </span>
                 </Link>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowLogin(true)}
-                  className="flex items-center justify-center w-9 sm:w-10 h-9 sm:h-10 rounded-xl text-stone-700 hover:text-[#F68B62] hover:bg-[#FCEFEA]/60 border border-stone-200/70 hover:border-[#F68B62]/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
-                  title="Se connecter"
-                  aria-label="Connexion"
-                >
-                  <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-stone-100 group-hover:bg-[#FCEFEA] flex items-center justify-center text-stone-600 group-hover:text-[#F68B62] transition-colors shrink-0">
-                    <User className="w-4 h-4" />
-                  </div>
-                </button>
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                  {/* Connexion (Log in) */}
+                  <button
+                    type="button"
+                    onClick={handleOpenLogin}
+                    className="h-8.5 sm:h-9.5 px-3 sm:px-4.5 rounded-full bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 text-stone-900 font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 active:scale-95 cursor-pointer shadow-2xs whitespace-nowrap"
+                    title={isFrench ? "Connexion" : "Log in"}
+                  >
+                    {isFrench ? "Connexion" : "Log in"}
+                  </button>
+
+                  {/* S’inscrire (Sign up) - Orange pill matching brand */}
+                  <button
+                    type="button"
+                    onClick={handleOpenRegister}
+                    className="h-8.5 sm:h-9.5 px-3 sm:px-4.5 rounded-full bg-[#F68B62] hover:bg-[#e07750] border border-[#F68B62] text-white font-semibold text-xs sm:text-sm tracking-tight transition-all duration-200 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-95 cursor-pointer whitespace-nowrap"
+                    title={isFrench ? "S’inscrire" : "Sign up"}
+                  >
+                    {isFrench ? "S’inscrire" : "Sign up"}
+                  </button>
+                </div>
               )}
 
               {/* Cart Icon */}
@@ -304,9 +328,16 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Customer Login Modal */}
+      {/* Customer Login / Register Modal */}
       {showLogin && (
-        <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+        <Login 
+          showLogin={showLogin} 
+          setShowLogin={(val) => {
+            setShowLogin(val);
+            if (!val) setInitialRegister(false);
+          }}
+          initialRegister={initialRegister}
+        />
       )}
     </>
   );

@@ -341,13 +341,21 @@ const Register = ({
     setConfirmPassword("");
     setFriendCode("");
     setShowRegister(false);
+    if (setShowLogin) {
+      setShowLogin(false);
+    }
     setIsLoading(false);
     setImagePreview(null);
     setProfileImage(null);
   };
 
   return (
-    <Dialog open={showRegister}>
+    <Dialog 
+      open={showRegister}
+      onOpenChange={(open) => {
+        if (!open) handleCloseRegister();
+      }}
+    >
       <DialogContent className="overflow-y-auto max-h-[90%]">
         <DialogHeader className="flex justify-between flex-row items-center">
           <div className="">
@@ -523,7 +531,12 @@ const Register = ({
               {t("alreadyHaveAnAccount")}{" "}
               <span
                 className="primaryColor underline ml-[2px] cursor-pointer"
-                onClick={() => setShowRegister(false)}
+                onClick={() => {
+                  setShowRegister(false);
+                  if (setShowLogin) {
+                    setShowLogin(true);
+                  }
+                }}
               >
                 {t("signIn")}
               </span>

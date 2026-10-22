@@ -42,7 +42,7 @@ import { setSetting } from "@/redux/slices/settingSlice";
 import ForgetPasswordModal from "../forgetpasswordmodal/ForgetPasswordModal";
 import { LocalizedLink } from "@/utils/localizedNav";
 
-export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
+export function Login({ showLogin, setShowLogin, setMobileActiveKey, initialRegister = false }) {
   const city = useSelector((state) => state.City.city);
   const cart = useSelector((state) => state.Cart);
   const setting = useSelector((state) => state.Setting.setting);
@@ -72,11 +72,17 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
   const [otpDisabled, setOtpDisabled] = useState(true);
   const [error, setError] = useState("");
   const [userAuthType, setUserAuthType] = useState("");
-  const [showRegister, setShowRegister] = useState(false);
+  const [showRegister, setShowRegister] = useState(initialRegister || false);
   const [showForgetPassword, setShowForgetPassword] = useState(false);
   const [phonePassword, setPhonePassword] = useState("");
   const [forgotPasswordType, setForgotPasswordType] = useState("");
   const [isErrorMessage, setIsErrorMessage] = useState(false);
+
+  useEffect(() => {
+    if (initialRegister) {
+      setShowRegister(true);
+    }
+  }, [initialRegister]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -495,7 +501,9 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
     setInputValue("");
     setInputType("");
     setLoading(false);
-    setMobileActiveKey(1);
+    if (setMobileActiveKey) {
+      setMobileActiveKey(1);
+    }
     setEmail("");
     setPassword("");
   };
@@ -809,7 +817,14 @@ export function Login({ showLogin, setShowLogin, setMobileActiveKey }) {
 
   return (
     <>
-      <Dialog open={showLogin}>
+      <Dialog 
+        open={showLogin && !showRegister}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleHideLogin();
+          }
+        }}
+      >
         <DialogContent className="overflow-y-auto overflow-x-hidden">
           <DialogHeader className="flex justify-between items-center flex-row">
             <div>
