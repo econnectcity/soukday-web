@@ -75,7 +75,7 @@ if (process.env.NEXT_PUBLIC_SEO == "true") {
 
 export const getServerSideProps = serverSidePropsFunction;
 
-export default function Index(props) {
+export default function Index(props = {}) {
   const router = useRouter();
   const slug = props.slug || router.query?.slug || "";
   const title = props.title || process.env.NEXT_PUBLIC_META_TITLE || "Soukday";

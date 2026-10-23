@@ -70,6 +70,7 @@ const ProductDetail = ({ slug: propSlug }) => {
   const hasDispatched = useRef(false);
   const dispatch = useDispatch();
   const router = useLocalizedRouter();
+  const { slug, isMobile, module: urlModuleSlug } = router.query || {};
   const rawSlug = propSlug || slug || (typeof window !== "undefined" ? window.location.pathname.split("/product/")[1]?.split("/")[0]?.split("?")[0] : "");
   const effectiveSlug = rawSlug ? decodeURIComponent(rawSlug).trim() : "";
   const pathname = usePathname();
