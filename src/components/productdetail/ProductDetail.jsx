@@ -66,6 +66,7 @@ import { useRedirectHomeOnModuleChange } from "@/utils/useRedirectHomeOnModuleCh
 import ProductCategorySidebar from "./ProductCategorySidebar";
 import StockNotificationModal from "./StockNotificationModal";
 import { Bell, Search, ChevronDown, ChevronRight } from "lucide-react";
+import { useCart } from "@/context/SoukdayCartContext";
 
 const ProductDetail = ({ slug: propSlug }) => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
@@ -85,6 +86,7 @@ const ProductDetail = ({ slug: propSlug }) => {
   const activeModuleId = useSelector((state) => state.Module.activeModuleId);
   const modules = useSelector((state) => state.Module.modules);
   const user = useSelector((state) => state.User);
+  const { selectedAddress, setIsAddressModalOpen } = useCart();
 
   // In Soukday single-module mode, don't bounce out on load
   // useRedirectHomeOnModuleChange();
@@ -511,17 +513,47 @@ const ProductDetail = ({ slug: propSlug }) => {
 
   const effectivePrice =
     selectVariant?.discounted_price &&
-    selectVariant.discounted_price !== 0 &&
-    selectVariant.discounted_price !== selectVariant.price
+    Number(selectVariant.discounted_price) > 0 &&
+    Number(selectVariant.discounted_price) < Number(selectVariant?.price)
       ? selectVariant.discounted_price
       : selectVariant?.price;
 
-  const hasDiscount =
+  const hasDiscount = Boolean(
     selectVariant?.discounted_price &&
-    selectVariant.discounted_price !== 0 &&
-    selectVariant.discounted_price !== selectVariant.price;
+    Number(selectVariant.discounted_price) > 0 &&
+    Number(selectVariant.discounted_price) < Number(selectVariant?.price)
+  );
 
   const regularPrice = selectVariant?.price;
+
+  const hasCustomerAddress = Boolean(
+    selectedAddress && (selectedAddress.city || selectedAddress.postalCode || selectedAddress.address)
+  );
+
+  const sellerLat = product?.latitude || product?.seller?.latitude;
+  const sellerLng = product?.longitude || product?.seller?.longitude;
+  const customerLat = selectedAddress?.lat;
+  const customerLng = selectedAddress?.lng;
+
+  const getDistanceKm = (lat1, lon1, lat2, lon2) => {
+    if (!lat1 || !lon1 || !lat2 || !lon2) return null;
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+    return d.toFixed(1);
+  };
+
+  const calculatedDistance = hasCustomerAddress && sellerLat && customerLat
+    ? getDistanceKm(parseFloat(sellerLat), parseFloat(sellerLng), parseFloat(customerLat), parseFloat(customerLng))
+    : null;
 
   const categoryName =
     product?.category?.translations?.name ||
@@ -559,23 +591,6 @@ const ProductDetail = ({ slug: propSlug }) => {
     return null;
   };
 
-  const getNutritionValues = () => {
-    const cat = (product?.category_name || "").toLowerCase();
-    const name = (product?.name || "").toLowerCase();
-
-    if (name.includes("energy") || name.includes("boisson") || cat.includes("boisson")) {
-      return { calories: "160", sodium: "150mg", sugar: "38g", protein: "0g" };
-    }
-    if (name.includes("viande") || name.includes("poulet") || cat.includes("boucherie")) {
-      return { calories: "220", sodium: "75mg", sugar: "0g", protein: "26g" };
-    }
-    if (name.includes("makrout") || name.includes("patisserie") || cat.includes("patisserie")) {
-      return { calories: "320", sodium: "45mg", sugar: "28g", protein: "4g" };
-    }
-    return { calories: "140", sodium: "110mg", sugar: "12g", protein: "3g" };
-  };
-
-  const nutrition = getNutritionValues();
   const unitPriceStr = getUnitPriceDisplay();
 
   return (
@@ -681,11 +696,11 @@ const ProductDetail = ({ slug: propSlug }) => {
                       {/* Main Image Card with Zoom */}
                       <div className="relative flex-1 bg-white rounded-3xl border border-stone-200/90 p-4 aspect-square flex items-center justify-center overflow-hidden shadow-2xs group">
                         {/* Discount Badge */}
-                        {hasDiscount && (
+                        {hasDiscount ? (
                           <span className="absolute top-3 left-3 z-10 bg-[#db3d26] text-white text-[12px] font-black py-1 px-2.5 rounded-lg shadow-xs uppercase">
                             -{Math.round(calculateDiscount(selectVariant?.discounted_price, selectVariant?.price))}%
                           </span>
-                        )}
+                        ) : null}
 
                         {isMobileScreen ? (
                           <ImageWithPlaceholder
@@ -775,11 +790,11 @@ const ProductDetail = ({ slug: propSlug }) => {
                         </LocalizedLink>
                       </div>
 
-                      {/* Nutrition / Highlights Card */}
+                      {/* Product Highlights Card */}
                       <div className="bg-[#FBFBFB] rounded-2xl border border-stone-200/80 p-3.5 mt-1">
                         <div className="flex items-center justify-between mb-2.5">
                           <h3 className="font-extrabold text-stone-900 text-xs sm:text-sm">
-                            {isFrench ? "Valeurs nutritives & infos" : "Nutrition"}
+                            {isFrench ? "Informations clés" : "Product Highlights"}
                           </h3>
                           <button
                             type="button"
@@ -798,34 +813,38 @@ const ProductDetail = ({ slug: propSlug }) => {
                         <div className="grid grid-cols-4 gap-2">
                           <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
                             <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
-                              {isFrench ? "Calories" : "Calories"}
+                              {isFrench ? "Format" : "Format"}
                             </div>
-                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5">
-                              {nutrition.calories}
-                            </div>
-                          </div>
-                          <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
-                            <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
-                              {isFrench ? "Sodium" : "Sodium"}
-                            </div>
-                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5">
-                              {nutrition.sodium}
+                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5 truncate">
+                              {selectVariant?.measurement} {selectVariant?.stock_unit_name || selectVariant?.unit?.translations?.short_code || ''}
                             </div>
                           </div>
                           <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
                             <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
-                              {isFrench ? "Sucre" : "Sugar"}
+                              {isFrench ? "Rayon" : "Aisle"}
                             </div>
-                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5">
-                              {nutrition.sugar}
+                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5 truncate">
+                              {categoryName}
                             </div>
                           </div>
                           <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
                             <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
-                              {isFrench ? "Protéines" : "Protein"}
+                              {isFrench ? "Qualité" : "Standard"}
                             </div>
-                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5">
-                              {nutrition.protein}
+                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5 truncate">
+                              {product?.indicator == 1
+                                ? isFrench ? "Végétarien" : "Vegetarian"
+                                : isFrench ? "100% Halal" : "100% Halal"}
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
+                            <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
+                              {isFrench ? "Garantie" : "Policy"}
+                            </div>
+                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5 truncate">
+                              {product?.return_status == 1
+                                ? `${product.return_days} ${isFrench ? 'j. retour' : 'd. return'}`
+                                : isFrench ? "Fraîcheur" : "Freshness"}
                             </div>
                           </div>
                         </div>
@@ -838,17 +857,19 @@ const ProductDetail = ({ slug: propSlug }) => {
                               </span>{" "}
                               {product?.short_description ||
                                 (product?.description
-                                  ? product.description.replace(/<[^>]*>?/gm, "").slice(0, 160) + "..."
+                                  ? product.description.replace(/<[^>]*>?/gm, "").slice(0, 200) + "..."
                                   : isFrench
                                   ? "Produit soigneusement sélectionné selon les standards de fraîcheur Soukday."
                                   : "Carefully selected product according to Soukday freshness standards.")}
                             </p>
-                            <p>
-                              <span className="font-bold text-stone-800">
-                                {isFrench ? "Conservation :" : "Storage:"}
-                              </span>{" "}
-                              {isFrench ? "Conserver dans un endroit frais et sec." : "Store in a cool, dry place."}
-                            </p>
+                            {product?.country_made_in && (
+                              <p>
+                                <span className="font-bold text-stone-800">
+                                  {isFrench ? "Origine :" : "Origin:"}
+                                </span>{" "}
+                                {product.country_made_in}
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>
@@ -921,28 +942,54 @@ const ProductDetail = ({ slug: propSlug }) => {
                             <h2 className="font-extrabold text-stone-900 text-base sm:text-lg leading-tight truncate">
                               {storeName}
                             </h2>
-                            {/* Lightning Delivery line */}
-                            <div className="flex items-center gap-1.5 text-xs text-stone-600 font-medium mt-1">
-                              <span className="text-emerald-600 font-bold flex items-center gap-0.5">
-                                ⚡ {isFrench ? "Livraison d'ici 15h30" : "Delivery by 3:15pm"}
-                              </span>
-                              <span>•</span>
-                              <span>0.9 km</span>
-                            </div>
-                            {/* Department tags */}
+                            {/* Delivery Information: Only show if customer has address! */}
+                            {hasCustomerAddress ? (
+                              <div className="flex items-center gap-1.5 text-xs text-stone-600 font-medium mt-1">
+                                <span className="text-emerald-600 font-bold flex items-center gap-0.5">
+                                  ⚡ {isFrench ? `Livraison à ${selectedAddress.city}` : `Delivery to ${selectedAddress.city}`}
+                                </span>
+                                {calculatedDistance ? (
+                                  <>
+                                    <span>•</span>
+                                    <span>{calculatedDistance} km</span>
+                                  </>
+                                ) : null}
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setIsAddressModalOpen && setIsAddressModalOpen(true)}
+                                className="text-xs text-stone-500 hover:text-[#F68B62] font-semibold flex items-center gap-1 mt-1 text-left transition-colors group"
+                              >
+                                <span>📍</span>
+                                <span className="underline group-hover:text-[#F68B62]">
+                                  {isFrench ? "Choisir une adresse de livraison" : "Select delivery address"}
+                                </span>
+                              </button>
+                            )}
+
+                            {/* Department / Category from actual product data */}
                             <p className="text-[11px] text-stone-500 font-medium mt-0.5 truncate">
-                              {isFrench
-                                ? "Épicerie • Boucherie • Pâtisserie"
-                                : "Groceries • Bakery • Deli"}
+                              {categoryName}
                             </p>
-                            {/* Small Badges */}
+
+                            {/* Badges from actual product properties */}
                             <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-stone-100 text-stone-600 border border-stone-200">
-                                100% Halal
-                              </span>
-                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                                {isFrench ? "Offres du jour" : "Lots of deals"}
-                              </span>
+                              {isSoukdayVendor || (product?.tag_names && String(product.tag_names).toLowerCase().includes("halal")) ? (
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-stone-100 text-stone-600 border border-stone-200">
+                                  100% Halal
+                                </span>
+                              ) : null}
+                              {product?.indicator == 1 ? (
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                  {isFrench ? "Végétarien" : "Vegetarian"}
+                                </span>
+                              ) : null}
+                              {hasDiscount ? (
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                  {isFrench ? "En promotion" : "Special deal"}
+                                </span>
+                              ) : null}
                             </div>
                           </div>
                         </div>
@@ -953,12 +1000,12 @@ const ProductDetail = ({ slug: propSlug }) => {
                             {currency}
                             {formatPriceDisplay(effectivePrice)}
                           </div>
-                          {hasDiscount && (
+                          {hasDiscount ? (
                             <div className="text-xs line-through text-stone-400 font-bold">
                               {currency}
                               {formatPriceDisplay(regularPrice)}
                             </div>
-                          )}
+                          ) : null}
                         </div>
                       </div>
 
