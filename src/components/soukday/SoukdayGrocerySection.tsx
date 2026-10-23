@@ -237,94 +237,121 @@ export default function SoukdayGrocerySection({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 pt-2">
             {displayProducts.map((product) => {
               const qty = getProductCartQuantity(product.id);
+              const [dollars, cents] = (product.price || 0).toFixed(2).split('.');
+              const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.price);
+              const discountPercent = hasDiscount 
+                ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100) 
+                : 0;
+
+              const sName = (product.storeName || '').trim();
+              const isSoukday = !sName || sName.toLowerCase().includes('soukday');
+              const vendorText = isSoukday
+                ? (isFrench ? "Vendu par Soukday" : "Sold by Soukday")
+                : `${isFrench ? "Vendu par " : "Sold by "}${sName}`;
+
               return (
                 <div
                   key={product.id}
-                  className="product-card group bg-white rounded-2xl p-3.5 sm:p-4 border border-stone-200/80 hover:border-[#F68B62]/60 hover:shadow-xl hover:shadow-[#F68B62]/10 transition-all duration-300 flex flex-col justify-between cursor-pointer"
+                  className="product-card group bg-white rounded-2xl p-2.5 sm:p-3 hover:shadow-xl hover:shadow-stone-200/50 transition-all duration-300 flex flex-col justify-between cursor-pointer"
                 >
                   <div>
-                    {/* Badges Row */}
-                    <div className="flex items-center justify-between gap-1 mb-2.5">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-50 text-[#F68B62] border border-orange-200/60 shadow-2xs">
-                        <Truck className="w-2.5 h-2.5" />
-                        <span>Canada &amp; USA</span>
-                      </span>
-                      {product.isHalal && (
-                        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-[#e06836] bg-[#FFF5EF] px-2 py-0.5 rounded-full border border-[#FF7A45]/30/60 shadow-2xs">
-                          <ShieldCheck className="w-2.5 h-2.5" />
-                          <span>Halal</span>
-                        </span>
-                      )}
-                    </div>
-
-                    <Link href={`/product/${product.slug || product.id}`} className="block group/link">
-                      {/* Product Image */}
-                      <div className="aspect-square rounded-xl overflow-hidden bg-stone-50/70 border border-stone-100/80 p-2.5 sm:p-3 mb-2.5 relative flex items-center justify-center group-hover:bg-white transition-colors duration-300">
+                    {/* Product Image & Top Floating Instacart-style Add Button */}
+                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-stone-50/70 p-2.5 sm:p-3 mb-2 flex items-center justify-center group-hover:bg-white transition-colors duration-300">
+                      <Link href={`/product/${product.slug || product.id}`} className="w-full h-full flex items-center justify-center">
                         <img
                           src={product.image}
                           alt={product.name}
                           className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300 ease-out"
                         />
-                      </div>
+                      </Link>
 
-                      {/* Brand / Provenance */}
-                      <div className="text-[10px] sm:text-[11px] font-semibold text-stone-400 flex items-center gap-1 mb-1 truncate">
-                        <span>{product.brand || 'Soukday'}</span>
-                        <span>•</span>
-                        <span className="truncate">{product.storeName}</span>
+                      {/* Floating Add to Cart Button */}
+                      <div className="absolute top-2 right-2 z-10">
+                        {qty === 0 ? (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              addToCart(product, 1);
+                            }}
+                            className="flex items-center gap-1 bg-[#F68B62] hover:bg-[#e07047] text-white px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-bold shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                          >
+                            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                            <span>{isFrench ? "Ajouter" : "Add"}</span>
+                          </button>
+                        ) : (
+                          <div 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            className="flex items-center bg-[#F68B62] text-white rounded-full p-0.5 shadow-md"
+                          >
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                updateQuantity(product.id, qty - 1);
+                              }}
+                              className="w-6 h-6 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="text-xs font-black px-1.5 min-w-[1.25rem] text-center">{qty}</span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                updateQuantity(product.id, qty + 1);
+                              }}
+                              className="w-6 h-6 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
+                            >
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
+                        )}
                       </div>
-
-                      {/* Title & Unit */}
-                      <h3 className="text-xs sm:text-sm font-bold text-stone-900 line-clamp-2 leading-snug group-hover/link:text-[#F68B62] transition-colors duration-200 min-h-[2.5rem] sm:min-h-[2.75rem]">
-                        {product.name}
-                      </h3>
-                      <div className="text-[11px] sm:text-xs font-medium text-stone-500 mt-1">
-                        {product.unit}
-                      </div>
-                    </Link>
-                  </div>
-
-                  {/* Price & Add to Cart button */}
-                  <div className="mt-3.5 pt-2.5 border-t border-stone-100">
-                    <div className="flex items-baseline gap-1.5 mb-2.5">
-                      <span className="text-base sm:text-lg font-black text-stone-900 tracking-tight">
-                        {product.price.toFixed(2)}$
-                      </span>
-                      {product.originalPrice && (
-                        <span className="text-xs text-stone-400 line-through">
-                          {product.originalPrice.toFixed(2)}$
-                        </span>
-                      )}
                     </div>
 
-                    {qty === 0 ? (
-                      <button
-                        type="button"
-                        onClick={() => addToCart(product, 1)}
-                        className="w-full py-2.5 px-3 rounded-xl bg-[#F68B62] hover:bg-[#e07047] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-[#F68B62]/25 active:scale-95 cursor-pointer"
-                      >
-                        <Plus className="w-4 h-4 stroke-[2.5]" />
-                        <span>{isFrench ? "Ajouter" : "Add"}</span>
-                      </button>
-                    ) : (
-                      <div className="flex items-center justify-between bg-[#F68B62] text-white rounded-xl p-1 shadow-sm">
-                        <button
-                          type="button"
-                          onClick={() => updateQuantity(product.id, qty - 1)}
-                          className="w-7 h-7 rounded-lg bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
-                        >
-                          <Minus className="w-3.5 h-3.5" />
-                        </button>
-                        <span className="text-xs sm:text-sm font-black px-2">{qty}</span>
-                        <button
-                          type="button"
-                          onClick={() => updateQuantity(product.id, qty + 1)}
-                          className="w-7 h-7 rounded-lg bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                        </button>
+                    {/* Product Details */}
+                    <Link href={`/product/${product.slug || product.id}`} className="block group/link">
+                      {/* Price Badge with Hero Banner Color (#FCEFEA) */}
+                      <div className="flex items-center flex-wrap gap-1.5">
+                        <div className="inline-flex items-start px-2 py-0.5 rounded-lg bg-[#FCEFEA] border border-[#F68B62]/20 shadow-2xs">
+                          <span className="text-lg sm:text-xl font-black text-stone-900 leading-none">
+                            {dollars}
+                          </span>
+                          <span className="text-[10px] sm:text-xs font-black text-[#D9531E] leading-none ml-0.5 mt-0.5">
+                            {cents}$
+                          </span>
+                        </div>
+                        {hasDiscount && (
+                          <span className="text-xs text-stone-400 line-through">
+                            {product.originalPrice!.toFixed(2)}$
+                          </span>
+                        )}
                       </div>
-                    )}
+
+                      {/* Discount Tag like Instacart */}
+                      {discountPercent > 0 && (
+                        <div className="text-[11px] font-bold text-emerald-600 mt-1">
+                          {isFrench ? `Réduction de ${discountPercent}%` : `${discountPercent}% off`}
+                        </div>
+                      )}
+
+                      {/* Product Name (Bigger font like Instacart) */}
+                      <h3 className="text-sm sm:text-[15px] font-bold text-stone-900 line-clamp-2 leading-snug group-hover/link:text-[#F68B62] transition-colors duration-200 mt-1.5 min-h-[2.4rem] sm:min-h-[2.6rem]">
+                        {product.name}
+                      </h3>
+
+                      {/* Vendor Attribution: Vendu par Soukday / Vendu par [store name] */}
+                      <div className="text-[11px] font-medium text-stone-400 truncate mt-1.5">
+                        {vendorText}
+                      </div>
+                    </Link>
                   </div>
                 </div>
               );
