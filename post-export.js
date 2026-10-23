@@ -69,6 +69,20 @@ const htaccessContent = `<IfModule mod_rewrite.c>
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
+  # Handle Next.js dynamic routes (product detail, categories, order details)
+  RewriteRule ^product/([^/]+)/?$ /product/[slug].html [L]
+  RewriteRule ^product/?$ /products.html [L]
+  RewriteRule ^categories/(.+)/?$ /categories/[...slug].html [L]
+  RewriteRule ^categories/?$ /404.html [L]
+  RewriteRule ^order-detail/([^/]+)/?$ /order-detail/[orderid].html [L]
+  RewriteRule ^order-detail/?$ /order-detail.html [L]
+  RewriteRule ^profile/orderhistory/([^/]+)/?$ /profile/orderhistory/[orderid].html [L]
+  RewriteRule ^profile/orderhistory/?$ /profile/orderhistory.html [L]
+
+  # Route matching .html static pages if they exist
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.*)$ /$1.html [L]
+
   # Route all other requests to index.html for client-side routing
   RewriteRule ^ index.html [L]
 </IfModule>

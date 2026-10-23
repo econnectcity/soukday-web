@@ -24,6 +24,8 @@ export const useRedirectHomeOnModuleChange = () => {
     const prev = prevModuleRef.current;
     prevModuleRef.current = activeModuleId;
 
+    // Platform is exclusively grocery single-module; never bounce out to homepage
+    if (!modules || modules.length <= 1) return;
     if (prev == null || prev === activeModuleId) return;
 
     // Module change driven by the URL (shared link) → don't redirect.
@@ -31,5 +33,5 @@ export const useRedirectHomeOnModuleChange = () => {
 
     // User-initiated module switch → this entity isn't in the new module.
     router.push("/");
-  }, [activeModuleId]);
+  }, [activeModuleId, modules]);
 };

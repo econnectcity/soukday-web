@@ -351,18 +351,30 @@ export const getProductById = async ({ latitude, longitude, slug, id }) => {
     console.warn("Direct getProductById failed:", err);
   }
 
-  // Fallback: If slug lookup failed, search catalog by products endpoint to find exact matching product
+  // Fallback: If slug lookup failed, search catalog by products endpoint to find matching product
   if (targetSlug) {
     try {
+      const cleanTarget = String(targetSlug).toLowerCase().trim();
+      const baseTarget = cleanTarget.replace(/-\d+-\d+$/, "");
+
       const searchRes = await api.post(
         apiEndPoints.getProducts,
         { latitude: userLat, longitude: userLng, limit: 100 },
         { headers: moduleHeader() }
       );
       if (searchRes.data?.status === 1 && Array.isArray(searchRes.data.data)) {
-        const matched = searchRes.data.data.find(
-          (p) => p.slug === targetSlug || String(p.id) === String(targetSlug) || p.slug?.toLowerCase() === targetSlug.toLowerCase()
-        );
+        const matched = searchRes.data.data.find((p) => {
+          if (!p) return false;
+          const pSlug = String(p.slug || "").toLowerCase().trim();
+          const pBaseSlug = pSlug.replace(/-\d+-\d+$/, "");
+          return (
+            pSlug === cleanTarget ||
+            String(p.id) === cleanTarget ||
+            pBaseSlug === baseTarget ||
+            pSlug.startsWith(cleanTarget) ||
+            cleanTarget.startsWith(pSlug)
+          );
+        });
         if (matched && matched.id) {
           const fallbackForm = new FormData();
           fallbackForm.append("latitude", userLat);

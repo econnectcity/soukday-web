@@ -70,8 +70,8 @@ const ProductDetail = ({ slug: propSlug }) => {
   const hasDispatched = useRef(false);
   const dispatch = useDispatch();
   const router = useLocalizedRouter();
-  const { slug, isMobile, module: urlModuleSlug } = router.query;
-  const effectiveSlug = propSlug || slug || (typeof window !== "undefined" ? window.location.pathname.split("/product/")[1]?.split("/")[0]?.split("?")[0] : "");
+  const rawSlug = propSlug || slug || (typeof window !== "undefined" ? window.location.pathname.split("/product/")[1]?.split("/")[0]?.split("?")[0] : "");
+  const effectiveSlug = rawSlug ? decodeURIComponent(rawSlug).trim() : "";
   const pathname = usePathname();
   const city = useSelector((state) => state.City.city);
   const setting = useSelector((state) => state.Setting);

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import Link from 'next/link';
+import { LocalizedLink as Link } from '@/utils/localizedNav';
 import { useCart } from '@/context/SoukdayCartContext';
 import { SOUKDAY_GROCERY_SUBCATEGORIES, SOUKDAY_DIRECT_PRODUCTS } from '@/data/mockData';
 import { Product } from '@/types';

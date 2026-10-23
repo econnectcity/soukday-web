@@ -15,7 +15,7 @@
   # Handle Next.js-like dynamic routes
   # ========================================
   RewriteRule ^categories/$ /404.html [L]
-  RewriteRule ^categories/([^/]+)/?$ /categories/[slug].html [L]
+  RewriteRule ^categories/(.+)/?$ /categories/[...slug].html [L]
 
   RewriteRule ^order-detail/$ /order-detail.html [L]
   RewriteRule ^order-detail/([^/]+)/?$ /order-detail/[orderid].html [L]

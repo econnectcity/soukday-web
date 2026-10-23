@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { LocalizedLink as Link } from '@/utils/localizedNav';
 import { useCart } from '@/context/SoukdayCartContext';
 import { Product } from '@/types';
 import { useTranslation } from '@/utils/translation';
