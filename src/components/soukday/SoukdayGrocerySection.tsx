@@ -108,8 +108,8 @@ export default function SoukdayGrocerySection({
       : [...groceryProducts]
   ).sort(sortByTopSelling);
 
-  // Exactly 2 lines of 5 products on desktop (10 products total)
-  const displayProducts = filteredProducts.slice(0, 10);
+  // Exactly 2 lines of 6 products on desktop (12 products total)
+  const displayProducts = filteredProducts.slice(0, 12);
 
   const getProductCartQuantity = (productId: number) => {
     const item = cart.find((i) => i.product.id === productId);
@@ -234,7 +234,7 @@ export default function SoukdayGrocerySection({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 pt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-2.5 sm:gap-3 pt-2">
             {displayProducts.map((product) => {
               const qty = getProductCartQuantity(product.id);
               const [dollars, cents] = (product.price || 0).toFixed(2).split('.');
@@ -245,18 +245,15 @@ export default function SoukdayGrocerySection({
 
               const sName = (product.storeName || '').trim();
               const isSoukday = !sName || sName.toLowerCase().includes('soukday');
-              const vendorText = isSoukday
-                ? (isFrench ? "Vendu par Soukday" : "Sold by Soukday")
-                : `${isFrench ? "Vendu par " : "Sold by "}${sName}`;
 
               return (
                 <div
                   key={product.id}
-                  className="product-card group bg-white rounded-2xl p-2.5 sm:p-3 hover:shadow-xl hover:shadow-stone-200/50 transition-all duration-300 flex flex-col justify-between cursor-pointer"
+                  className="product-card group bg-white rounded-2xl p-2 sm:p-2.5 hover:shadow-xl hover:shadow-stone-200/50 transition-all duration-300 flex flex-col justify-between cursor-pointer"
                 >
                   <div>
                     {/* Product Image & Top Floating Instacart-style Add Button */}
-                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-stone-50/70 p-2.5 sm:p-3 mb-2 flex items-center justify-center group-hover:bg-white transition-colors duration-300">
+                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-stone-50/70 p-2 sm:p-2.5 mb-2 flex items-center justify-center group-hover:bg-white transition-colors duration-300">
                       <Link href={`/product/${product.slug || product.id}`} className="w-full h-full flex items-center justify-center">
                         <img
                           src={product.image}
@@ -266,7 +263,7 @@ export default function SoukdayGrocerySection({
                       </Link>
 
                       {/* Floating Add to Cart Button */}
-                      <div className="absolute top-2 right-2 z-10">
+                      <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10">
                         {qty === 0 ? (
                           <button
                             type="button"
@@ -275,7 +272,7 @@ export default function SoukdayGrocerySection({
                               e.stopPropagation();
                               addToCart(product, 1);
                             }}
-                            className="flex items-center gap-1 bg-[#F68B62] hover:bg-[#e07047] text-white px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-bold shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                            className="flex items-center gap-1 bg-[#F68B62] hover:bg-[#e07047] text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                           >
                             <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                             <span>{isFrench ? "Ajouter" : "Add"}</span>
@@ -295,11 +292,11 @@ export default function SoukdayGrocerySection({
                                 e.stopPropagation();
                                 updateQuantity(product.id, qty - 1);
                               }}
-                              className="w-6 h-6 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
+                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
                             >
                               <Minus className="w-3 h-3" />
                             </button>
-                            <span className="text-xs font-black px-1.5 min-w-[1.25rem] text-center">{qty}</span>
+                            <span className="text-[11px] sm:text-xs font-black px-1 sm:px-1.5 min-w-[1.1rem] sm:min-w-[1.25rem] text-center">{qty}</span>
                             <button
                               type="button"
                               onClick={(e) => {
@@ -307,7 +304,7 @@ export default function SoukdayGrocerySection({
                                 e.stopPropagation();
                                 updateQuantity(product.id, qty + 1);
                               }}
-                              className="w-6 h-6 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
+                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
                             >
                               <Plus className="w-3 h-3" />
                             </button>
@@ -319,9 +316,9 @@ export default function SoukdayGrocerySection({
                     {/* Product Details */}
                     <Link href={`/product/${product.slug || product.id}`} className="block group/link">
                       {/* Price Badge with Hero Banner Color (#FCEFEA) */}
-                      <div className="flex items-center flex-wrap gap-1.5">
-                        <div className="inline-flex items-start px-2 py-0.5 rounded-lg bg-[#FCEFEA] border border-[#F68B62]/20 shadow-2xs">
-                          <span className="text-lg sm:text-xl font-black text-stone-900 leading-none">
+                      <div className="flex items-center flex-wrap gap-1">
+                        <div className="inline-flex items-start px-1.5 py-0.5 rounded-lg bg-[#FCEFEA] border border-[#F68B62]/20 shadow-2xs">
+                          <span className="text-base sm:text-lg font-black text-stone-900 leading-none">
                             {dollars}
                           </span>
                           <span className="text-[10px] sm:text-xs font-black text-[#D9531E] leading-none ml-0.5 mt-0.5">
@@ -337,19 +334,24 @@ export default function SoukdayGrocerySection({
 
                       {/* Discount Tag like Instacart */}
                       {discountPercent > 0 && (
-                        <div className="text-[11px] font-bold text-emerald-600 mt-1">
+                        <div className="text-[11px] font-bold text-emerald-600 mt-0.5">
                           {isFrench ? `Réduction de ${discountPercent}%` : `${discountPercent}% off`}
                         </div>
                       )}
 
-                      {/* Product Name (Bigger font like Instacart) */}
-                      <h3 className="text-sm sm:text-[15px] font-bold text-stone-900 line-clamp-2 leading-snug group-hover/link:text-[#F68B62] transition-colors duration-200 mt-1.5 min-h-[2.4rem] sm:min-h-[2.6rem]">
+                      {/* Product Name (Natural 1 or 2 lines without reserved blank height) */}
+                      <h3 className="text-xs sm:text-sm font-bold text-stone-900 line-clamp-2 leading-snug group-hover/link:text-[#F68B62] transition-colors duration-200 mt-1">
                         {product.name}
                       </h3>
 
-                      {/* Vendor Attribution: Vendu par Soukday / Vendu par [store name] */}
-                      <div className="text-[11px] font-medium text-stone-400 truncate mt-1.5">
-                        {vendorText}
+                      {/* Vendor Attribution: Vendu par in black and seller in orange */}
+                      <div className="text-[11px] sm:text-xs truncate mt-1">
+                        <span className="font-semibold text-stone-900">
+                          {isFrench ? "Vendu par " : "Sold by "}
+                        </span>
+                        <span className="font-bold text-[#F68B62]">
+                          {isSoukday ? "Soukday" : sName}
+                        </span>
                       </div>
                     </Link>
                   </div>
