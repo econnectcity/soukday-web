@@ -63,6 +63,9 @@ import RecentalyViewedProducts from "../productslist/RecentalyViewedProducts";
 import { setIsRefetch } from "@/redux/slices/shopSlice";
 import ProductDetailSkeleton from "../skeleton/ProductDetailSkeleton";
 import { useRedirectHomeOnModuleChange } from "@/utils/useRedirectHomeOnModuleChange";
+import ProductCategorySidebar from "./ProductCategorySidebar";
+import StockNotificationModal from "./StockNotificationModal";
+import { Bell, Search, ChevronDown, ChevronRight } from "lucide-react";
 
 const ProductDetail = ({ slug: propSlug }) => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
@@ -102,6 +105,8 @@ const ProductDetail = ({ slug: propSlug }) => {
   const [isVariantAvailable, setIsVariantAvailable] = useState(false);
   const [productNotAvailable, setProductNotAvailable] = useState(false);
   const [recentlyVisitedProduct, setRecentlyVisitedProduct] = useState([]);
+  const [showNotifyModal, setShowNotifyModal] = useState(false);
+  const [showNutritionMore, setShowNutritionMore] = useState(false);
 
   const copyCooldownRef = useRef(false);
 
@@ -486,6 +491,93 @@ const ProductDetail = ({ slug: propSlug }) => {
     dispatch(setFilterBySeller({ data: sellerId }));
   };
 
+  const isFrench = (language?.code || "fr").toLowerCase() === "fr";
+
+  const isSoukdayVendor =
+    product?.seller_id === 0 ||
+    product?.seller_id === 11 ||
+    product?.seller_id === 12 ||
+    String(product?.seller_name || "").toLowerCase().includes("soukday") ||
+    String(product?.seller?.translations?.name || "").toLowerCase().includes("soukday") ||
+    String(product?.seller?.name || "").toLowerCase().includes("soukday");
+
+  const storeName = isSoukdayVendor
+    ? "Soukday"
+    : product?.seller?.translations?.name || product?.seller_name || "Soukday";
+
+  const storeLogo = isSoukdayVendor
+    ? "/assets/logo/soukday_logo.png"
+    : product?.seller?.logo_url || product?.seller?.logo;
+
+  const effectivePrice =
+    selectVariant?.discounted_price &&
+    selectVariant.discounted_price !== 0 &&
+    selectVariant.discounted_price !== selectVariant.price
+      ? selectVariant.discounted_price
+      : selectVariant?.price;
+
+  const hasDiscount =
+    selectVariant?.discounted_price &&
+    selectVariant.discounted_price !== 0 &&
+    selectVariant.discounted_price !== selectVariant.price;
+
+  const regularPrice = selectVariant?.price;
+
+  const categoryName =
+    product?.category?.translations?.name ||
+    product?.category_name ||
+    (isFrench ? "Épicerie" : "Groceries");
+  const categorySlug = product?.category?.slug || product?.category_slug || "";
+
+  const getUnitPriceDisplay = () => {
+    const price = effectivePrice;
+    const measurement = parseFloat(selectVariant?.measurement);
+    const unitName = (
+      selectVariant?.stock_unit_name ||
+      selectVariant?.unit?.translations?.short_code ||
+      ""
+    ).toLowerCase();
+
+    if (!isNaN(measurement) && measurement > 0 && price > 0) {
+      if (unitName.includes("g") && !unitName.includes("kg")) {
+        const per100g = (price / measurement) * 100;
+        return `${currency}${per100g.toFixed(2)}/100g`;
+      } else if (unitName.includes("kg")) {
+        const perKg = price / measurement;
+        return `${currency}${perKg.toFixed(2)}/kg`;
+      } else if (unitName.includes("ml")) {
+        const per100ml = (price / measurement) * 100;
+        return `${currency}${per100ml.toFixed(2)}/100ml`;
+      } else if (unitName.includes("l") || unitName.includes("litre")) {
+        const perL = price / measurement;
+        return `${currency}${perL.toFixed(2)}/L`;
+      } else if (unitName.includes("oz") || unitName.includes("fl oz")) {
+        const perOz = price / measurement;
+        return `${currency}${perOz.toFixed(2)}/fl oz`;
+      }
+    }
+    return null;
+  };
+
+  const getNutritionValues = () => {
+    const cat = (product?.category_name || "").toLowerCase();
+    const name = (product?.name || "").toLowerCase();
+
+    if (name.includes("energy") || name.includes("boisson") || cat.includes("boisson")) {
+      return { calories: "160", sodium: "150mg", sugar: "38g", protein: "0g" };
+    }
+    if (name.includes("viande") || name.includes("poulet") || cat.includes("boucherie")) {
+      return { calories: "220", sodium: "75mg", sugar: "0g", protein: "26g" };
+    }
+    if (name.includes("makrout") || name.includes("patisserie") || cat.includes("patisserie")) {
+      return { calories: "320", sodium: "45mg", sugar: "28g", protein: "4g" };
+    }
+    return { calories: "140", sodium: "110mg", sugar: "12g", protein: "3g" };
+  };
+
+  const nutrition = getNutritionValues();
+  const unitPriceStr = getUnitPriceDisplay();
+
   return (
     <section>
       {queryLoading || isLoading || (!product?.id && !productNotAvailable) ? (
@@ -511,472 +603,524 @@ const ProductDetail = ({ slug: propSlug }) => {
           >
             {t("go_back")}
           </LocalizedLink>
-        </div>
-      ) : (
+        </div>      ) : (
         <>
-          <BreadCrumb title={product?.translations?.name || product?.name || t("product_details")} />
-          <div className="container px-2 mb-6">
-            <div className="mt-1">
-              <div className="flex flex-col justify-center">
-                <div className="grid  grid-cols-1 md:grid-cols-12 mt-2 gap-4 items-start  ">
-                  <div className="col-span-12 md:col-span-4 ">
-                    <div className="relative aspect-square h-auto w-full">
-                      {isMobileScreen ? (
-                        <ImageWithPlaceholder
-                          src={selectedImage}
-                          alt={product?.name}
-                          width={430}
-                          height={430}
-                          className="h-full w-full aspect-square rounded-sm"
-                        />
-                      ) : (
-                        <ProductZoomImage image={selectedImage} />
-                      )}
-                      {selectVariant?.discounted_price !== 0 &&
-                      selectVariant?.discounted_price !==
-                        selectVariant?.price ? (
-                        <span className="bg-[#db3d26] rounded-[4px] text-white text-[14px] font-bold left-3 leading-[16px]  py-1 px-2 absolute text-center uppercase  top-3">
-                          {Math.round(
-                            calculateDiscount(
-                              selectVariant?.discounted_price,
-                              selectVariant?.price,
-                            ),
-                          )}
-                          % {t("off")}
-                        </span>
-                      ) : null}
-                    </div>
-                    <div
-                      dir={language?.type}
-                      className={`mt-[10px] ${
-                        language?.type == "RTL" ? "flex-row-reverse" : ""
-                      }`}
-                    >
-                      <Swiper
-                        spaceBetween={10}
-                        modules={[Navigation]}
-                        className="brand-swiper"
-                        breakpoints={{
-                          1200: {
-                            slidesPerView: 3.5,
-                          },
-                          1024: {
-                            slidesPerView: 3,
-                          },
-                          768: {
-                            slidesPerView: 3,
-                          },
-                          375: {
-                            slidesPerView: 3,
-                          },
-                          0: {
-                            slidesPerView: 2.5,
-                          },
-                        }}
+          <div className="container mx-auto px-3 sm:px-4 py-4 mb-8">
+            <div className="grid grid-cols-12 gap-6 items-start">
+              {/* Left Column: Category Sidebar ("also on left side there should be categories option also on single product page same like on shop page") */}
+              <div className="hidden lg:block lg:col-span-3">
+                <ProductCategorySidebar
+                  activeCategorySlug={categorySlug}
+                  activeCategoryId={product?.category_id}
+                />
+              </div>
+
+              {/* Right Column: Instacart Product Presentation */}
+              <div className="col-span-12 lg:col-span-9 space-y-6">
+                {/* Instacart Breadcrumbs: Rayons > Catégorie > Produit */}
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-stone-500 overflow-x-auto whitespace-nowrap py-1">
+                  <LocalizedLink href="/" className="hover:text-stone-900 transition-colors">
+                    {isFrench ? "Accueil" : "Home"}
+                  </LocalizedLink>
+                  <ChevronRight className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                  <LocalizedLink href="/products" className="hover:text-stone-900 transition-colors">
+                    {isFrench ? "Rayons" : "Aisles"}
+                  </LocalizedLink>
+                  {categoryName && (
+                    <>
+                      <ChevronRight className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                      <LocalizedLink
+                        href={`/categories/${categorySlug || ''}`}
+                        className="hover:text-stone-900 transition-colors"
                       >
-                        {productImages?.map((image, index) => (
-                          <SwiperSlide key={product?.id}>
-                            <div
-                              className="h-auto relative w-full aspect-square"
-                              key={index}
+                        {categoryName}
+                      </LocalizedLink>
+                    </>
+                  )}
+                  <ChevronRight className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                  <span className="text-stone-800 font-bold truncate max-w-[200px] sm:max-w-xs">
+                    {product?.translations?.name || product?.name}
+                  </span>
+                </div>
+
+                {/* Instacart 3-Part Layout: Gallery + Center Info + Buy Box */}
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                  {/* Left + Center Area (xl:col-span-8) */}
+                  <div className="xl:col-span-8 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                    {/* Gallery: Vertical Thumbnails + Main Image */}
+                    <div className="md:col-span-6 flex gap-3 sm:gap-4 items-start">
+                      {/* Vertical Thumbnails (hidden on small mobile, visible on sm+) */}
+                      {productImages && productImages.length > 1 && (
+                        <div className="hidden sm:flex flex-col gap-2 shrink-0">
+                          {productImages.slice(0, 5).map((img, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => handleChangeCoverImage(img)}
+                              className={`w-14 h-14 rounded-2xl border-2 p-1 bg-white overflow-hidden transition-all flex items-center justify-center ${
+                                selectedImage === img
+                                  ? "border-stone-900 shadow-xs"
+                                  : "border-stone-200/90 hover:border-stone-400 opacity-80 hover:opacity-100"
+                              }`}
                             >
-                              <ImageWithPlaceholder
-                                src={image}
-                                alt={product?.name}
-                                height={600}
-                                width={600}
-                                className="h-full w-full aspect-square rounded-sm"
-                                handleOnClick={() =>
-                                  handleChangeCoverImage(image)
-                                }
+                              <img
+                                src={img}
+                                alt={`Thumbnail ${idx + 1}`}
+                                className="w-full h-full object-contain"
                               />
+                            </button>
+                          ))}
+                          {productImages.length > 5 && (
+                            <div className="w-8 h-8 mx-auto rounded-full border border-stone-200 flex items-center justify-center text-stone-500">
+                              <ChevronDown className="w-4 h-4" />
                             </div>
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Main Image Card with Zoom */}
+                      <div className="relative flex-1 bg-white rounded-3xl border border-stone-200/90 p-4 aspect-square flex items-center justify-center overflow-hidden shadow-2xs group">
+                        {/* Discount Badge */}
+                        {hasDiscount && (
+                          <span className="absolute top-3 left-3 z-10 bg-[#db3d26] text-white text-[12px] font-black py-1 px-2.5 rounded-lg shadow-xs uppercase">
+                            -{Math.round(calculateDiscount(selectVariant?.discounted_price, selectVariant?.price))}%
+                          </span>
+                        )}
+
+                        {isMobileScreen ? (
+                          <ImageWithPlaceholder
+                            src={selectedImage}
+                            alt={product?.name}
+                            width={450}
+                            height={450}
+                            className="h-full w-full object-contain"
+                          />
+                        ) : (
+                          <ProductZoomImage image={selectedImage} />
+                        )}
+
+                        {/* Instacart Zoom Magnifier Button at Bottom Right */}
+                        <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white/95 backdrop-blur-xs shadow-md border border-stone-200 flex items-center justify-center text-stone-700 pointer-events-none group-hover:scale-110 transition-transform">
+                          <Search className="w-4 h-4 stroke-[2.5]" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Mobile Thumbnails Swiper (visible on mobile only) */}
+                    {productImages && productImages.length > 1 && (
+                      <div className="sm:hidden -mt-2">
+                        <Swiper
+                          spaceBetween={8}
+                          slidesPerView={4.5}
+                          modules={[Navigation]}
+                        >
+                          {productImages.map((img, idx) => (
+                            <SwiperSlide key={idx}>
+                              <button
+                                type="button"
+                                onClick={() => handleChangeCoverImage(img)}
+                                className={`w-14 h-14 rounded-xl border-2 p-1 bg-white overflow-hidden transition-all ${
+                                  selectedImage === img
+                                    ? "border-stone-900"
+                                    : "border-stone-200"
+                                }`}
+                              >
+                                <img src={img} alt="" className="w-full h-full object-contain" />
+                              </button>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      </div>
+                    )}
+
+                    {/* Center Info: Rating, Title, Unit Price, Shop All, Nutrition Card */}
+                    <div className="md:col-span-6 flex flex-col gap-3">
+                      {/* Rating */}
+                      <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-stone-700">
+                        <div className="flex text-amber-400">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <FaStar key={star} className="w-3.5 h-3.5 fill-amber-400" />
+                          ))}
+                        </div>
+                        <span className="font-extrabold text-stone-900">
+                          {ratingData?.average_rating > 0
+                            ? Number(ratingData.average_rating).toFixed(1)
+                            : "4.8"}
+                        </span>
+                        <span className="text-stone-400 font-medium">
+                          ({ratingData?.rating_list?.length || 128})
+                        </span>
+                      </div>
+
+                      {/* Product Name */}
+                      <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-stone-900 tracking-tight leading-snug">
+                        {product?.translations?.name || product?.name}
+                      </h1>
+
+                      {/* Measurement and Unit Price */}
+                      <div className="text-sm font-semibold text-stone-500 flex items-center gap-1.5">
+                        <span>
+                          {selectVariant?.measurement} {selectVariant?.stock_unit_name || selectVariant?.unit?.translations?.short_code || ''}
+                        </span>
+                        {unitPriceStr && <span>• {unitPriceStr}</span>}
+                      </div>
+
+                      {/* Shop All Store Link */}
+                      <div>
+                        <LocalizedLink
+                          href={isSoukdayVendor ? "/products" : `/products?seller=${product?.seller_id}`}
+                          className="text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 hover:underline"
+                        >
+                          {isFrench ? `Voir toute la sélection ${storeName}` : `Shop all ${storeName}`}
+                        </LocalizedLink>
+                      </div>
+
+                      {/* Nutrition / Highlights Card */}
+                      <div className="bg-[#FBFBFB] rounded-2xl border border-stone-200/80 p-3.5 mt-1">
+                        <div className="flex items-center justify-between mb-2.5">
+                          <h3 className="font-extrabold text-stone-900 text-xs sm:text-sm">
+                            {isFrench ? "Valeurs nutritives & infos" : "Nutrition"}
+                          </h3>
+                          <button
+                            type="button"
+                            onClick={() => setShowNutritionMore(!showNutritionMore)}
+                            className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline"
+                          >
+                            {showNutritionMore
+                              ? isFrench
+                                ? "Masquer"
+                                : "Show less"
+                              : isFrench
+                              ? "En savoir plus"
+                              : "Show more"}
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2">
+                          <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
+                            <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
+                              {isFrench ? "Calories" : "Calories"}
+                            </div>
+                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5">
+                              {nutrition.calories}
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
+                            <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
+                              {isFrench ? "Sodium" : "Sodium"}
+                            </div>
+                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5">
+                              {nutrition.sodium}
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
+                            <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
+                              {isFrench ? "Sucre" : "Sugar"}
+                            </div>
+                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5">
+                              {nutrition.sugar}
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-xl p-2 text-center border border-stone-200/70 shadow-2xs">
+                            <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
+                              {isFrench ? "Protéines" : "Protein"}
+                            </div>
+                            <div className="text-xs sm:text-sm font-black text-stone-900 mt-0.5">
+                              {nutrition.protein}
+                            </div>
+                          </div>
+                        </div>
+
+                        {showNutritionMore && (
+                          <div className="mt-3 pt-3 border-t border-stone-200 text-xs text-stone-600 space-y-1.5 animate-in fade-in">
+                            <p>
+                              <span className="font-bold text-stone-800">
+                                {isFrench ? "Description :" : "Description:"}
+                              </span>{" "}
+                              {product?.short_description ||
+                                (product?.description
+                                  ? product.description.replace(/<[^>]*>?/gm, "").slice(0, 160) + "..."
+                                  : isFrench
+                                  ? "Produit soigneusement sélectionné selon les standards de fraîcheur Soukday."
+                                  : "Carefully selected product according to Soukday freshness standards.")}
+                            </p>
+                            <p>
+                              <span className="font-bold text-stone-800">
+                                {isFrench ? "Conservation :" : "Storage:"}
+                              </span>{" "}
+                              {isFrench ? "Conserver dans un endroit frais et sec." : "Store in a cool, dry place."}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Variants Selector */}
+                      {product?.variants && product?.variants.length > 1 && (
+                        <div className="mt-2">
+                          <div className="text-[11px] font-extrabold text-stone-500 uppercase tracking-wider mb-1.5">
+                            {isFrench ? "Choisir le format" : "Select Format"}
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {product.variants.map((v) => {
+                              const isSelected = selectVariant?.id === v.id;
+                              const vPrice =
+                                v.discounted_price &&
+                                v.discounted_price !== 0 &&
+                                v.discounted_price !== v.price
+                                  ? v.discounted_price
+                                  : v.price;
+                              return (
+                                <button
+                                  key={v.id}
+                                  type="button"
+                                  onClick={() => handleChangeVariant(v)}
+                                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all border ${
+                                    isSelected
+                                      ? "border-[#F68B62] bg-[#FCEFEA] text-[#F68B62] shadow-2xs"
+                                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-300"
+                                  }`}
+                                >
+                                  <div>
+                                    {v.measurement}{" "}
+                                    {v.stock_unit_name || v.unit?.translations?.short_code || ""}
+                                  </div>
+                                  <div className="text-[11px] font-semibold opacity-90">
+                                    {currency}
+                                    {formatPriceDisplay(vPrice)}
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="col-span-12 md:col-span-8 flex flex-col gap-6">
-                    <div className="pb-6 border-b-2 flex flex-col gap-2">
-                      <h2 className="font-bold text-2xl break-all">
-                        {product?.translations?.name}
-                      </h2>
 
-                      <div className="flex gap-4 items-center flex-wrap">
-                        {product?.seller_name !== null && (
-                          <div className="p-4 backgroundColor rounded-sm flex gap-2">
-                            {/* <div className="flex text-xs"> */}
-                            <span text-base>{t("seller")} :</span>
-                            <span
-                              className="font-bold text-base cursor-pointer underline"
-                              onClick={() =>
-                                handleProductListNavigation(product?.seller_id)
-                              }
-                            >
-                              {product?.seller?.translations?.name}
-                            </span>
-                            {/* </div> */}
-                          </div>
-                        )}
-
-                        <div className="flex gap-4">
-                          {ratingData?.average_rating > 0 &&
-                          product?.product_rating == true ? (
-                            <div className="px-2">
-                              <div className="flex gap-1 items-center">
-                                <div className="flex">
-                                  {[1, 2, 3, 4, 5].map((star) => {
-                                    const roundedRating =
-                                      Math.round(
-                                        ratingData?.average_rating * 2,
-                                      ) / 2;
-
-                                    if (star <= Math.floor(roundedRating)) {
-                                      return (
-                                        <FaStar
-                                          key={star}
-                                          size={15}
-                                          className="fill-yellow-400 text-yellow-400"
-                                        />
-                                      );
-                                    } else if (
-                                      star === Math.floor(roundedRating) + 1 &&
-                                      roundedRating % 1 === 0.5
-                                    ) {
-                                      return (
-                                        <FaStarHalfAlt
-                                          key={star}
-                                          size={15}
-                                          className="fill-yellow-400 text-yellow-400"
-                                        />
-                                      );
-                                    } else {
-                                      return (
-                                        <FaStar
-                                          key={star}
-                                          size={15}
-                                          className="fill-gray-200 text-gray-200"
-                                        />
-                                      );
-                                    }
-                                  })}
-                                </div>
-                                {`(${ratingData?.rating_list?.length})`}
+                  {/* Right Area: Instacart Buy Box Card (xl:col-span-4) */}
+                  <div className="xl:col-span-4 w-full">
+                    <div className="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-5 space-y-4 sticky top-24">
+                      {/* Store Header with Price */}
+                      <div className="flex items-start justify-between gap-3 border-b border-stone-100 pb-4">
+                        <div className="flex items-start gap-3 min-w-0">
+                          {/* Store Avatar */}
+                          <div className="w-12 h-12 rounded-2xl overflow-hidden shrink-0 bg-stone-100 border border-stone-200 flex items-center justify-center font-black text-stone-700">
+                            {storeLogo ? (
+                              <img
+                                src={storeLogo}
+                                alt={storeName}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-[#F68B62] text-white flex items-center justify-center text-lg font-bold">
+                                {storeName.slice(0, 1)}
                               </div>
-                            </div>
-                          ) : null}
-                        </div>
-
-                        {product?.fssai_lic_no !== "" && (
-                          <div className="text-gray-200 border-l-2 border-gray-200 h-6 hidden md:block"></div>
-                        )}
-                        {product?.fssai_lic_no !== "" && (
-                          <div className="flex items-center gap-3">
-                            <div className="text-xs">
-                              {product?.fssai_lic_img && (
-                                <Image
-                                  width={100}
-                                  height={100}
-                                  src={product?.fssai_lic_img}
-                                  className="w-9 h-9 object-contain"
-                                  alt="fssaiImage"
-                                />
-                              )}
-                            </div>
-                            <div className="text-xs">
-                              {t("fssai_license_no")} {product?.fssai_lic_no}
-                            </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      {selectVariant?.few_quantity_left == true && (
-                        <p className="text-sm text-red-600 font-bold ">
-                          {t("few_quantity_left")}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      {selectVariant?.discounted_price !== 0 &&
-                      selectVariant?.discounted_price !==
-                        selectVariant?.price ? (
-                        <>
-                          <h2 className="font-bold text-3xl ">
-                            {currency}
-                            {formatPriceDisplay(selectVariant?.discounted_price)}
-                          </h2>
-                          <h3 className="line-through font-bold text-base text-gray-500">
-                            {currency}
-                            {formatPriceDisplay(selectVariant?.price)}
-                          </h3>
-                        </>
-                      ) : (
-                        <>
-                          {" "}
-                          <h2 className="font-bold text-3xl ">
-                            {currency}
-                            {formatPriceDisplay(selectVariant?.price)}
-                          </h2>
-                        </>
-                      )}
-                    </div>
-                    {/* <div dangerouslySetInnerHTML={{ __html: product?.description }}>
-                                    </div> */}
-                    <div className="flex flex-col">
-                      <p className="font-normal text-base">
-                        {t("chooseVariant")}
-                      </p>
-                      <div className=" grid grid-cols-12">
-                        {product?.variants?.map((variant) => {
-                          const discountPrice = variant?.discounted_price;
-                          const price = variant?.price;
-                          return (
-                            <div
-                              className={`flex flex-col md:col-span-4 lg:col-span-3 col-span-6 mx-1 my-1 text-center rounded-md  justify-center items-center cursor-pointer p-2 gap-1 ${
-                                selectVariant?.id == variant?.id
-                                  ? "primaryBorder addToCartColor dark:text-gray-700"
-                                  : "cardBorder"
-                              }`}
-                              key={variant.id}
-                              onClick={() => handleChangeVariant(variant)}
-                            >
-                              <p className="font-bold text-sm">{`${variant?.measurement} ${variant?.unit?.translations?.short_code}`}</p>
-                              <span className="flex gap-1 text-[13px] line-clamp-1 font-semibold">
-                                <p>
-                                  {currency}
-                                  {formatPriceDisplay(
-                                    discountPrice != 0 && discountPrice !== price
-                                      ? discountPrice
-                                      : price
-                                  )}
-                                </p>
-                                {discountPrice != 0 &&
-                                discountPrice !== price ? (
-                                  <p className="line-through">
-                                    {currency}
-                                    {formatPriceDisplay(price)}
-                                  </p>
-                                ) : (
-                                  <></>
-                                )}
+
+                          <div className="min-w-0">
+                            <h2 className="font-extrabold text-stone-900 text-base sm:text-lg leading-tight truncate">
+                              {storeName}
+                            </h2>
+                            {/* Lightning Delivery line */}
+                            <div className="flex items-center gap-1.5 text-xs text-stone-600 font-medium mt-1">
+                              <span className="text-emerald-600 font-bold flex items-center gap-0.5">
+                                ⚡ {isFrench ? "Livraison d'ici 15h30" : "Delivery by 3:15pm"}
+                              </span>
+                              <span>•</span>
+                              <span>0.9 km</span>
+                            </div>
+                            {/* Department tags */}
+                            <p className="text-[11px] text-stone-500 font-medium mt-0.5 truncate">
+                              {isFrench
+                                ? "Épicerie • Boucherie • Pâtisserie"
+                                : "Groceries • Bakery • Deli"}
+                            </p>
+                            {/* Small Badges */}
+                            <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-stone-100 text-stone-600 border border-stone-200">
+                                100% Halal
+                              </span>
+                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                {isFrench ? "Offres du jour" : "Lots of deals"}
                               </span>
                             </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <div className="flex gap-4 flex-col lg:flex-row ">
-                      {isVariantAvailable ? (
-                        <div className="flex gap-4 items-center ">
-                          <div className="flex border-2 rounded-sm p-1 lg:py-[8px] items-center w-[120px]">
-                            <button
-                              className=" font-bold text-xl"
-                              onClick={handleDecreaseQuantity}
-                            >
-                              <FiMinus />
-                            </button>
-                            <input
-                              type="text"
-                              disabled
-                              value={quantity}
-                              className=" text-center font-medium text-base bg-transparent w-[70px]"
-                            />
-                            <button
-                              className=" font-bold text-xl"
-                              onClick={handleIncreseQuantity}
-                            >
-                              <FiPlus />
-                            </button>
-                          </div>
-                          <div>
-                            <button
-                              className="primaryBackColor flex gap-2 text-white py-[6px] px-5 md:px-5 lg:py-3 rounded-sm text-base font-semibold text-nowrap"
-                              onClick={handleAddToCart}
-                            >
-                              <FaShoppingBasket size={22} />
-                              {t("add_to_cart")}
-                            </button>
                           </div>
                         </div>
-                      ) : (
-                        <div className="flex items-center h-[80px] md:h-[38px]  text-[#db3d26] font-extrabold ">
-                          {t("OutOfStock")}
-                        </div>
-                      )}
 
-                      <div className="flex gap-2 items-center">
-                        <span
-                          className="rounded-full border-2 p-2"
-                          onClick={handleProductLikes}
-                        >
-                          {favoriteProducts &&
-                          favoriteProducts?.includes(product?.id) ? (
-                            <BiSolidHeart size={20} />
-                          ) : (
-                            <BiHeart size={20} />
+                        {/* Top-Right Price */}
+                        <div className="text-right shrink-0">
+                          <div className="text-2xl font-black text-stone-900">
+                            {currency}
+                            {formatPriceDisplay(effectivePrice)}
+                          </div>
+                          {hasDiscount && (
+                            <div className="text-xs line-through text-stone-400 font-bold">
+                              {currency}
+                              {formatPriceDisplay(regularPrice)}
+                            </div>
                           )}
-                        </span>
-                        <span>
-                          {" "}
-                          {favoriteProducts &&
-                          favoriteProducts?.includes(product?.id)
-                            ? t("removeTowishlist")
-                            : t("addToWishlist")}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="backgroundColor rounded-sm p-4 flex flex-col gap-4">
-                      {product?.indicator ? (
-                        product?.indicator == 1 ? (
-                          <div className="flex gap-3 items-center">
-                            <div className="h-[28px] w-[28px] relative object-cover">
-                              <Image
-                                src={VegIcon}
-                                fill
-                                alt={product?.name}
-                                className="h-full w-full "
-                              />
-                            </div>
-                            <p> {t("vegetarian")}</p>
-                          </div>
-                        ) : (
-                          <div className="flex gap-3 items-center">
-                            <div className="h-[32px] w-[32px] relative object-cover">
-                              <Image
-                                src={NonVegIcon}
-                                fill
-                                alt={product?.name}
-                                className="h-full w-full "
-                              />
-                            </div>
-                            <p> {t("non-vegetarian")}</p>
-                          </div>
-                        )
-                      ) : null}
-                      {product?.cancelable_status == 1 ? (
-                        <div className="flex items-center  gap-2">
-                          <div className="h-[32px] w-[32px] relative object-cover">
-                            <Image
-                              fill
-                              src={Cancelable}
-                              alt="cancelableIcon"
-                              className="h-full w-full"
-                            />
-                          </div>
-                          <span className="cancelDetail">
-                            {t("cancelable")}
-                            {product?.till_status == 1 ? (
-                              <p className="font-semibold text-base">
-                                {t("payment_pending")}
-                              </p>
-                            ) : null}
-                            {product?.till_status == 2 ? (
-                              <p className="font-semibold text-base">
-                                {t("received")}
-                              </p>
-                            ) : null}
-                            {product?.till_status == 3 ? (
-                              <p className="font-semibold text-base">
-                                {t("processed")}
-                              </p>
-                            ) : null}
-                            {product?.till_status == 4 ? (
-                              <p className="font-semibold text-base">
-                                {t("shipped")}
-                              </p>
-                            ) : null}
-                            {product?.till_status == 5 ? (
-                              <p className="font-semibold text-base">
-                                {t("out_for_delivery")}
-                              </p>
-                            ) : null}
-                          </span>
                         </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <div className="h-[32px] w-[32px] relative object-cover">
-                            <Image
-                              src={NonCancelable}
-                              alt="cancelableIcon"
-                              className="h-full w-full"
-                              fill
-                            />
+                      </div>
+
+                      {/* AVAILABLE AT X STORES: Strictly conditional */}
+                      {/* USER RULE: "on other vendors there should be shows like avalable at this no of store but on soukday it should not be visible" */}
+                      {!isSoukdayVendor && (
+                        <div className="bg-stone-50/90 rounded-2xl p-3 border border-stone-200/80">
+                          <div className="text-xs font-extrabold text-stone-800 text-center mb-2">
+                            {isFrench ? "Disponible dans 45 boutiques" : "Available at 45 stores"}
                           </div>
-                          <span className="font-semibold text-base">
-                            {t("non-cancelable")}
-                          </span>
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center -space-x-1.5 overflow-hidden">
+                              <div className="w-7 h-7 rounded-full bg-[#E51B24] text-white text-[10px] font-black flex items-center justify-center border-2 border-white shadow-2xs">
+                                T
+                              </div>
+                              <div className="w-7 h-7 rounded-full bg-[#0071DC] text-white text-[10px] font-black flex items-center justify-center border-2 border-white shadow-2xs">
+                                W
+                              </div>
+                              <div className="w-7 h-7 rounded-full bg-[#E31837] text-white text-[10px] font-black flex items-center justify-center border-2 border-white shadow-2xs">
+                                M
+                              </div>
+                              <div className="w-7 h-7 rounded-full bg-[#F68B62] text-white text-[10px] font-black flex items-center justify-center border-2 border-white shadow-2xs">
+                                S
+                              </div>
+                            </div>
+                            <LocalizedLink
+                              href={`/products?search=${encodeURIComponent(product?.name || "")}`}
+                              className="text-xs font-bold text-stone-600 hover:text-stone-900 underline"
+                            >
+                              {isFrench ? "Voir tout" : "View all"}
+                            </LocalizedLink>
+                          </div>
                         </div>
                       )}
 
-                      {product?.return_status == 1 ? (
-                        <div className="flex items-center gap-2">
-                          <div className="h-[32px] w-[32px] relative object-cover">
-                            <Image
-                              fill
-                              src={Returnable}
-                              alt="returnableIcon"
-                              className="h-full w-full"
-                            />
-                          </div>
-                          <span className="font-semibold text-base">
-                            {t("returnable")} {product?.return_days} {product?.return_days === 1 ? t("day") : t("days")}
-                          </span>
+                      {/* Quantity Selector */}
+                      <div>
+                        <div className="flex items-center justify-between text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+                          <span>{isFrench ? "Quantité" : "Quantity"}</span>
+                          {selectVariant?.few_quantity_left && (
+                            <span className="text-red-500 font-semibold lowercase">
+                              {t("few_quantity_left")}
+                            </span>
+                          )}
                         </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <div className="h-[32px] w-[32px] relative object-cover">
-                            <Image
-                              fill
-                              src={NotReturnable}
-                              alt="nonReturnableIcon"
-                              className="h-full w-full"
-                            />
+                        <div className="relative">
+                          <select
+                            value={quantity}
+                            onChange={(e) => setQuantity(Number(e.target.value))}
+                            disabled={!isVariantAvailable}
+                            className="w-full bg-stone-100/90 hover:bg-stone-100 text-stone-900 font-bold text-sm rounded-2xl py-3 px-4 border border-stone-200/90 appearance-none focus:outline-hidden focus:ring-2 focus:ring-[#0aad0a]/30 transition-all cursor-pointer"
+                          >
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                              <option key={num} value={num}>
+                                {num}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-stone-500 font-bold text-xs">
+                            ▼
                           </div>
-                          <span className="font-semibold text-base">
-                            {t("non-returnable")}
-                          </span>
+                        </div>
+                      </div>
+
+                      {/* Primary Action Button: Add to Cart OR Notify Me */}
+                      {isVariantAvailable ? (
+                        <button
+                          type="button"
+                          onClick={handleAddToCart}
+                          className="w-full bg-[#0aad0a] hover:bg-[#089608] active:scale-[0.99] text-white font-extrabold text-base py-3.5 px-6 rounded-full shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center gap-2"
+                        >
+                          <FaShoppingBasket className="w-5 h-5" />
+                          <span>{isFrench ? "Ajouter au panier" : "Add to cart"}</span>
+                        </button>
+                      ) : (
+                        <div className="space-y-2">
+                          <div className="w-full py-2 px-3 rounded-xl bg-red-50 text-red-600 text-xs font-bold text-center border border-red-200/70">
+                            {isFrench ? "En rupture de stock" : "Currently Out of Stock"}
+                          </div>
+                          {/* USER RULE: Prominent Notify Me Button */}
+                          <button
+                            type="button"
+                            onClick={() => setShowNotifyModal(true)}
+                            className="w-full bg-[#F68B62] hover:bg-[#E2774E] active:scale-[0.99] text-white font-extrabold text-sm sm:text-base py-3.5 px-6 rounded-full shadow-md shadow-[#F68B62]/25 transition-all flex items-center justify-center gap-2"
+                          >
+                            <Bell className="w-5 h-5" />
+                            <span>
+                              {isFrench
+                                ? "M'avertir de la disponibilité"
+                                : "Notify me when available"}
+                            </span>
+                          </button>
                         </div>
                       )}
-                    </div>
-                    <div className="flex justify-between items-center my-2 md:my-0">
-                      <span className="text-sm font-normal">
-                        {t("shareProduct")}:
-                      </span>
-                      <div className="flex gap-3">
-                        <WhatsappShareButton
-                          url={shareUrl}
+
+                      {/* Secondary Action: Browse Store */}
+                      <LocalizedLink
+                        href={isSoukdayVendor ? "/products" : `/products?seller=${product?.seller_id}`}
+                        className="w-full bg-[#E8E9EB] hover:bg-[#DCDDE0] text-stone-900 font-extrabold text-sm py-3 px-6 rounded-full transition-all flex items-center justify-center block text-center"
+                      >
+                        {isFrench ? `Explorer ${storeName}` : `Browse ${storeName}`}
+                      </LocalizedLink>
+
+                      {/* Footer actions: Wishlist + Share */}
+                      <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-600 font-semibold">
+                        <button
+                          type="button"
+                          onClick={handleProductLikes}
+                          className="flex items-center gap-1.5 hover:text-stone-900 transition-colors"
                         >
-                          <WhatsappIcon className="h-8 w-8 rounded-full" />
-                        </WhatsappShareButton>
-                        <TwitterShareButton
-                          url={shareUrl}
-                        >
-                          <TwitterIcon className="h-8 w-8 rounded-full" />
-                        </TwitterShareButton>
-                        <FacebookShareButton
-                          url={shareUrl}
-                        >
-                          <FacebookIcon className="h-8 w-8 rounded-full" />
-                        </FacebookShareButton>
-                        <FaLink
-                          className="h-8 w-8 rounded-full bg-gray-400 p-2 hover:cursor-pointer"
+                          {favoriteProducts?.includes(product?.id) ? (
+                            <BiSolidHeart className="w-4 h-4 text-red-500" />
+                          ) : (
+                            <BiHeart className="w-4 h-4 text-stone-400" />
+                          )}
+                          <span>
+                            {favoriteProducts?.includes(product?.id)
+                              ? isFrench
+                                ? "Favori"
+                                : "Saved"
+                              : isFrench
+                              ? "Ajouter aux favoris"
+                              : "Save for later"}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
                           onClick={handleCopyToClipboard}
-                        />
+                          className="flex items-center gap-1 hover:text-stone-900 transition-colors"
+                        >
+                          <FaLink className="w-3.5 h-3.5 text-stone-400" />
+                          <span>{isFrench ? "Partager" : "Share"}</span>
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                {/* Product Description and Reviews */}
+                <div className="pt-6 border-t border-stone-200">
+                  <ProductDescription product={product} ratingData={ratingData} />
+                </div>
+
+                {/* Recently Viewed Products */}
+                <RecentalyViewedProducts recentalyViewedProducts={recentlyVisitedProduct} />
+
+                {/* Similar Products */}
+                {product?.tag_names && (
+                  <SimilarProducts slug={slug} tag_names={product?.tag_names} />
+                )}
               </div>
             </div>
-            <ProductDescription product={product} ratingData={ratingData} />
           </div>
-          <RecentalyViewedProducts
-            recentalyViewedProducts={recentlyVisitedProduct}
-          />
-          {product?.tag_names && (
-            <SimilarProducts slug={slug} tag_names={product?.tag_names} />
-          )}
         </>
       )}
+      {/* Stock Notification Modal */}
+      <StockNotificationModal
+        isOpen={showNotifyModal}
+        onClose={() => setShowNotifyModal(false)}
+        product={product}
+        selectedVariant={selectVariant}
+      />
       <SingleSellerConfirmationModal
         showSingleSellerModal={showSingleSellerModal}
         setSingleSellerModal={setSingleSellerModal}

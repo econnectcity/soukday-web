@@ -69,6 +69,7 @@ export const userActivePlan = "user_active_plan"
 export const subscriptionFaqs = "subscription_faqs"
 export const mailSettings = "mail_settings"
 export const updateFcmToken = "update_fcm_token"
+export const stockNotifications = "stock_notifications"
 
 export const save = "save";
 export const remove = "remove";

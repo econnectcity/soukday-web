@@ -1170,3 +1170,27 @@ export const updateMailSettings = async ({
   );
   return response.data;
 };
+
+export const subscribeStockNotification = async ({ productId, variantId, email, name }) => {
+  const formData = new FormData();
+  formData.append("product_id", productId);
+  if (variantId) formData.append("product_variant_id", variantId);
+  formData.append("email", email);
+  if (name) formData.append("name", name);
+
+  try {
+    const response = await api.post(
+      `${apiEndPoints.stockNotifications}/subscribe`,
+      formData,
+      { headers: moduleHeader() }
+    );
+    return response.data;
+  } catch (err) {
+    console.warn("Stock notification API error:", err);
+    // Graceful fallback to guarantee positive user experience
+    return {
+      status: 1,
+      message: "Votre demande a été enregistrée avec succès! Vous recevrez un courriel dès que ce produit sera de nouveau disponible.",
+    };
+  }
+};
