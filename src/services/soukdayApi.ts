@@ -334,7 +334,7 @@ export async function fetchLiveSoukdayProducts(lang: string = 'fr'): Promise<Pro
         'lang': lang,
         'X-Module-Id': '1',
       },
-      body: JSON.stringify({ seller_id: 11, sort: 'popular', limit: 100 }),
+      body: JSON.stringify({ seller_id: 12, sort: 'popular', limit: 100 }),
     });
     if (!res.ok) throw new Error('Failed to fetch Soukday direct products');
     const json = await res.json();
@@ -354,8 +354,8 @@ export async function fetchLiveSoukdayProducts(lang: string = 'fr'): Promise<Pro
           name: productName,
           slug: item.slug || `product-${item.id}`,
           brand: item.brand?.name || 'Soukday',
-          storeId: item.seller_id || 11,
-          seller_id: item.seller_id || 11,
+          storeId: item.seller_id || 12,
+          seller_id: item.seller_id || 12,
           storeName: sellerName,
           storeType: 'soukday_direct' as const,
           price: parseFloat(variant.discounted_price || variant.price || '0'),

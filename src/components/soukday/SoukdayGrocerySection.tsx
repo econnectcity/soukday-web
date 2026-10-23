@@ -44,7 +44,7 @@ export default function SoukdayGrocerySection({
   const isSoukdayProduct = (p: Product) => {
     if (!p) return false;
     if (p.storeType === 'soukday_direct') return true;
-    if (p.seller_id === 11 || p.seller_id === 0 || p.storeId === 11 || p.storeId === 0) return true;
+    if (p.seller_id === 12 || p.seller_id === 11 || p.seller_id === 0 || p.storeId === 12 || p.storeId === 11 || p.storeId === 0) return true;
     const sName = (p.storeName || '').toLowerCase();
     return sName.includes('soukday') || sName.includes('épicerie directe') || sName.includes('epicerie directe');
   };

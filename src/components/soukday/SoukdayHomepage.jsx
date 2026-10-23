@@ -79,7 +79,7 @@ export default function SoukdayHomepage() {
             setSoukdayProducts(liveSoukdayProds);
           } else if (liveProds && liveProds.length > 0) {
             const adminOnly = liveProds.filter(
-              (p) => p.storeType === 'soukday_direct' || p.seller_id === 11 || p.seller_id === 0
+              (p) => p.storeType === 'soukday_direct' || p.seller_id === 12 || p.seller_id === 11 || p.seller_id === 0
             );
             setSoukdayProducts(adminOnly);
           }
