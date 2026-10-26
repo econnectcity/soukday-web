@@ -11,8 +11,7 @@ import { setFilterBySeller } from '@/redux/slices/productFilterSlice';
 import { 
   Zap, 
   Store as StoreIcon, 
-  ArrowRight, 
-  Flame 
+  ArrowRight 
 } from 'lucide-react';
 
 interface ButcherSectionProps {
