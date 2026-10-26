@@ -138,6 +138,10 @@ export interface LiveWebSettings {
   androidAppUrl?: string;
   isIosApp?: boolean;
   iosAppUrl?: string;
+  appBannerTitle?: string;
+  appBannerSubtitle?: string;
+  appBannerImage?: string;
+  appBannerQrUrl?: string;
 
   // SEO
   commonMetaTitle?: string;

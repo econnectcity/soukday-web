@@ -45,6 +45,11 @@ export const DEFAULT_LIVE_SETTINGS = {
   otherStoresSectionTitle: 'Autres magasins disponibles',
   otherStoresSectionSubtitle: 'Supermarchés orientaux, pâtisseries fines, épiceries de quartier et traiteurs pour votre adresse',
 
+  appBannerTitle: "Get the full Soukday experience",
+  appBannerSubtitle: "Scan the QR code with your camera. First delivery is free.",
+  appBannerImage: "/images/soukday-app-experience.png",
+  appBannerQrUrl: "https://soukday.ca",
+
   footerAboutText: 'Soukday est la première plateforme au Québec dédiée aux épiceries orientales, boucheries halal certifiées et commerces de spécialités avec livraison locale et expédition nationale.',
   footerEmail: 'support@soukday.ca',
   footerPhone: '+1 (514) 000-0000',
@@ -451,6 +456,11 @@ export async function fetchLiveWebSettings(): Promise<LiveWebSettings> {
         androidAppUrl: ws.android_app_url || '',
         isIosApp: ws.is_ios_app === '1' || ws.is_ios_app === 1,
         iosAppUrl: ws.ios_app_url || '',
+
+        appBannerTitle: parseLocalized(ws.app_banner_title) || DEFAULT_LIVE_SETTINGS.appBannerTitle,
+        appBannerSubtitle: parseLocalized(ws.app_banner_subtitle) || DEFAULT_LIVE_SETTINGS.appBannerSubtitle,
+        appBannerImage: resolveImageUrl(ws.app_banner_image) || DEFAULT_LIVE_SETTINGS.appBannerImage,
+        appBannerQrUrl: ws.app_banner_qr_url || DEFAULT_LIVE_SETTINGS.appBannerQrUrl,
 
         commonMetaTitle: parseLocalized(ws.common_meta_title) || DEFAULT_LIVE_SETTINGS.commonMetaTitle,
         commonMetaDescription: parseLocalized(ws.common_meta_description) || DEFAULT_LIVE_SETTINGS.commonMetaDescription,

@@ -6,6 +6,7 @@ import { useCart } from '@/context/SoukdayCartContext';
 import HeroBanner from './HeroBanner';
 import CategorySlider from './CategorySlider';
 import SoukdayGrocerySection from './SoukdayGrocerySection';
+import SoukdayAppExperienceBanner from './SoukdayAppExperienceBanner';
 import ButcherSection from './ButcherSection';
 import OtherStoresSection from './OtherStoresSection';
 import PopularProductsSection from './PopularProductsSection';
@@ -114,6 +115,9 @@ export default function SoukdayHomepage() {
 
       {/* 3. Dedicated Soukday Grocery (Only products sold by Soukday / Admin) */}
       <SoukdayGrocerySection products={soukdayProducts} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
+
+      {/* 3.5 Instacart-Style Soukday App Experience Banner with QR code and mobile app graphic */}
+      <SoukdayAppExperienceBanner settings={webSettings || DEFAULT_LIVE_SETTINGS} />
 
       {/* 4. Butchers Delivering to You (Based on customer address / postal code) */}
       <ButcherSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />

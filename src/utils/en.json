@@ -723,5 +723,8 @@
   "city_required": "City is required",
   "postal_required": "Postal code is required",
   "phone": "Phone Number",
-  "placing_order": "Placing Order..."
+  "placing_order": "Placing Order...",
+  "get_full_soukday_experience": "Get the full Soukday experience",
+  "scan_qr_code_camera_free_delivery": "Scan the QR code with your camera. First delivery is free.",
+  "scan_with_camera": "Scan with your camera"
 }

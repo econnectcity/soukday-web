@@ -1522,6 +1522,11 @@ export const DEFAULT_LIVE_SETTINGS = {
   otherStoresSectionTitle: 'Autres magasins disponibles',
   otherStoresSectionSubtitle: 'Supermarchés orientaux, pâtisseries fines, épiceries de quartier et traiteurs pour votre adresse',
 
+  appBannerTitle: "Get the full Soukday experience",
+  appBannerSubtitle: "Scan the QR code with your camera. First delivery is free.",
+  appBannerImage: "/images/soukday-app-experience.png",
+  appBannerQrUrl: "https://soukday.ca",
+
   footerAboutText: 'Soukday est la première plateforme au Québec dédiée aux épiceries orientales, boucheries halal certifiées et commerces de spécialités avec livraison locale et expédition nationale.',
   footerAddress: 'Montréal, Québec, Canada',
   footerEmail: 'support@soukday.ca',

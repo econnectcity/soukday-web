@@ -722,5 +722,8 @@
   "city_required": "La ville est obligatoire",
   "postal_required": "Le code postal est obligatoire",
   "phone": "Téléphone",
-  "placing_order": "Traitement de la commande..."
+  "placing_order": "Traitement de la commande...",
+  "get_full_soukday_experience": "Obtenez l'expérience complète Soukday",
+  "scan_qr_code_camera_free_delivery": "Scannez le code QR avec votre appareil photo. Première livraison offerte.",
+  "scan_with_camera": "Scannez avec votre caméra"
 }
