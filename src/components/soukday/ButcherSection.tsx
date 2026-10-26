@@ -12,9 +12,7 @@ import {
   Zap, 
   Store as StoreIcon, 
   ArrowRight, 
-  Flame,
-  CheckCircle2,
-  MapPin
+  Flame 
 } from 'lucide-react';
 
 interface ButcherSectionProps {
@@ -65,19 +63,17 @@ export default function ButcherSection({
    * Helper to format delivery line (e.g. Delivery by 12:00pm • 1.8 mi • $)
    */
   const getDeliveryByText = (butcher: StoreType) => {
-    if (butcher.deliveryBy) {
-      return isFr 
-        ? `Livraison d’ici ${butcher.deliveryBy}` 
-        : `Delivery by ${butcher.deliveryBy}`;
-    }
-    return isFr ? "Livraison d’ici 12h00" : "Delivery by 12:00pm";
+    const val = typeof butcher.deliveryBy === 'string' && butcher.deliveryBy !== '[object Object]' 
+      ? butcher.deliveryBy 
+      : (typeof butcher.deliveryTime === 'string' ? butcher.deliveryTime : '12:00pm');
+    return isFr ? `Livraison d’ici ${val}` : `Delivery by ${val}`;
   };
 
   /**
    * Helper to format pickup line (e.g. Pickup ready by 10:45am • 9.8 mi)
    */
   const getPickupText = (butcher: StoreType) => {
-    if (butcher.pickupReadyBy) {
+    if (typeof butcher.pickupReadyBy === 'string' && butcher.pickupReadyBy.trim() !== '' && butcher.pickupReadyBy !== '[object Object]') {
       return isFr 
         ? `Ramassage prêt d’ici ${butcher.pickupReadyBy}` 
         : `Pickup ready by ${butcher.pickupReadyBy}`;
@@ -86,30 +82,47 @@ export default function ButcherSection({
   };
 
   /**
-   * Helper to format categories line (e.g. Organic • Groceries • Butcher Shop)
+   * Helper to format categories line, sanitizing against [object Object]
    */
   const getCategoriesText = (butcher: StoreType) => {
-    if (butcher.categories && butcher.categories.length > 0) {
-      return butcher.categories.join(' • ');
+    const rawList = Array.isArray(butcher.categories) && butcher.categories.length > 0
+      ? butcher.categories
+      : (Array.isArray(butcher.tags) && butcher.tags.length > 0 ? butcher.tags : []);
+
+    const extracted = rawList
+      .map((item: any) => {
+        if (!item) return '';
+        if (typeof item === 'string') return item;
+        if (typeof item === 'object') {
+          return item.translations?.name || item.name || item.title || item.tag || '';
+        }
+        return String(item);
+      })
+      .filter((s: string) => s && s.trim() !== '' && s !== '[object Object]');
+
+    if (extracted.length > 0) {
+      return extracted.slice(0, 3).join(' • ');
     }
-    const parts = [butcher.typeLabel || (isFr ? 'Boucherie Halal' : 'Halal Butcher')];
-    if (butcher.tags && butcher.tags.length > 0) {
-      parts.push(...butcher.tags.slice(0, 2));
-    }
-    return parts.join(' • ');
+
+    const typeStr = typeof butcher.typeLabel === 'string' && butcher.typeLabel !== '[object Object]'
+      ? butcher.typeLabel
+      : (isFr ? 'Boucherie Halal' : 'Halal Butcher');
+    return `${typeStr} • ${isFr ? 'Découpe fraîche' : 'Fresh cuts'}`;
   };
 
   /**
    * Helper for store logo image / avatar
    */
   const getStoreLogoSrc = (butcher: StoreType) => {
-    if (butcher.logo) return butcher.logo;
-    const nameLower = butcher.name.toLowerCase();
+    if (typeof butcher.logo === 'string' && butcher.logo.trim() !== '' && butcher.logo !== '[object Object]') {
+      return butcher.logo;
+    }
+    const nameLower = (typeof butcher.name === 'string' ? butcher.name : '').toLowerCase();
     if (nameLower.includes('zakiya')) return '/images/butchers/boucherie-zakiya.svg';
     if (nameLower.includes('koutoubia')) return '/images/butchers/boucherie-koutoubia.svg';
     if (nameLower.includes('mamounia')) return '/images/butchers/boucherie-mamounia.svg';
     if (nameLower.includes('melia')) return '/images/butchers/boucherie-melia.svg';
-    return butcher.image || '/images/favicon.png';
+    return (typeof butcher.image === 'string' && butcher.image !== '[object Object]') ? butcher.image : '/images/favicon.png';
   };
 
   return (
@@ -121,24 +134,13 @@ export default function ButcherSection({
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-red-600 mb-1">
               <Flame className="w-3.5 h-3.5 fill-red-600" />
-              <span>{settings?.butcherSectionTag || (isFr ? 'Viandes fraîches & artisanales' : 'Fresh & craft meats')}</span>
+              <span>{isFr ? 'Viandes fraîches & artisanales' : 'Fresh & craft meats'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
-              {isFr ? (settings?.butcherSectionTitle || 'Boucheries livrant chez vous') : 'Butcher shops delivering to you'}
+              {isFr ? 'Vos boucheries halal à proximité' : 'Halal butcher shops near you'}
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 mt-1">
-              {selectedAddress ? (
-                <>
-                  {settings?.butcherSectionSubtitle || (isFr ? 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à' : '100% Certified Halal butchers with custom cuts, delivered to')}{' '}
-                  <strong className="text-stone-900 underline decoration-[#F68B62] decoration-2">
-                    {selectedAddress.city} ({selectedAddress.postalCode})
-                  </strong>
-                </>
-              ) : (
-                <>
-                  {settings?.butcherSectionSubtitle || (isFr ? 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement chez vous.' : '100% Certified Halal butchers with custom cuts, delivered directly to your door.')}
-                </>
-              )}
+              {isFr ? 'Choisissez parmi les boucheries disponibles dans votre secteur.' : 'Choose from available butchers in your area.'}
             </p>
           </div>
 
@@ -156,51 +158,38 @@ export default function ButcherSection({
           </button>
         </div>
 
-        {/* Notice for number of butchers */}
-        <div className="flex items-center gap-2 text-xs text-stone-700 bg-white p-3 rounded-2xl border border-stone-200/70 shadow-2xs">
-          <CheckCircle2 className="w-4 h-4 text-[#FF7A45] shrink-0" />
-          <span>
-            {selectedAddress ? (
-              displayButchers.length === 1 ? (
-                <>
-                  {isFr ? (
-                    <><strong>1 boucherie partenaire exclusive</strong> dessert actuellement votre secteur à {selectedAddress.city}.</>
-                  ) : (
-                    <><strong>1 exclusive partner butcher</strong> currently serves your area in {selectedAddress.city}.</>
-                  )}
-                </>
-              ) : (
-                <>
-                  {isFr ? (
-                    <><strong>{displayButchers.length} boucheries partenaires</strong> peuvent vous livrer aujourd’hui à {selectedAddress.city}.</>
-                  ) : (
-                    <><strong>{displayButchers.length} partner butchers</strong> can deliver to you today in {selectedAddress.city}.</>
-                  )}
-                </>
-              )
-            ) : (
-              <>
-                {isFr ? (
-                  <><strong>{allButchers.length} boucheries partenaires Halal</strong> disponibles au Québec. Sélectionnez votre adresse pour filtrer par proximité.</>
-                ) : (
-                  <><strong>{allButchers.length} Halal partner butchers</strong> available across Quebec. Select your address to filter by proximity.</>
-                )}
-              </>
-            )}
-          </span>
-        </div>
-
         {/* ================= Instacart-Style Store Cards Grid ================= */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {displayButchers.map((butcher) => {
+            const storeName = typeof butcher.name === 'string' && butcher.name !== '[object Object]' 
+              ? butcher.name 
+              : 'Boucherie Halal';
             const logoSrc = getStoreLogoSrc(butcher);
             const deliveryText = getDeliveryByText(butcher);
             const pickupText = getPickupText(butcher);
             const categoriesText = getCategoriesText(butcher);
             const distance = butcher.distanceKm ? `${butcher.distanceKm.toFixed(1)} km` : '2.1 km';
-            const priceTier = butcher.priceTier || (butcher.minOrder > 30 ? '$$$' : butcher.minOrder > 20 ? '$$' : '$');
-            const highlightBadge = butcher.highlightBadge || (butcher.isHalalCertified ? '100% Halal' : undefined);
-            const badges = butcher.badges || butcher.tags?.slice(0, 3) || ['Découpe fraîche', 'Prix direct'];
+            const priceTier = typeof butcher.priceTier === 'string' && butcher.priceTier !== '[object Object]'
+              ? butcher.priceTier
+              : (butcher.minOrder > 30 ? '$$$' : butcher.minOrder > 20 ? '$$' : '$');
+            
+            const highlightBadge = typeof butcher.highlightBadge === 'string' && butcher.highlightBadge !== '[object Object]'
+              ? butcher.highlightBadge
+              : (butcher.isHalalCertified ? '100% Halal' : undefined);
+
+            const badgesList = Array.isArray(butcher.badges) && butcher.badges.length > 0
+              ? butcher.badges
+              : (Array.isArray(butcher.tags) && butcher.tags.length > 0 ? butcher.tags : ['Découpe fraîche', 'Prix direct']);
+
+            const cleanBadges = badgesList
+              .map((b: any) => {
+                if (!b) return '';
+                if (typeof b === 'string') return b;
+                if (typeof b === 'object') return b.name || b.tag || b.translations?.name || '';
+                return String(b);
+              })
+              .filter((b: string) => b && b.trim() !== '' && b !== '[object Object]')
+              .slice(0, 3);
 
             return (
               <div
@@ -212,10 +201,9 @@ export default function ButcherSection({
                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl border border-stone-100 bg-white p-2 shrink-0 flex items-center justify-center overflow-hidden shadow-2xs group-hover:scale-105 transition-transform duration-200">
                   <img
                     src={logoSrc}
-                    alt={butcher.name}
+                    alt={storeName}
                     className="w-full h-full object-contain"
                     onError={(e) => {
-                      // Graceful fallback to favicon if image fails
                       e.currentTarget.src = '/images/favicon.png';
                     }}
                   />
@@ -226,7 +214,7 @@ export default function ButcherSection({
                   
                   {/* Line 1: Store Name */}
                   <h3 className="font-bold text-[15px] sm:text-base text-stone-900 group-hover:text-[#F68B62] transition-colors leading-tight truncate">
-                    {butcher.name}
+                    {storeName}
                   </h3>
 
                   {/* Line 2: Delivery Line (Green Lightning Bolt) */}
@@ -264,7 +252,7 @@ export default function ButcherSection({
                     )}
 
                     {/* Regular Grey Badges */}
-                    {badges.map((badge, idx) => (
+                    {cleanBadges.map((badge, idx) => (
                       <span
                         key={idx}
                         className="bg-stone-100 text-stone-600 font-medium px-2 py-0.5 rounded text-[11px] leading-tight"

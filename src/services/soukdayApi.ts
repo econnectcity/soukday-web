@@ -38,8 +38,8 @@ export const DEFAULT_LIVE_SETTINGS = {
   directGroceryFeature2Subtitle: 'Garantie Soukday',
 
   butcherSectionTag: 'Viandes fraîches & artisanales',
-  butcherSectionTitle: 'Boucheries livrant chez vous',
-  butcherSectionSubtitle: 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à votre porte',
+  butcherSectionTitle: 'Vos boucheries halal à proximité',
+  butcherSectionSubtitle: 'Choisissez parmi les boucheries disponibles dans votre secteur.',
 
   otherStoresSectionTag: 'Commerces de proximité & Supermarchés',
   otherStoresSectionTitle: 'Autres magasins disponibles',
@@ -243,34 +243,61 @@ export async function fetchLiveSellers(lat: number = 45.5017, lng: number = -73.
     const json = await res.json();
     if (json.status === 1 && Array.isArray(json.data) && json.data.length > 0) {
       return json.data.map((item: any) => {
-        const storeName = item.translations?.store_name || item.translations?.name || item.store_name || item.name || 'Boutique Partenaire';
+        const storeName = typeof item.translations?.store_name === 'string' 
+          ? item.translations.store_name 
+          : (typeof item.translations?.name === 'string' 
+              ? item.translations.name 
+              : (typeof item.store_name === 'string' 
+                  ? item.store_name 
+                  : (typeof item.name === 'string' ? item.name : 'Boutique Partenaire')));
         const isButcher = storeName.toLowerCase().includes('boucherie');
         const logoUrl = resolveImageUrl(item.logo_url || item.logo || item.image);
+
+        // Extract clean string category names from object array
+        const rawCategories = Array.isArray(item.categories)
+          ? item.categories.map((c: any) => {
+              if (typeof c === 'string') return c;
+              if (typeof c === 'object' && c !== null) {
+                return c.translations?.name || c.name || '';
+              }
+              return '';
+            }).filter(Boolean)
+          : [];
+
+        const categories = rawCategories.length > 0
+          ? rawCategories.slice(0, 3)
+          : (isButcher ? ['Boucherie Halal', 'Volailles', 'Bœuf & Agneau'] : ['Épicerie', 'Frais du jour']);
+
+        const rawTags = Array.isArray(item.tags)
+          ? item.tags.map((t: any) => typeof t === 'string' ? t : (t?.name || '')).filter(Boolean)
+          : [];
+        const tags = rawTags.length > 0 ? rawTags : (isButcher ? ['Halal Certifié', 'Viande Fraîche'] : ['Épicerie', 'Frais du jour']);
+
         return {
           id: item.id,
           name: storeName,
           slug: item.slug || `store-${item.id}`,
           type: isButcher ? 'butcher' : 'grocery',
           typeLabel: isButcher ? 'Boucherie Halal' : 'Supermarché & Épicerie',
-          address: item.street || item.formatted_address || 'Montréal, QC',
-          city: item.city?.name || 'Montréal',
+          address: typeof item.street === 'string' ? item.street : (typeof item.formatted_address === 'string' ? item.formatted_address : 'Montréal, QC'),
+          city: typeof item.city === 'object' ? (item.city?.name || 'Montréal') : (typeof item.city === 'string' ? item.city : 'Montréal'),
           state: item.state || 'QC',
           postalCode: item.pincode?.pincode || '',
           rating: 4.8,
           reviewsCount: 120,
           deliveryTime: item.delivery_time || '30-50 min',
-          deliveryBy: item.delivery_by || '12:00pm',
+          deliveryBy: typeof item.delivery_by === 'string' ? item.delivery_by : '12:00pm',
           deliveryFee: item.delivery_fee || 'Gratuite dès 50$',
           minOrder: item.min_order_amount || 25,
           distanceKm: parseFloat(item.distance || '3.5'),
-          priceTier: item.price_tier || '$$',
-          pickupReadyBy: item.pickup_ready_by,
+          priceTier: typeof item.price_tier === 'string' ? item.price_tier : '$$',
+          pickupReadyBy: typeof item.pickup_ready_by === 'string' ? item.pickup_ready_by : undefined,
           logo: logoUrl || (isButcher ? '/images/butchers/boucherie-zakiya.svg' : undefined),
           image: logoUrl || getStoreImage(storeName),
-          categories: item.categories || (isButcher ? ['Boucherie Halal', 'Volailles', 'Bœuf & Agneau'] : ['Épicerie', 'Frais du jour']),
-          highlightBadge: item.highlight_badge || (isButcher ? '100% Halal' : undefined),
-          badges: item.badges || (isButcher ? ['Découpe fraîche', 'Prix direct', 'Frais du jour'] : ['Prix bas', 'Frais du jour']),
-          tags: item.tags || (isButcher ? ['Halal Certifié', 'Viande Fraîche'] : ['Épicerie', 'Frais du jour']),
+          categories,
+          highlightBadge: isButcher ? '100% Halal' : undefined,
+          badges: isButcher ? ['Découpe fraîche', 'Prix direct', 'Frais du jour'] : ['Prix bas', 'Frais du jour'],
+          tags,
           isHalalCertified: isButcher,
           isOpenNow: true,
           hours: '09h00 - 21h00',
