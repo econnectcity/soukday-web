@@ -38,3 +38,4 @@ jobs:
           server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
           local-dir: ./out/
           dangerous-clean-slate: false
+          timeout: 120000
