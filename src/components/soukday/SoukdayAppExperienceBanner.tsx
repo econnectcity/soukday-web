@@ -70,7 +70,7 @@ export default function SoukdayAppExperienceBanner({
       : 'Scan the QR code with your phone camera for faster ordering. First delivery is free!');
 
   return (
-    <section className={`w-full pt-4 sm:pt-6 pb-16 sm:pb-20 bg-stone-50 ${className}`}>
+    <section className={`w-full pt-0 pb-12 sm:pb-16 bg-white ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Soukday Brand Warm Card Container */}

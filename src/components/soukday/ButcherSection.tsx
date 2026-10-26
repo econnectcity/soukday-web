@@ -126,16 +126,12 @@ export default function ButcherSection({
   };
 
   return (
-    <section className="py-10 sm:py-14 bg-stone-50">
+    <section className="py-12 sm:py-16 bg-stone-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
 
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-red-600 mb-1">
-              <Flame className="w-3.5 h-3.5 fill-red-600" />
-              <span>{isFr ? 'Viandes fraîches & artisanales' : 'Fresh & craft meats'}</span>
-            </div>
             <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
               {isFr ? 'Vos boucheries halal à proximité' : 'Halal butcher shops near you'}
             </h2>
@@ -147,7 +143,7 @@ export default function ButcherSection({
           <button
             type="button"
             onClick={() => setIsAddressModalOpen(true)}
-            className="text-xs font-bold text-[#F68B62] hover:text-[#e07750] flex items-center gap-1.5 self-start sm:self-auto cursor-pointer px-3.5 py-2 rounded-xl bg-[#FCEFEA] border border-[#F68B62]/20 hover:border-[#F68B62]/40 transition-all shadow-2xs"
+            className="text-xs font-bold text-[#F68B62] hover:text-[#e07750] flex items-center gap-1.5 self-start sm:self-center cursor-pointer px-4 py-2.5 rounded-xl bg-[#FCEFEA] border border-[#F68B62]/20 hover:border-[#F68B62]/40 transition-all shadow-2xs shrink-0"
           >
             <span>
               {selectedAddress 

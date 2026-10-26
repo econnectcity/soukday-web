@@ -117,7 +117,7 @@ export default function SoukdayGrocerySection({
   };
 
   return (
-    <section className="w-full bg-gradient-to-b from-stone-50 via-white to-stone-50 py-[80px]">
+    <section className="w-full bg-stone-100 py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
         {/* Section Header - Styled identically to category section with CategorySlider arrows */}
