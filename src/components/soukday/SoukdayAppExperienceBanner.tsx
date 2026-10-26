@@ -82,15 +82,25 @@ export default function SoukdayAppExperienceBanner({
 
           <div className="relative flex flex-col md:flex-row items-center justify-between min-h-[140px] md:h-[150px] px-4 sm:px-6 lg:px-8 py-4 md:py-0 gap-4 md:gap-6">
             
-            {/* ================= 1. LEFT: Illustration / Smartphone Mockup ================= */}
-            <div className="w-full md:w-auto flex items-end justify-center md:justify-start shrink-0 h-[120px] sm:h-[135px] md:h-[150px] -mb-1 md:mb-0">
+            {/* ================= 1. LEFT: High-Res Smartphone & Hand Mockup ================= */}
+            <div className="relative w-full md:w-auto flex items-end justify-center md:justify-start shrink-0 h-[130px] sm:h-[145px] md:h-[160px] -mb-2 md:-mb-3">
               {!imageFailed && imageSrc ? (
-                <img
-                  src={imageSrc}
-                  alt={bannerTitle}
-                  className="h-full w-auto max-w-[240px] sm:max-w-[280px] md:max-w-[320px] object-contain object-bottom select-none transition-transform duration-300 hover:scale-105"
-                  onError={() => setImageFailed(true)}
-                />
+                <div className="relative h-full flex items-end">
+                  <img
+                    src={imageSrc}
+                    alt={bannerTitle}
+                    className="h-full w-auto max-w-[260px] sm:max-w-[300px] md:max-w-[340px] object-contain object-bottom select-none transition-transform duration-300 hover:scale-105 drop-shadow-md"
+                    onError={() => setImageFailed(true)}
+                  />
+                  {/* Floating App Rating Pill */}
+                  <div className="absolute top-2 right-1 translate-x-2 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-xs border border-[#FCDCD0] hidden sm:flex items-center gap-1.5 pointer-events-none">
+                    <span className="text-[10px]">⭐</span>
+                    <span className="text-[10px] font-bold text-stone-800">4.9</span>
+                    <span className="text-[9.5px] font-semibold text-[#F68B62]">
+                      {isFr ? '• App Soukday' : '• Soukday App'}
+                    </span>
+                  </div>
+                </div>
               ) : (
                 <div className="h-full w-[200px] sm:w-[240px] md:w-[270px] flex items-end">
                   <SoukdayAppHandIllustration
