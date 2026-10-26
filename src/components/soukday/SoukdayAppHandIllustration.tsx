@@ -6,16 +6,18 @@ interface SoukdayAppHandIllustrationProps {
   className?: string;
   width?: number | string;
   height?: number | string;
+  isFrench?: boolean;
 }
 
 export default function SoukdayAppHandIllustration({
   className = '',
   width = '100%',
   height = '100%',
+  isFrench = true,
 }: SoukdayAppHandIllustrationProps) {
   return (
     <svg
-      viewBox="0 0 320 180"
+      viewBox="0 0 380 230"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={`select-none overflow-visible ${className}`}
@@ -23,262 +25,390 @@ export default function SoukdayAppHandIllustration({
       aria-label="Illustration de l'application mobile Soukday"
     >
       <defs>
-        {/* Phone bezel gradient */}
-        <linearGradient id="phoneFrameGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#1E293B" />
-          <stop offset="100%" stopColor="#0F172A" />
-        </linearGradient>
-
-        {/* Hand skin gradient */}
-        <linearGradient id="handSkinGrad" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0%" stopColor="#B47248" />
-          <stop offset="40%" stopColor="#D89264" />
-          <stop offset="100%" stopColor="#E6A87E" />
-        </linearGradient>
-
-        {/* Finger skin highlight */}
-        <linearGradient id="fingerGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#EEB58D" />
-          <stop offset="100%" stopColor="#C88052" />
-        </linearGradient>
-
-        {/* Sleeve cuff */}
-        <linearGradient id="cuffGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#0D9488" />
-          <stop offset="100%" stopColor="#047857" />
-        </linearGradient>
-
-        {/* Screen header */}
-        <linearGradient id="screenHeaderGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#059669" />
-          <stop offset="100%" stopColor="#10B981" />
-        </linearGradient>
+        {/* Soft Drop Shadow for Phone */}
+        <filter id="phoneShadow" x="-20%" y="-20%" width="150%" height="150%">
+          <feDropShadow dx="6" dy="12" stdDeviation="10" floodColor="#431407" floodOpacity="0.18" />
+        </filter>
 
         {/* Golden Sparkle Glow */}
-        <filter id="sparkleGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="1.5" result="blur" />
+        <filter id="sparkleGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2" result="blur" />
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
 
-        <linearGradient id="sparkleGrad" x1="0" y1="0" x2="1" y2="1">
+        {/* Floating Badge Shadow */}
+        <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#000000" floodOpacity="0.1" />
+        </filter>
+
+        {/* Phone Frame Metallic Gradient */}
+        <linearGradient id="phoneFrame" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#292524" />
+          <stop offset="50%" stopColor="#1C1917" />
+          <stop offset="100%" stopColor="#0C0A09" />
+        </linearGradient>
+
+        {/* Screen Glass Reflection */}
+        <linearGradient id="screenGlass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.15" />
+          <stop offset="35%" stopColor="#FFFFFF" stopOpacity="0.03" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+        </linearGradient>
+
+        {/* Soukday Coral Brand Gradient (Exact match to Soukday logo) */}
+        <linearGradient id="soukdayBrandGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#F68B62" />
+          <stop offset="60%" stopColor="#f89b77" />
+          <stop offset="100%" stopColor="#F68B62" />
+        </linearGradient>
+
+        {/* Warm Skin Gradient */}
+        <linearGradient id="skinGrad" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stopColor="#C47E53" />
+          <stop offset="45%" stopColor="#DC976C" />
+          <stop offset="100%" stopColor="#ECAB80" />
+        </linearGradient>
+
+        {/* Finger Depth Shadow */}
+        <linearGradient id="fingerShadow" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#ECAB80" />
+          <stop offset="100%" stopColor="#B36B42" />
+        </linearGradient>
+
+        {/* Sleeve Cuff Gradient */}
+        <linearGradient id="cuffGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#292524" />
+          <stop offset="100%" stopColor="#1C1917" />
+        </linearGradient>
+
+        {/* Golden Sparkle Gradient */}
+        <linearGradient id="goldSparkle" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#FEF08A" />
           <stop offset="50%" stopColor="#FBBF24" />
           <stop offset="100%" stopColor="#F59E0B" />
         </linearGradient>
+
+        {/* Screen Clipping Mask */}
+        <clipPath id="phoneScreenMask">
+          <rect x="-62" y="-124" width="124" height="216" rx="20" />
+        </clipPath>
       </defs>
 
-      {/* ================= SPARKLES ================= */}
-      {/* 1. Top Left Sparkle Star */}
-      <g transform="translate(68, 48) scale(1.15)" filter="url(#sparkleGlow)">
+      {/* ================= BACKGROUND SPARKLES ================= */}
+      {/* 1. Large Top-Left Sparkle */}
+      <g transform="translate(68, 52) scale(1.1)" filter="url(#sparkleGlow)">
         <path
-          d="M0 -14 C1 -4 4 -1 14 0 C4 1 1 4 0 14 C-1 4 -4 1 -14 0 C-4 -1 -1 -4 0 -14 Z"
-          fill="url(#sparkleGrad)"
+          d="M0 -15 C1.2 -4.5 4.5 -1.2 15 0 C4.5 1.2 1.2 4.5 0 15 C-1.2 4.5 -4.5 1.2 -15 0 C-4.5 -1.2 -1.2 -4.5 0 -15 Z"
+          fill="url(#goldSparkle)"
         />
         <circle cx="0" cy="0" r="2.5" fill="#FFFFFF" />
       </g>
 
-      {/* 2. Top Right Sparkle Star */}
-      <g transform="translate(242, 38) scale(1.3)" filter="url(#sparkleGlow)">
+      {/* 2. Top-Right Sparkle */}
+      <g transform="translate(290, 42) scale(1.3)" filter="url(#sparkleGlow)">
         <path
-          d="M0 -15 C1.2 -4.5 4.5 -1.2 15 0 C4.5 1.2 1.2 4.5 0 15 C-1.2 4.5 -4.5 1.2 -15 0 C-4.5 -1.2 -1.2 -4.5 0 -15 Z"
-          fill="url(#sparkleGrad)"
+          d="M0 -16 C1.4 -4.8 4.8 -1.4 16 0 C4.8 1.4 1.4 4.8 0 16 C-1.4 4.8 -4.8 1.4 -16 0 C-4.8 -1.4 -1.4 -4.8 0 -16 Z"
+          fill="url(#goldSparkle)"
         />
         <circle cx="0" cy="0" r="3" fill="#FFFFFF" />
       </g>
 
-      {/* 3. Small Middle Sparkle */}
-      <g transform="translate(268, 98) scale(0.75)" filter="url(#sparkleGlow)">
+      {/* 3. Mid-Right Small Sparkle */}
+      <g transform="translate(322, 115) scale(0.75)" filter="url(#sparkleGlow)">
         <path
           d="M0 -12 C1 -3 3 -1 12 0 C3 1 1 3 0 12 C-1 3 -3 1 -12 0 C-3 -1 -1 -3 0 -12 Z"
-          fill="url(#sparkleGrad)"
+          fill="url(#goldSparkle)"
         />
         <circle cx="0" cy="0" r="1.5" fill="#FFFFFF" />
       </g>
 
-      {/* 4. Tiny Left Sparkle */}
-      <g transform="translate(42, 92) scale(0.65)" filter="url(#sparkleGlow)">
+      {/* 4. Lower-Left Sparkle */}
+      <g transform="translate(42, 112) scale(0.65)" filter="url(#sparkleGlow)">
         <path
           d="M0 -10 C0.8 -2.5 2.5 -0.8 10 0 C2.5 0.8 0.8 2.5 0 10 C-0.8 2.5 -2.5 0.8 -10 0 C-2.5 -0.8 -0.8 -2.5 0 -10 Z"
-          fill="url(#sparkleGrad)"
+          fill="url(#goldSparkle)"
         />
       </g>
 
-      {/* ================= ARM / WRIST ================= */}
-      {/* Wrist / Arm coming from bottom left */}
+      {/* ================= ARM & SLEEVE (Coming cleanly from bottom left) ================= */}
       <g>
+        {/* Sleeve */}
         <path
-          d="M-10 200 C30 185 75 160 115 130 C135 115 150 102 162 108 C175 115 170 145 162 170 C155 190 140 210 135 220 L-10 220 Z"
-          fill="url(#handSkinGrad)"
+          d="M-20 230 C15 205 50 185 85 170 C95 166 108 170 114 180 L125 210 C130 220 125 230 115 230 Z"
+          fill="url(#cuffGrad)"
         />
-        {/* Soft arm shadow/depth */}
+        {/* White shirt inner cuff line */}
         <path
-          d="M10 210 C50 185 90 160 128 138 C140 145 145 165 140 195 L20 220 Z"
-          fill="#000000"
+          d="M86 172 C96 168 107 172 113 181 L116 186 C108 178 97 175 88 178 Z"
+          fill="#FFFFFF"
+          opacity="0.9"
+        />
+
+        {/* Forearm & Wrist */}
+        <path
+          d="M85 174 C112 160 142 142 168 126 C182 117 194 122 198 135 C202 148 196 168 184 188 C168 212 145 226 122 230 Z"
+          fill="url(#skinGrad)"
+        />
+        {/* Soft anatomical wrist shadow */}
+        <path
+          d="M102 184 C128 170 156 150 178 134 C184 145 182 160 172 182 L120 228 Z"
+          fill="#431407"
           opacity="0.08"
         />
       </g>
 
-      {/* ================= SMARTPHONE (Angled ~22 deg) ================= */}
-      <g transform="translate(162, 108) rotate(-16)">
-        {/* Phone Drop Shadow */}
+      {/* ================= SMARTPHONE (Tilted at 18 degrees) ================= */}
+      <g transform="translate(196, 134) rotate(-18)" filter="url(#phoneShadow)">
+        
+        {/* Outer Phone Frame (Graphite Titanium) */}
         <rect
-          x="-58"
-          y="-110"
-          width="116"
-          height="192"
-          rx="18"
-          fill="#064E3B"
-          opacity="0.25"
-          transform="translate(4, 10)"
-        />
-
-        {/* Outer Phone Frame */}
-        <rect
-          x="-58"
-          y="-110"
-          width="116"
-          height="192"
-          rx="18"
-          fill="url(#phoneFrameGrad)"
-          stroke="#475569"
+          x="-68"
+          y="-130"
+          width="136"
+          height="228"
+          rx="24"
+          fill="url(#phoneFrame)"
+          stroke="#57534E"
           strokeWidth="2.5"
         />
 
-        {/* Screen Bezel / Inner Glass */}
+        {/* Antenna / Button Accents on Frame */}
+        <rect x="67" y="-70" width="3" height="18" rx="1.5" fill="#78716C" />
+        <rect x="-70" y="-85" width="3" height="14" rx="1.5" fill="#78716C" />
+        <rect x="-70" y="-62" width="3" height="22" rx="1.5" fill="#78716C" />
+        <rect x="-70" y="-34" width="3" height="22" rx="1.5" fill="#78716C" />
+
+        {/* Screen Bezel (Jet Black) */}
         <rect
-          x="-53"
-          y="-105"
-          width="106"
-          height="182"
-          rx="14"
-          fill="#F8FAFC"
+          x="-64"
+          y="-126"
+          width="128"
+          height="220"
+          rx="21"
+          fill="#0C0A09"
         />
 
-        {/* Screen App UI */}
-        <g clipPath="url(#phoneScreenClip)">
-          {/* Top Notch / Island */}
-          <rect x="-18" y="-103" width="36" height="6" rx="3" fill="#0F172A" />
+        {/* Inner Screen Display (White / Light Background) */}
+        <rect
+          x="-62"
+          y="-124"
+          width="124"
+          height="216"
+          rx="19"
+          fill="#FAFAF9"
+        />
 
-          {/* App Header (Soukday Emerald/Mint) */}
-          <rect x="-53" y="-95" width="106" height="34" fill="url(#screenHeaderGrad)" />
+        {/* ================= SCREEN CONTENT (SOUKDAY APP IN BRAND ORANGE) ================= */}
+        <g clipPath="url(#phoneScreenMask)">
           
-          {/* App Brand Name */}
-          <text
-            x="-44"
-            y="-77"
-            fontFamily="system-ui, sans-serif"
-            fontWeight="900"
-            fontSize="10"
-            fill="#FFFFFF"
-            letterSpacing="-0.3"
-          >
-            Soukday
+          {/* Status Bar */}
+          <rect x="-62" y="-124" width="124" height="22" fill="url(#soukdayBrandGrad)" />
+          {/* Dynamic Island / Speaker Pill */}
+          <rect x="-18" y="-121" width="36" height="7" rx="3.5" fill="#0C0A09" />
+          <circle cx="9" cy="-117.5" r="1.5" fill="#1C1917" />
+          
+          {/* Status Bar Clock & Icons */}
+          <text x="-48" y="-113" fontSize="6.5" fontWeight="bold" fill="#FFFFFF" fontFamily="system-ui, sans-serif">
+            9:41
           </text>
+          <path d="M42 -117 A3 3 0 0 1 48 -117 M40 -115 A6 6 0 0 1 50 -115" stroke="#FFFFFF" strokeWidth="0.8" fill="none" />
+          <rect x="42" y="-113" width="9" height="4.5" rx="1" stroke="#FFFFFF" strokeWidth="0.7" fill="none" />
+          <rect x="43" y="-112" width="6" height="2.5" rx="0.5" fill="#FFFFFF" />
+
+          {/* App Header (Soukday Coral Gradient) */}
+          <rect x="-62" y="-102" width="124" height="34" fill="url(#soukdayBrandGrad)" />
           
-          {/* Location badge on screen */}
-          <rect x="-44" y="-72" width="56" height="8" rx="4" fill="#047857" opacity="0.8" />
+          {/* Soukday Wordmark & Cart Icon */}
+          <g transform="translate(-50, -92)">
+            <circle cx="5" cy="5" r="5" fill="#FFFFFF" />
+            <text x="2.5" y="7.5" fontSize="6" fontWeight="900" fill="#F68B62">S</text>
+            <text
+              x="13"
+              y="7.5"
+              fontFamily="system-ui, sans-serif"
+              fontWeight="900"
+              fontSize="11"
+              fill="#FFFFFF"
+              letterSpacing="-0.3"
+            >
+              Soukday
+            </text>
+          </g>
+
+          {/* Location Delivery Pin */}
+          <rect x="-50" y="-81" width="68" height="9" rx="4.5" fill="#FFFFFF" fillOpacity="0.22" />
+          <circle cx="-45" cy="-76.5" r="2" fill="#FFFFFF" />
           <text
-            x="-41"
-            y="-66"
+            x="-40"
+            y="-74.5"
             fontFamily="system-ui, sans-serif"
-            fontWeight="600"
-            fontSize="5"
-            fill="#ECFDF5"
+            fontWeight="bold"
+            fontSize="5.5"
+            fill="#FFFFFF"
           >
             📍 Montréal & Rive-Sud
           </text>
 
-          {/* Search bar inside app */}
-          <rect x="-46" y="-55" width="92" height="12" rx="6" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1" />
-          <circle cx="-38" cy="-49" r="2.5" stroke="#94A3B8" strokeWidth="1" fill="none" />
-          <line x1="-36" y1="-47" x2="-34" y2="-45" stroke="#94A3B8" strokeWidth="1" />
+          {/* Search Bar */}
+          <rect x="-52" y="-62" width="104" height="13" rx="6.5" fill="#FFFFFF" stroke="#E7E5E4" strokeWidth="0.8" />
+          <circle cx="-43" cy="-55.5" r="2.8" stroke="#A8A29E" strokeWidth="1" fill="none" />
+          <line x1="-41" y1="-53.5" x2="-39" y2="-51.5" stroke="#A8A29E" strokeWidth="1" />
           <text
-            x="-30"
-            y="-46"
+            x="-34"
+            y="-52.5"
             fontFamily="system-ui, sans-serif"
             fontSize="5.5"
-            fill="#94A3B8"
+            fill="#78716C"
+            fontWeight="500"
           >
-            Épicerie, épices, halal...
+            {isFrench ? "Épiceries, halal, épices..." : "Groceries, halal, spices..."}
           </text>
 
-          {/* Mini Category Chips */}
-          <rect x="-46" y="-38" width="28" height="9" rx="4" fill="#FEF3C7" />
-          <text x="-42" y="-32" fontSize="5" fontWeight="bold" fill="#D97706">🥖 Pain frais</text>
-          
-          <rect x="-15" y="-38" width="30" height="9" rx="4" fill="#FEE2E2" />
-          <text x="-12" y="-32" fontSize="5" fontWeight="bold" fill="#DC2626">🥩 Boucherie</text>
+          {/* Horizontal Category Badges */}
+          {/* Badge 1: Boucherie Halal */}
+          <rect x="-52" y="-44" width="34" height="11" rx="5.5" fill="#FEE2E2" stroke="#FECACA" strokeWidth="0.5" />
+          <text x="-48" y="-36.5" fontSize="5.5" fontWeight="bold" fill="#DC2626">🥩 Boucherie</text>
 
-          <rect x="18" y="-38" width="28" height="9" rx="4" fill="#E0E7FF" />
-          <text x="21" y="-32" fontSize="5" fontWeight="bold" fill="#4338CA">🫒 Épicerie</text>
+          {/* Badge 2: Épicerie Maghrébine */}
+          <rect x="-14" y="-44" width="34" height="11" rx="5.5" fill="#FFF7ED" stroke="#FED7AA" strokeWidth="0.5" />
+          <text x="-10" y="-36.5" fontSize="5.5" fontWeight="bold" fill="#EA580C">🌾 Épicerie</text>
 
-          {/* Mini Product Cards Grid on Phone */}
+          {/* Badge 3: Boulangerie */}
+          <rect x="24" y="-44" width="32" height="11" rx="5.5" fill="#FEF3C7" stroke="#FDE68A" strokeWidth="0.5" />
+          <text x="28" y="-36.5" fontSize="5.5" fontWeight="bold" fill="#D97706">🥐 Pains</text>
+
+          {/* Product Cards Row */}
           {/* Card 1 */}
-          <rect x="-46" y="-24" width="43" height="52" rx="6" fill="#FFFFFF" stroke="#F1F5F9" strokeWidth="1" />
-          <rect x="-43" y="-21" width="37" height="26" rx="4" fill="#F8FAFC" />
-          <text x="-28" y="-5" fontSize="14" textAnchor="middle">🥬</text>
-          <text x="-42" y="12" fontSize="4.5" fontWeight="bold" fill="#1E293B">Légumes frais</text>
-          <text x="-42" y="19" fontSize="4.5" fontWeight="900" fill="#059669">2,99 $</text>
-          <circle cx="-8" cy="18" r="4" fill="#059669" />
-          <text x="-8" y="20" fontSize="6" fontWeight="bold" fill="#FFFFFF" textAnchor="middle">+</text>
+          <g transform="translate(-52, -28)">
+            <rect x="0" y="0" width="49" height="66" rx="8" fill="#FFFFFF" stroke="#E7E5E4" strokeWidth="0.8" />
+            <rect x="3" y="3" width="43" height="34" rx="6" fill="#FCEFEA" />
+            {/* Halal Stamp */}
+            <rect x="6" y="6" width="15" height="6" rx="3" fill="#10B981" />
+            <text x="8.5" y="10.5" fontSize="4" fontWeight="bold" fill="#FFFFFF">HALAL</text>
+            <text x="24" y="24" fontSize="18" textAnchor="middle">🥩</text>
+            
+            <text x="4" y="44" fontSize="5.5" fontWeight="bold" fill="#1C1917">Merguez Halal</text>
+            <text x="4" y="52" fontSize="5" fontWeight="500" fill="#78716C">Boucherie artisanale</text>
+            <text x="4" y="60" fontSize="7" fontWeight="900" fill="#F68B62">9,99 $</text>
+            
+            {/* Orange Add Button */}
+            <circle cx="41" cy="58" r="5" fill="#F68B62" />
+            <text x="41" y="60.5" fontSize="8" fontWeight="bold" fill="#FFFFFF" textAnchor="middle">+</text>
+          </g>
 
           {/* Card 2 */}
-          <rect x="3" y="-24" width="43" height="52" rx="6" fill="#FFFFFF" stroke="#F1F5F9" strokeWidth="1" />
-          <rect x="6" y="-21" width="37" height="26" rx="4" fill="#F8FAFC" />
-          <text x="24" y="-5" fontSize="14" textAnchor="middle">🥐</text>
-          <text x="7" y="12" fontSize="4.5" fontWeight="bold" fill="#1E293B">Pâtisserie fine</text>
-          <text x="7" y="19" fontSize="4.5" fontWeight="900" fill="#059669">4,50 $</text>
-          <circle cx="41" cy="18" r="4" fill="#059669" />
-          <text x="41" y="20" fontSize="6" fontWeight="bold" fill="#FFFFFF" textAnchor="middle">+</text>
+          <g transform="translate(3, -28)">
+            <rect x="0" y="0" width="49" height="66" rx="8" fill="#FFFFFF" stroke="#E7E5E4" strokeWidth="0.8" />
+            <rect x="3" y="3" width="43" height="34" rx="6" fill="#FFFBEB" />
+            <rect x="6" y="6" width="17" height="6" rx="3" fill="#F59E0B" />
+            <text x="8" y="10.5" fontSize="4" fontWeight="bold" fill="#FFFFFF">DIRECT</text>
+            <text x="24" y="24" fontSize="18" textAnchor="middle">🫒</text>
+            
+            <text x="4" y="44" fontSize="5.5" fontWeight="bold" fill="#1C1917">Huile d'olive pure</text>
+            <text x="4" y="52" fontSize="5" fontWeight="500" fill="#78716C">Épicerie Soukday</text>
+            <text x="4" y="60" fontSize="7" fontWeight="900" fill="#F68B62">14,50 $</text>
+            
+            {/* Orange Add Button */}
+            <circle cx="41" cy="58" r="5" fill="#F68B62" />
+            <text x="41" y="60.5" fontSize="8" fontWeight="bold" fill="#FFFFFF" textAnchor="middle">+</text>
+          </g>
 
-          {/* Bottom App Navigation */}
-          <rect x="-53" y="58" width="106" height="19" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="0.8" />
-          <circle cx="-32" cy="67" r="3" fill="#059669" />
-          <circle cx="-6" cy="67" r="3" fill="#94A3B8" />
-          <circle cx="20" cy="67" r="3" fill="#94A3B8" />
-          <circle cx="36" cy="67" r="4.5" fill="#F68B62" />
-          <text x="36" y="69.5" fontSize="6" fontWeight="bold" fill="#FFFFFF" textAnchor="middle">1</text>
+          {/* App Bottom Navigation Bar */}
+          <rect x="-62" y="46" width="124" height="26" fill="#FFFFFF" stroke="#E7E5E4" strokeWidth="0.8" />
+          {/* Home active icon (Coral) */}
+          <circle cx="-38" cy="57" r="3.5" fill="#F68B62" />
+          {/* Browse icon */}
+          <circle cx="-13" cy="57" r="3" fill="#A8A29E" />
+          {/* Orders icon */}
+          <circle cx="13" cy="57" r="3" fill="#A8A29E" />
+          {/* Cart active badge with count */}
+          <circle cx="38" cy="57" r="5" fill="#F68B62" />
+          <text x="38" y="59.5" fontSize="6.5" fontWeight="bold" fill="#FFFFFF" textAnchor="middle">2</text>
+          
+          {/* iPhone Home Indicator bar */}
+          <rect x="-20" y="68" width="40" height="2.5" rx="1.2" fill="#0C0A09" />
+
+          {/* Glass glare highlight over screen */}
+          <polygon points="-62,-124 62,-124 10,92 -62,92" fill="url(#screenGlass)" pointerEvents="none" />
         </g>
-
-        {/* Clip path for the phone screen */}
-        <clipPath id="phoneScreenClip">
-          <rect x="-53" y="-105" width="106" height="182" rx="14" />
-        </clipPath>
       </g>
 
-      {/* ================= HAND FINGERS (Wrapping around phone) ================= */}
+      {/* ================= FINGERS WRAPPING AROUND PHONE ================= */}
+      {/* Anatomical fingers with natural curve and depth */}
       <g>
-        {/* Thumb holding right/bottom side of phone */}
-        <path
-          d="M178 98 C192 92 206 96 215 106 C220 112 218 120 210 125 C198 132 184 130 172 120 Z"
-          fill="url(#fingerGrad)"
-          stroke="#C88052"
-          strokeWidth="1"
-        />
+        {/* Thumb (bottom-right edge holding phone) */}
+        <g>
+          <path
+            d="M214 122 C228 116 244 122 252 134 C257 142 254 152 244 158 C232 165 218 162 206 150 Z"
+            fill="url(#skinGrad)"
+            stroke="#B36B42"
+            strokeWidth="1.2"
+          />
+          <path
+            d="M232 128 C242 134 246 142 242 148"
+            stroke="#FFFFFF"
+            strokeWidth="1"
+            strokeLinecap="round"
+            opacity="0.35"
+          />
+        </g>
 
-        {/* Index Finger peek */}
-        <path
-          d="M92 95 C98 84 112 82 120 89 C126 94 125 102 118 108 C110 114 98 112 92 102 Z"
-          fill="url(#fingerGrad)"
-          stroke="#B47248"
-          strokeWidth="0.8"
-        />
+        {/* Index Finger (left side peek) */}
+        <g>
+          <path
+            d="M112 118 C120 106 136 104 146 112 C153 118 152 127 144 133 C134 140 120 137 112 126 Z"
+            fill="url(#fingerShadow)"
+            stroke="#B36B42"
+            strokeWidth="1"
+          />
+          <path
+            d="M124 112 C134 112 140 118 142 124"
+            stroke="#FFFFFF"
+            strokeWidth="0.8"
+            strokeLinecap="round"
+            opacity="0.4"
+          />
+        </g>
 
-        {/* Middle Finger peek */}
-        <path
-          d="M82 114 C88 104 102 102 110 109 C116 114 115 122 108 128 C100 134 88 132 82 122 Z"
-          fill="url(#fingerGrad)"
-          stroke="#B47248"
-          strokeWidth="0.8"
-        />
+        {/* Middle Finger (left side peek) */}
+        <g>
+          <path
+            d="M102 139 C109 128 125 126 134 134 C141 140 140 150 132 156 C122 163 108 160 102 148 Z"
+            fill="url(#fingerShadow)"
+            stroke="#B36B42"
+            strokeWidth="1"
+          />
+          <path
+            d="M114 134 C123 134 128 140 130 146"
+            stroke="#FFFFFF"
+            strokeWidth="0.8"
+            strokeLinecap="round"
+            opacity="0.4"
+          />
+        </g>
 
-        {/* Ring Finger peek */}
-        <path
-          d="M74 135 C80 126 94 125 101 131 C107 136 106 144 99 150 C92 155 80 152 74 142 Z"
-          fill="url(#fingerGrad)"
-          stroke="#B47248"
-          strokeWidth="0.8"
-        />
+        {/* Ring Finger (left side peek) */}
+        <g>
+          <path
+            d="M94 162 C101 152 116 150 124 158 C131 164 129 173 122 179 C113 185 100 182 94 171 Z"
+            fill="url(#fingerShadow)"
+            stroke="#B36B42"
+            strokeWidth="1"
+          />
+        </g>
+      </g>
+
+      {/* ================= FLOATING BADGE (TOP RIGHT OF PHONE) ================= */}
+      <g transform="translate(242, 68)" filter="url(#badgeShadow)">
+        <rect x="0" y="0" width="108" height="28" rx="14" fill="#FFFFFF" stroke="#FCDCD0" strokeWidth="1" />
+        <circle cx="14" cy="14" r="8" fill="#F68B62" />
+        <text x="14" y="17" fontSize="10" fill="#FFFFFF" textAnchor="middle">⭐</text>
+        <text x="28" y="13" fontSize="8" fontWeight="bold" fill="#1C1917" fontFamily="system-ui, sans-serif">
+          App Soukday
+        </text>
+        <text x="28" y="21" fontSize="6.5" fontWeight="600" fill="#F68B62" fontFamily="system-ui, sans-serif">
+          {isFrench ? "Note 4.9 • iOS & Android" : "Rated 4.9 • iOS & Android"}
+        </text>
       </g>
     </svg>
   );
