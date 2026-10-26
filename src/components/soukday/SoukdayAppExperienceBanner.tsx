@@ -184,15 +184,15 @@ export default function SoukdayAppExperienceBanner({
               </div>
             </div>
 
-            {/* ================= 3. RIGHT: Professional QR Code Card (Strict sizing, no overflow) ================= */}
+            {/* ================= 3. RIGHT: Transparent QR Code (No white background) ================= */}
             <div className="shrink-0 flex items-center justify-center py-1 md:py-0">
               <a
                 href={targetQrUrl}
                 title={isFr ? "Scannez avec votre téléphone" : "Scan with your phone"}
-                className="group flex flex-col items-center bg-white p-2.5 sm:p-3 rounded-2xl shadow-sm hover:shadow-md border border-[#FCDCD0] transition-all duration-200 active:scale-95 w-[135px] sm:w-[155px] shrink-0"
+                className="group flex flex-col items-center bg-transparent p-1 transition-all duration-200 active:scale-95 w-[120px] sm:w-[135px] shrink-0"
               >
-                {/* Strictly sized square QR container */}
-                <div className="relative w-[92px] h-[92px] sm:w-[106px] sm:h-[106px] flex items-center justify-center bg-white overflow-hidden rounded-xl">
+                {/* Strictly sized square QR container without white box */}
+                <div className="relative w-[92px] h-[92px] sm:w-[106px] sm:h-[106px] flex items-center justify-center bg-transparent">
                   <img
                     src="/images/qr-soukday.svg"
                     alt="Code QR Soukday"
