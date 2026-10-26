@@ -1,24 +1,24 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import { useCart } from '@/context/SoukdayCartContext';
-import { Store } from '@/types';
-import { LiveWebSettings } from '@/types';
+import { Store as StoreType, LiveWebSettings } from '@/types';
 import { DEFAULT_LIVE_SETTINGS } from '@/services/soukdayApi';
 import { useTranslation } from '@/utils/translation';
+import { setFilterBySeller } from '@/redux/slices/productFilterSlice';
 import { 
-  ShieldCheck, 
-  Clock, 
-  MapPin, 
-  Star, 
-  Truck, 
+  Zap, 
+  Store as StoreIcon, 
   ArrowRight, 
   Flame,
-  CheckCircle2
+  CheckCircle2,
+  MapPin
 } from 'lucide-react';
 
 interface ButcherSectionProps {
-  stores?: Store[];
+  stores?: StoreType[];
   settings?: LiveWebSettings;
 }
 
@@ -26,9 +26,12 @@ export default function ButcherSection({
   stores = [],
   settings = DEFAULT_LIVE_SETTINGS 
 }: ButcherSectionProps) {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const { selectedAddress, setIsAddressModalOpen } = useCart();
-  const { isFrench } = useTranslation();
+  const { isFrench, currentCode } = useTranslation();
 
+  const isFr = isFrench || currentCode === 'fr' || !currentCode || currentCode.startsWith('fr');
   const sourceStores = stores || [];
 
   // All butchers
@@ -47,31 +50,93 @@ export default function ButcherSection({
 
   const displayButchers = localButchers.length > 0 ? localButchers : allButchers;
 
+  const handleStoreClick = (butcher: StoreType) => {
+    try {
+      if (dispatch) {
+        dispatch(setFilterBySeller({ data: butcher.id }));
+      }
+    } catch (e) {
+      console.warn('Dispatch failed:', e);
+    }
+    router.push(`/products?seller_id=${butcher.id}`);
+  };
+
+  /**
+   * Helper to format delivery line (e.g. Delivery by 12:00pm • 1.8 mi • $)
+   */
+  const getDeliveryByText = (butcher: StoreType) => {
+    if (butcher.deliveryBy) {
+      return isFr 
+        ? `Livraison d’ici ${butcher.deliveryBy}` 
+        : `Delivery by ${butcher.deliveryBy}`;
+    }
+    return isFr ? "Livraison d’ici 12h00" : "Delivery by 12:00pm";
+  };
+
+  /**
+   * Helper to format pickup line (e.g. Pickup ready by 10:45am • 9.8 mi)
+   */
+  const getPickupText = (butcher: StoreType) => {
+    if (butcher.pickupReadyBy) {
+      return isFr 
+        ? `Ramassage prêt d’ici ${butcher.pickupReadyBy}` 
+        : `Pickup ready by ${butcher.pickupReadyBy}`;
+    }
+    return null;
+  };
+
+  /**
+   * Helper to format categories line (e.g. Organic • Groceries • Butcher Shop)
+   */
+  const getCategoriesText = (butcher: StoreType) => {
+    if (butcher.categories && butcher.categories.length > 0) {
+      return butcher.categories.join(' • ');
+    }
+    const parts = [butcher.typeLabel || (isFr ? 'Boucherie Halal' : 'Halal Butcher')];
+    if (butcher.tags && butcher.tags.length > 0) {
+      parts.push(...butcher.tags.slice(0, 2));
+    }
+    return parts.join(' • ');
+  };
+
+  /**
+   * Helper for store logo image / avatar
+   */
+  const getStoreLogoSrc = (butcher: StoreType) => {
+    if (butcher.logo) return butcher.logo;
+    const nameLower = butcher.name.toLowerCase();
+    if (nameLower.includes('zakiya')) return '/images/butchers/boucherie-zakiya.svg';
+    if (nameLower.includes('koutoubia')) return '/images/butchers/boucherie-koutoubia.svg';
+    if (nameLower.includes('mamounia')) return '/images/butchers/boucherie-mamounia.svg';
+    if (nameLower.includes('melia')) return '/images/butchers/boucherie-melia.svg';
+    return butcher.image || '/images/favicon.png';
+  };
+
   return (
-    <section className="py-14 sm:py-20 bg-stone-100/70 border-b border-stone-200/70">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <section className="py-10 sm:py-14 bg-stone-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
 
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-red-600 mb-1">
               <Flame className="w-3.5 h-3.5 fill-red-600" />
-              <span>{settings?.butcherSectionTag || (isFrench ? 'Viandes fraîches & artisanales' : 'Fresh & craft meats')}</span>
+              <span>{settings?.butcherSectionTag || (isFr ? 'Viandes fraîches & artisanales' : 'Fresh & craft meats')}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
-              {isFrench ? (settings?.butcherSectionTitle || 'Boucheries livrant chez vous') : 'Butcher shops delivering to you'}
+              {isFr ? (settings?.butcherSectionTitle || 'Boucheries livrant chez vous') : 'Butcher shops delivering to you'}
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 mt-1">
               {selectedAddress ? (
                 <>
-                  {settings?.butcherSectionSubtitle || (isFrench ? 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à' : '100% Certified Halal butchers with custom cuts, delivered to')}{' '}
+                  {settings?.butcherSectionSubtitle || (isFr ? 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement à' : '100% Certified Halal butchers with custom cuts, delivered to')}{' '}
                   <strong className="text-stone-900 underline decoration-[#F68B62] decoration-2">
                     {selectedAddress.city} ({selectedAddress.postalCode})
                   </strong>
                 </>
               ) : (
                 <>
-                  {settings?.butcherSectionSubtitle || (isFrench ? 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement chez vous.' : '100% Certified Halal butchers with custom cuts, delivered directly to your door.')}
+                  {settings?.butcherSectionSubtitle || (isFr ? 'Boucheries 100% Halal certifiées avec découpe à la commande, livrées directement chez vous.' : '100% Certified Halal butchers with custom cuts, delivered directly to your door.')}
                 </>
               )}
             </p>
@@ -80,25 +145,25 @@ export default function ButcherSection({
           <button
             type="button"
             onClick={() => setIsAddressModalOpen(true)}
-            className="text-xs font-bold text-[#F68B62] hover:text-[#e07750] flex items-center gap-1.5 self-start sm:self-auto cursor-pointer px-3 py-1.5 rounded-xl bg-[#FCEFEA] border border-[#F68B62]/20 hover:border-[#F68B62]/40 transition-all shadow-xs"
+            className="text-xs font-bold text-[#F68B62] hover:text-[#e07750] flex items-center gap-1.5 self-start sm:self-auto cursor-pointer px-3.5 py-2 rounded-xl bg-[#FCEFEA] border border-[#F68B62]/20 hover:border-[#F68B62]/40 transition-all shadow-2xs"
           >
             <span>
               {selectedAddress 
-                ? (isFrench ? 'Changer d’adresse de livraison' : 'Change delivery address') 
-                : (isFrench ? 'Sélectionner mon adresse' : 'Select my address')}
+                ? (isFr ? 'Changer d’adresse de livraison' : 'Change delivery address') 
+                : (isFr ? 'Sélectionner mon adresse' : 'Select my address')}
             </span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* Notice for number of butchers */}
-        <div className="flex items-center gap-2 text-xs text-stone-700 bg-white p-3 rounded-2xl border border-stone-200/70 shadow-xs">
+        <div className="flex items-center gap-2 text-xs text-stone-700 bg-white p-3 rounded-2xl border border-stone-200/70 shadow-2xs">
           <CheckCircle2 className="w-4 h-4 text-[#FF7A45] shrink-0" />
           <span>
             {selectedAddress ? (
               displayButchers.length === 1 ? (
                 <>
-                  {isFrench ? (
+                  {isFr ? (
                     <><strong>1 boucherie partenaire exclusive</strong> dessert actuellement votre secteur à {selectedAddress.city}.</>
                   ) : (
                     <><strong>1 exclusive partner butcher</strong> currently serves your area in {selectedAddress.city}.</>
@@ -106,7 +171,7 @@ export default function ButcherSection({
                 </>
               ) : (
                 <>
-                  {isFrench ? (
+                  {isFr ? (
                     <><strong>{displayButchers.length} boucheries partenaires</strong> peuvent vous livrer aujourd’hui à {selectedAddress.city}.</>
                   ) : (
                     <><strong>{displayButchers.length} partner butchers</strong> can deliver to you today in {selectedAddress.city}.</>
@@ -115,7 +180,7 @@ export default function ButcherSection({
               )
             ) : (
               <>
-                {isFrench ? (
+                {isFr ? (
                   <><strong>{allButchers.length} boucheries partenaires Halal</strong> disponibles au Québec. Sélectionnez votre adresse pour filtrer par proximité.</>
                 ) : (
                   <><strong>{allButchers.length} Halal partner butchers</strong> available across Quebec. Select your address to filter by proximity.</>
@@ -125,104 +190,94 @@ export default function ButcherSection({
           </span>
         </div>
 
-        {/* Butcher Cards Grid / Swipeable Carousel */}
-        <div className={`grid gap-4 ${
-          displayButchers.length === 1 
-            ? 'grid-cols-1 md:grid-cols-2' 
-            : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-        }`}>
-          {displayButchers.map((butcher) => (
-            <div
-              key={butcher.id}
-              className="store-card group bg-white rounded-3xl overflow-hidden border border-stone-200/80 hover:border-[#F68B62]/50 flex flex-col justify-between cursor-pointer"
-            >
-              <div>
-                {/* Store Cover Image */}
-                <div className="relative aspect-[16/9] w-full overflow-hidden bg-stone-100">
-                  <img
-                    src={butcher.image}
-                    alt={butcher.name}
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-                  
-                  {/* Badges on image */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                    <span className="bg-[#FF7A45] text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
-                      <ShieldCheck className="w-3 h-3" /> 100% Halal
-                    </span>
-                    <span className="bg-white/90 backdrop-blur-xs text-stone-800 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-                      {butcher.typeLabel}
-                    </span>
-                  </div>
+        {/* ================= Instacart-Style Store Cards Grid ================= */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {displayButchers.map((butcher) => {
+            const logoSrc = getStoreLogoSrc(butcher);
+            const deliveryText = getDeliveryByText(butcher);
+            const pickupText = getPickupText(butcher);
+            const categoriesText = getCategoriesText(butcher);
+            const distance = butcher.distanceKm ? `${butcher.distanceKm.toFixed(1)} km` : '2.1 km';
+            const priceTier = butcher.priceTier || (butcher.minOrder > 30 ? '$$$' : butcher.minOrder > 20 ? '$$' : '$');
+            const highlightBadge = butcher.highlightBadge || (butcher.isHalalCertified ? '100% Halal' : undefined);
+            const badges = butcher.badges || butcher.tags?.slice(0, 3) || ['Découpe fraîche', 'Prix direct'];
 
-                  <div className="absolute bottom-3 left-3 right-3 text-white flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1 font-semibold">
-                      <MapPin className="w-3.5 h-3.5 text-[#F68B62]" />
-                      <span>{butcher.city}</span>
-                    </div>
-                    <div className="flex items-center gap-1 font-bold bg-black/40 px-2 py-0.5 rounded-md backdrop-blur-xs">
-                      <Clock className="w-3 h-3 text-[#FF7A45]" />
-                      <span>{butcher.deliveryTime}</span>
-                    </div>
-                  </div>
+            return (
+              <div
+                key={butcher.id}
+                onClick={() => handleStoreClick(butcher)}
+                className="group relative bg-white rounded-2xl border border-stone-200/80 p-4 sm:p-5 shadow-2xs hover:border-[#F68B62]/50 hover:shadow-md transition-all duration-200 flex items-start gap-3.5 sm:gap-4 cursor-pointer"
+              >
+                {/* Left: Square Store Logo Container */}
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl border border-stone-100 bg-white p-2 shrink-0 flex items-center justify-center overflow-hidden shadow-2xs group-hover:scale-105 transition-transform duration-200">
+                  <img
+                    src={logoSrc}
+                    alt={butcher.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      // Graceful fallback to favicon if image fails
+                      e.currentTarget.src = '/images/favicon.png';
+                    }}
+                  />
                 </div>
 
-                {/* Content details */}
-                <div className="p-4 sm:p-5 space-y-3">
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-black text-base sm:text-lg text-stone-900 group-hover:text-[#F68B62] transition-colors duration-200 leading-snug">
-                        {butcher.name}
-                      </h3>
-                      <div className="flex items-center gap-1 bg-amber-50 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-md shrink-0">
-                        <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
-                        <span>{butcher.rating}</span>
-                        <span className="text-[10px] text-stone-400">({butcher.reviewsCount})</span>
-                      </div>
-                    </div>
-                    <p className="text-xs text-stone-500 mt-1 flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-stone-400" />
-                      {butcher.address}, {butcher.postalCode}
-                    </p>
+                {/* Right: Store Details Stack */}
+                <div className="flex-1 min-w-0 space-y-1">
+                  
+                  {/* Line 1: Store Name */}
+                  <h3 className="font-bold text-[15px] sm:text-base text-stone-900 group-hover:text-[#F68B62] transition-colors leading-tight truncate">
+                    {butcher.name}
+                  </h3>
+
+                  {/* Line 2: Delivery Line (Green Lightning Bolt) */}
+                  <div className="flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-emerald-700 leading-tight">
+                    <Zap className="w-3.5 h-3.5 fill-emerald-600 text-emerald-600 shrink-0" />
+                    <span className="truncate">
+                      {deliveryText}
+                      <span className="mx-1 text-stone-300 font-normal">•</span>
+                      {distance}
+                      <span className="mx-1 text-stone-300 font-normal">•</span>
+                      {priceTier}
+                    </span>
                   </div>
 
-                  {/* Delivery & Min order pills */}
-                  <div className="flex items-center gap-3 text-xs text-stone-600 bg-[#FCEFEA]/45 p-2.5 rounded-xl border border-[#F68B62]/15">
-                    <div className="flex items-center gap-1 font-semibold text-stone-800">
-                      <Truck className="w-3.5 h-3.5 text-[#F68B62]" />
-                      <span>{butcher.deliveryFee}</span>
+                  {/* Line 3: Optional Pickup Line (Storefront Icon) */}
+                  {pickupText && (
+                    <div className="flex items-center gap-1.5 text-xs text-stone-600 leading-tight">
+                      <StoreIcon className="w-3.5 h-3.5 text-stone-500 shrink-0" />
+                      <span className="truncate">{pickupText}</span>
                     </div>
-                    <span className="text-stone-300">•</span>
-                    <div>Min. commande : <strong className="text-stone-800">{butcher.minOrder}$</strong></div>
-                  </div>
+                  )}
 
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {(butcher.tags || []).map((tag: string) => (
+                  {/* Line 4: Categories / Specialties Line */}
+                  <p className="text-xs text-stone-500 truncate leading-tight">
+                    {categoriesText}
+                  </p>
+
+                  {/* Line 5: Badge Pills Row */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    {/* Highlighted Yellow Badge (like "No markups") */}
+                    {highlightBadge && (
+                      <span className="bg-amber-300 text-stone-950 font-bold px-1.5 py-0.5 rounded text-[11px] leading-tight">
+                        {highlightBadge}
+                      </span>
+                    )}
+
+                    {/* Regular Grey Badges */}
+                    {badges.map((badge, idx) => (
                       <span
-                        key={tag}
-                        className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#FCEFEA]/60 text-stone-700 border border-[#F68B62]/10"
+                        key={idx}
+                        className="bg-stone-100 text-stone-600 font-medium px-2 py-0.5 rounded text-[11px] leading-tight"
                       >
-                        {tag}
+                        {badge}
                       </span>
                     ))}
                   </div>
+
                 </div>
               </div>
-
-              {/* Action Button */}
-              <div className="p-4 sm:p-5 pt-0">
-                <button
-                  type="button"
-                  className="w-full py-2.5 px-4 rounded-xl bg-stone-900 group-hover:bg-[#F68B62] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer shadow-xs group-hover:shadow-md group-hover:shadow-[#F68B62]/25 active:scale-95"
-                >
-                  <span>Commander les viandes</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform duration-200" />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>

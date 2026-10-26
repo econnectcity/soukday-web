@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" rx="28" fill="#FFFFFF"/>
+  <rect x="55" y="40" width="90" height="65" rx="16" fill="#FEF3C7" stroke="#D97706" stroke-width="3"/>
+  <text x="100" y="85" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="900" font-size="36" fill="#B45309" text-anchor="middle">M</text>
+  <text x="100" y="142" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="900" font-size="20" fill="#9A3412" text-anchor="middle" letter-spacing="1">MAMOUNIA</text>
+  <text x="100" y="162" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="700" font-size="10.5" fill="#78716C" text-anchor="middle" letter-spacing="1">VIANDES &amp; GRILLADES</text>
+</svg>

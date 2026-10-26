@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" rx="28" fill="#FFFFFF"/>
+  <circle cx="100" cy="80" r="42" fill="#FFF1EB" stroke="#F68B62" stroke-width="4"/>
+  <path d="M85 70 L100 54 L115 70 L115 96 L85 96 Z" fill="#F68B62"/>
+  <circle cx="100" cy="78" r="8" fill="#FFFFFF"/>
+  <text x="100" y="142" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="900" font-size="22" fill="#C2410C" text-anchor="middle" letter-spacing="1.5">ZAKIYA</text>
+  <text x="100" y="162" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="700" font-size="11" fill="#78716C" text-anchor="middle" letter-spacing="1">BOUCHERIE HALAL</text>
+</svg>

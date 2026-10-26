@@ -19,6 +19,13 @@ export interface Store {
   isHalalCertified?: boolean;
   isOpenNow: boolean;
   hours: string;
+  logo?: string;
+  deliveryBy?: string;
+  priceTier?: string;
+  pickupReadyBy?: string;
+  categories?: string[];
+  highlightBadge?: string;
+  badges?: string[];
 }
 
 export interface Category {

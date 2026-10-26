@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" rx="28" fill="#0F172A"/>
+  <circle cx="100" cy="75" r="32" fill="none" stroke="#38BDF8" stroke-width="4"/>
+  <path d="M88 75 L96 83 L112 67" fill="none" stroke="#38BDF8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="100" y="142" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="900" font-size="22" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">MELIA</text>
+  <text x="100" y="162" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="700" font-size="10" fill="#94A3B8" text-anchor="middle" letter-spacing="1">HALAL CERTIFIÉ</text>
+</svg>

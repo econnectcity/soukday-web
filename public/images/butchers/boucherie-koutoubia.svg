@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" rx="28" fill="#15803D"/>
+  <path d="M100 40 C80 40 70 55 70 75 C70 95 90 105 100 112 C110 105 130 95 130 75 C130 55 120 40 100 40 Z" fill="none" stroke="#FDE047" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="100" cy="72" r="10" fill="#FDE047"/>
+  <text x="100" y="142" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">KOUTOUBIA</text>
+  <text x="100" y="162" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="700" font-size="10.5" fill="#86EFAC" text-anchor="middle" letter-spacing="1">BOUCHERIE ARTISANALE</text>
+</svg>
