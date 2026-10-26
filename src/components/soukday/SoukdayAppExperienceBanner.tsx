@@ -70,7 +70,7 @@ export default function SoukdayAppExperienceBanner({
       : 'Scan the QR code with your phone camera for faster ordering. First delivery is free!');
 
   return (
-    <section className={`w-full py-4 sm:py-6 bg-stone-50 ${className}`}>
+    <section className={`w-full pt-4 sm:pt-6 pb-16 sm:pb-20 bg-stone-50 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Soukday Brand Warm Card Container */}
@@ -80,16 +80,16 @@ export default function SoukdayAppExperienceBanner({
           <div className="absolute top-0 right-1/4 w-80 h-80 bg-[#F68B62]/8 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-10 left-1/3 w-64 h-64 bg-[#F59E0B]/8 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="relative flex flex-col md:flex-row items-center justify-between min-h-[140px] md:h-[150px] px-4 sm:px-6 lg:px-8 py-4 md:py-0 gap-4 md:gap-6">
+          <div className="relative flex flex-col md:flex-row items-center justify-between px-5 sm:px-8 lg:px-10 py-6 sm:py-7 gap-5 md:gap-6">
             
             {/* ================= 1. LEFT: High-Res Smartphone & Hand Mockup ================= */}
-            <div className="relative w-full md:w-auto flex items-end justify-center md:justify-start shrink-0 h-[130px] sm:h-[145px] md:h-[160px] -mb-2 md:-mb-3">
+            <div className="relative w-full md:w-auto flex items-center justify-center md:justify-start shrink-0 h-[140px] sm:h-[155px] md:h-[165px]">
               {!imageFailed && imageSrc ? (
-                <div className="relative h-full flex items-end">
+                <div className="relative h-full flex items-center">
                   <img
                     src={imageSrc}
                     alt={bannerTitle}
-                    className="h-full w-auto max-w-[260px] sm:max-w-[300px] md:max-w-[340px] object-contain object-bottom select-none transition-transform duration-300 hover:scale-105 drop-shadow-md"
+                    className="h-full w-auto max-w-[260px] sm:max-w-[300px] md:max-w-[340px] object-contain select-none transition-transform duration-300 hover:scale-105 drop-shadow-md"
                     onError={() => setImageFailed(true)}
                   />
                   {/* Floating App Rating Pill */}
@@ -102,9 +102,9 @@ export default function SoukdayAppExperienceBanner({
                   </div>
                 </div>
               ) : (
-                <div className="h-full w-[200px] sm:w-[240px] md:w-[270px] flex items-end">
+                <div className="h-full w-[200px] sm:w-[240px] md:w-[270px] flex items-center">
                   <SoukdayAppHandIllustration
-                    className="w-full h-full object-bottom"
+                    className="w-full h-full object-contain"
                     width="100%"
                     height="100%"
                     isFrench={isFr}
