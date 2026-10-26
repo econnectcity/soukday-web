@@ -8,6 +8,7 @@ import CategorySlider from './CategorySlider';
 import SoukdayGrocerySection from './SoukdayGrocerySection';
 import SoukdayAppExperienceBanner from './SoukdayAppExperienceBanner';
 import ButcherSection from './ButcherSection';
+import SoukdayHowItWorksSection from './SoukdayHowItWorksSection';
 import OtherStoresSection from './OtherStoresSection';
 import PopularProductsSection from './PopularProductsSection';
 import {
@@ -121,6 +122,9 @@ export default function SoukdayHomepage() {
 
       {/* 4. Butchers Delivering to You (Based on customer address / postal code) */}
       <ButcherSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
+
+      {/* 4.5 How It Works / Combined Order Explanation (Instacart 3-card style) */}
+      <SoukdayHowItWorksSection />
 
       {/* 5. Other Stores Available (Supermarkets, specialty stores, bakeries, caterers) */}
       <OtherStoresSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
