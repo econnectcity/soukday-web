@@ -10,6 +10,7 @@ import SoukdayAppExperienceBanner from './SoukdayAppExperienceBanner';
 import ButcherSection from './ButcherSection';
 import SoukdayHowItWorksSection from './SoukdayHowItWorksSection';
 import OtherStoresSection from './OtherStoresSection';
+import SoukdayFaqSection from './SoukdayFaqSection';
 import PopularProductsSection from './PopularProductsSection';
 import {
   fetchLiveCategories,
@@ -127,6 +128,9 @@ export default function SoukdayHomepage() {
 
       {/* 5. Other Stores Available (Supermarkets, specialty stores, bakeries, caterers) */}
       <OtherStoresSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
+
+      {/* 5.5 FAQ Section: Des questions ? On vous répond ! */}
+      <SoukdayFaqSection />
 
       {/* 6. Popular Products (Live from Admin/Seller product inventory) */}
       <PopularProductsSection products={products} />
