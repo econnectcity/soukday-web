@@ -12,6 +12,7 @@ import {
   Mail, 
   Phone 
 } from 'lucide-react';
+import PreFooterAppBanner from './PreFooterAppBanner';
 
 export default function Footer() {
   const settingState = useSelector((state) => state.Setting);
@@ -29,9 +30,11 @@ export default function Footer() {
   const siteTitle = webSettings?.site_title || setting?.app_name || 'Soukday';
 
   return (
-    <footer className="w-full bg-[#141a1f] text-stone-300 text-xs mt-16 border-t border-stone-800">
-      
-      {/* 4 Value Props / Trust Badges Bar */}
+    <>
+      <PreFooterAppBanner />
+      <footer className="w-full bg-[#141a1f] text-stone-300 text-xs border-t border-stone-800">
+        
+        {/* 4 Value Props / Trust Badges Bar */}
       <div className="border-b border-stone-800/80 bg-stone-900/60 py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
@@ -230,5 +233,6 @@ export default function Footer() {
 
       </div>
     </footer>
+    </>
   );
 }
