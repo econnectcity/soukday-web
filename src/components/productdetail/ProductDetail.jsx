@@ -498,7 +498,6 @@ const ProductDetail = ({ slug: propSlug }) => {
   const isSoukdayVendor =
     product?.seller_id === 0 ||
     product?.seller_id === 11 ||
-    product?.seller_id === 12 ||
     String(product?.seller_name || "").toLowerCase().includes("soukday") ||
     String(product?.seller?.translations?.name || "").toLowerCase().includes("soukday") ||
     String(product?.seller?.name || "").toLowerCase().includes("soukday");

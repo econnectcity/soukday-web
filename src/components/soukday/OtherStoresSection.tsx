@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { Store } from '@/types';
@@ -27,8 +27,10 @@ export default function OtherStoresSection({
   const { isFrench } = useTranslation();
   const sourceStores = stores || [];
 
-  // Non-butcher stores: Supermarkets, Bakeries, Specialty Markets
-  const otherStores = sourceStores.filter((s) => s.type !== 'butcher');
+  // Non-butcher partner stores: Supermarkets, Bakeries, Specialty Markets (Soukday direct has its own dedicated section)
+  const otherStores = sourceStores.filter(
+    (s) => s.type !== 'butcher' && s.id !== 11 && !s.slug?.includes('soukday')
+  );
 
   return (
     <section className="py-14 sm:py-20 bg-white">

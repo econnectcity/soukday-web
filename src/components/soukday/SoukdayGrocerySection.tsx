@@ -6,7 +6,7 @@ import { useCart } from '@/context/SoukdayCartContext';
 import { SOUKDAY_GROCERY_SUBCATEGORIES, SOUKDAY_DIRECT_PRODUCTS } from '@/data/mockData';
 import { Product } from '@/types';
 import { LiveWebSettings } from '@/types';
-import { DEFAULT_LIVE_SETTINGS } from '@/services/soukdayApi';
+import { DEFAULT_LIVE_SETTINGS, isDedicatedSoukdayProduct } from '@/services/soukdayApi';
 import { useTranslation } from '@/utils/translation';
 import { getTranslatedCategoryName } from '@/utils/categoryTranslation';
 import { 
@@ -40,20 +40,12 @@ export default function SoukdayGrocerySection({
     }
   };
 
-  // Strict check: ONLY products sold by Soukday / Admin (never third-party vendors)
-  const isSoukdayProduct = (p: Product) => {
-    if (!p) return false;
-    if (p.storeType === 'soukday_direct') return true;
-    if (p.seller_id === 12 || p.seller_id === 11 || p.seller_id === 0 || p.storeId === 12 || p.storeId === 11 || p.storeId === 0) return true;
-    const sName = (p.storeName || '').toLowerCase();
-    return sName.includes('soukday') || sName.includes('épicerie directe') || sName.includes('epicerie directe');
-  };
-
-  const incomingSoukday = (products || []).filter(isSoukdayProduct);
-  // Fallback ONLY to default Soukday direct products, NEVER to third-party vendor products
+  // Strict check: ONLY products sold by Soukday / Admin (strictly rejects any new seller ID, outside store, or vendor)
+  const incomingSoukday = (products || []).filter(isDedicatedSoukdayProduct);
+  const fallbackCatalog = (SOUKDAY_DIRECT_PRODUCTS || []).filter(isDedicatedSoukdayProduct);
   const groceryProducts = incomingSoukday.length > 0 
     ? incomingSoukday 
-    : (SOUKDAY_DIRECT_PRODUCTS || []);
+    : fallbackCatalog;
 
   // Sort helper: Top most selling products 1st (descending by salesCount / orderCounter / isTopSeller)
   const sortByTopSelling = (a: Product, b: Product) => {
@@ -344,13 +336,13 @@ export default function SoukdayGrocerySection({
                         {product.name}
                       </h3>
 
-                      {/* Vendor Attribution: Vendu par in black and seller in orange */}
+                      {/* Vendor Attribution: Exclusively Soukday in this dedicated section */}
                       <div className="text-[11px] sm:text-xs truncate mt-1">
                         <span className="font-semibold text-stone-900">
                           {isFrench ? "Vendu par " : "Sold by "}
                         </span>
                         <span className="font-bold text-[#F68B62]">
-                          {isSoukday ? "Soukday" : sName}
+                          Soukday
                         </span>
                       </div>
                     </Link>

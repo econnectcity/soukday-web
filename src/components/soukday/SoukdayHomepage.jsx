@@ -17,6 +17,7 @@ import {
   fetchLiveProducts,
   fetchLiveSoukdayProducts,
   fetchLiveWebSettings,
+  isDedicatedSoukdayProduct,
 } from '@/services/soukdayApi';
 import { DEFAULT_LIVE_SETTINGS, DEFAULT_CATEGORIES } from '@/data/mockData';
 
@@ -78,11 +79,9 @@ export default function SoukdayHomepage() {
           if (liveStores && liveStores.length > 0) setStores(liveStores);
           if (liveProds && liveProds.length > 0) setProducts(liveProds);
           if (liveSoukdayProds && liveSoukdayProds.length > 0) {
-            setSoukdayProducts(liveSoukdayProds);
+            setSoukdayProducts(liveSoukdayProds.filter(isDedicatedSoukdayProduct));
           } else if (liveProds && liveProds.length > 0) {
-            const adminOnly = liveProds.filter(
-              (p) => p.storeType === 'soukday_direct' || p.seller_id === 12 || p.seller_id === 11 || p.seller_id === 0
-            );
+            const adminOnly = liveProds.filter(isDedicatedSoukdayProduct);
             setSoukdayProducts(adminOnly);
           }
           if (liveSettings) {

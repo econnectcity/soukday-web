@@ -5,7 +5,7 @@ import { LocalizedLink as Link } from '@/utils/localizedNav';
 import { useCart } from '@/context/SoukdayCartContext';
 import { SOUKDAY_GROCERY_SUBCATEGORIES, SOUKDAY_DIRECT_PRODUCTS } from '@/data/mockData';
 import { Product } from '@/types';
-import { fetchLiveSoukdayProducts } from '@/services/soukdayApi';
+import { fetchLiveSoukdayProducts, isDedicatedSoukdayProduct } from '@/services/soukdayApi';
 import { useTranslation } from '@/utils/translation';
 import { getTranslatedCategoryName } from '@/utils/categoryTranslation';
 import {
@@ -57,10 +57,11 @@ export default function SoukdayDedicatedGroceryPage({
         const lang = isFrench ? 'fr' : 'en';
         const liveProds = await fetchLiveSoukdayProducts(lang);
         if (isMounted && liveProds && liveProds.length > 0) {
+          const verifiedLive = liveProds.filter(isDedicatedSoukdayProduct);
           // Merge live items with any custom mock items to ensure rich catalog
           const map = new Map<number, Product>();
-          SOUKDAY_DIRECT_PRODUCTS.forEach((p) => map.set(p.id, p));
-          liveProds.forEach((p) => map.set(p.id, { ...map.get(p.id), ...p }));
+          SOUKDAY_DIRECT_PRODUCTS.filter(isDedicatedSoukdayProduct).forEach((p) => map.set(p.id, p));
+          verifiedLive.forEach((p) => map.set(p.id, { ...map.get(p.id), ...p }));
           setAllProducts(Array.from(map.values()));
         }
       } catch (err) {
@@ -76,17 +77,9 @@ export default function SoukdayDedicatedGroceryPage({
     };
   }, [isFrench]);
 
-  // Strict guard: Admin / Soukday direct products only
-  const isSoukdayProduct = (p: Product) => {
-    if (!p) return false;
-    if (p.storeType === 'soukday_direct') return true;
-    if (p.seller_id === 12 || p.seller_id === 11 || p.seller_id === 0 || p.storeId === 12 || p.storeId === 11 || p.storeId === 0) return true;
-    const sName = (p.storeName || '').toLowerCase();
-    return sName.includes('soukday') || sName.includes('épicerie directe') || sName.includes('epicerie directe');
-  };
-
+  // Strict guard: Admin / Soukday direct products only (strictly rejects any new seller ID, outside store, or vendor)
   const soukdayOnlyCatalog = useMemo(() => {
-    return allProducts.filter(isSoukdayProduct);
+    return allProducts.filter(isDedicatedSoukdayProduct);
   }, [allProducts]);
 
   // Category product count calculation

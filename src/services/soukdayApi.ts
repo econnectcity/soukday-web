@@ -56,6 +56,52 @@ export const DEFAULT_LIVE_SETTINGS = {
   copyrightDetails: '© 2026 Soukday Inc. Tous droits réservés. Plateforme de commerce multi-vendeurs.',
 };
 
+export const SOUKDAY_OFFICIAL_SELLER_ID = 11;
+export const SOUKDAY_OFFICIAL_SELLER_SLUG = 'soukday-epicerie-directe';
+
+/**
+ * Strict validator: ensures that only official Soukday products can ever enter
+ * the dedicated Soukday grocery section.
+ * Absolutely NO other vendor ID, outside store, or third-party product can pass.
+ */
+export function isDedicatedSoukdayProduct(product: any): boolean {
+  if (!product) return false;
+
+  // 1. Seller ID check: MUST be 11 (or 0 for admin direct).
+  // Any other seller ID (e.g. 12, 13, 1, 2, 4...) is strictly rejected.
+  const sellerId = Number(product.seller_id ?? product.storeId ?? product.seller?.id ?? -1);
+  if (sellerId !== SOUKDAY_OFFICIAL_SELLER_ID && sellerId !== 0) {
+    return false;
+  }
+
+  // 2. Store name check: if provided, it must not belong to an outside vendor
+  const storeName = String(
+    product.storeName ?? 
+    product.seller?.translations?.store_name ?? 
+    product.seller?.store_name ?? 
+    product.seller?.name ?? 
+    ''
+  ).toLowerCase().trim();
+
+  if (storeName) {
+    const isSoukdayName = 
+      storeName.includes('soukday') || 
+      storeName.includes('épicerie directe') || 
+      storeName.includes('epicerie directe');
+    if (!isSoukdayName) {
+      return false;
+    }
+  }
+
+  // 3. Seller slug check: if provided, must belong to Soukday
+  const sellerSlug = String(product.sellerSlug ?? product.seller?.slug ?? '').toLowerCase().trim();
+  if (sellerSlug && sellerSlug !== SOUKDAY_OFFICIAL_SELLER_SLUG && !sellerSlug.includes('soukday')) {
+    return false;
+  }
+
+  return true;
+}
+
 const getApiBaseUrl = () => {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
   if (envUrl && !envUrl.includes('127.0.0.1') && !envUrl.includes('localhost') && envUrl.startsWith('http')) {
@@ -327,7 +373,7 @@ export async function fetchLiveProducts(lat: number = 45.5017, lng: number = -73
       return json.data.map((item: any) => {
         const variant = item.variants?.[0] || {};
         const sellerName = item.seller?.translations?.store_name || item.seller?.store_name || item.seller?.name || item.seller_name;
-        const isSoukday = item.seller_id === 0 || item.seller_id === 11 || item.seller_id === 12 || sellerName?.toLowerCase().includes('soukday');
+        const isSoukday = isDedicatedSoukdayProduct(item);
         const rawUnit = variant.stock_unit_name || (typeof variant.unit === 'object' ? variant.unit?.name : variant.unit) || 'u';
         const productName = item.translations?.name || item.name;
         const formattedUnits = formatProductUnitAndWeight(productName, rawUnit, variant.measurement);
@@ -374,30 +420,32 @@ export async function fetchLiveSoukdayProducts(lang: string = 'fr'): Promise<Pro
         'lang': lang,
         'X-Module-Id': '1',
       },
-      body: JSON.stringify({ seller_id: 12, sort: 'popular', limit: 100 }),
+      body: JSON.stringify({ seller_id: SOUKDAY_OFFICIAL_SELLER_ID, sort: 'popular', limit: 100 }),
     });
     if (!res.ok) throw new Error('Failed to fetch Soukday direct products');
     const json = await res.json();
     if (json.status === 1 && Array.isArray(json.data) && json.data.length > 0) {
-      return json.data.map((item: any) => {
-        const variant = item.variants?.[0] || {};
-        const sellerName = item.seller?.translations?.store_name || item.seller?.store_name || item.seller?.name || 'Soukday Épicerie Directe';
-        const rawUnit = variant.stock_unit_name || (typeof variant.unit === 'object' ? variant.unit?.name : variant.unit) || 'u';
-        const productName = item.translations?.name || item.name;
-        const formattedUnits = formatProductUnitAndWeight(productName, rawUnit, variant.measurement);
-        const orderCount = parseInt(item.order_counter || '0', 10);
+      return json.data
+        .filter(isDedicatedSoukdayProduct)
+        .map((item: any) => {
+          const variant = item.variants?.[0] || {};
+          const sellerName = 'Soukday Épicerie Directe';
+          const rawUnit = variant.stock_unit_name || (typeof variant.unit === 'object' ? variant.unit?.name : variant.unit) || 'u';
+          const productName = item.translations?.name || item.name;
+          const formattedUnits = formatProductUnitAndWeight(productName, rawUnit, variant.measurement);
+          const orderCount = parseInt(item.order_counter || '0', 10);
 
-        return {
-          id: item.id,
-          variantId: variant.id || item.id,
-          variant_id: variant.id || item.id,
-          name: productName,
-          slug: item.slug || `product-${item.id}`,
-          brand: item.brand?.name || 'Soukday',
-          storeId: item.seller_id || 12,
-          seller_id: item.seller_id || 12,
-          storeName: sellerName,
-          storeType: 'soukday_direct' as const,
+          return {
+            id: item.id,
+            variantId: variant.id || item.id,
+            variant_id: variant.id || item.id,
+            name: productName,
+            slug: item.slug || `product-${item.id}`,
+            brand: item.brand?.name || 'Soukday',
+            storeId: SOUKDAY_OFFICIAL_SELLER_ID,
+            seller_id: SOUKDAY_OFFICIAL_SELLER_ID,
+            storeName: sellerName,
+            storeType: 'soukday_direct' as const,
           price: parseFloat(variant.discounted_price || variant.price || '0'),
           originalPrice: variant.discounted_price ? parseFloat(variant.price || '0') : undefined,
           unit: formattedUnits.unit,
@@ -413,7 +461,8 @@ export async function fetchLiveSoukdayProducts(lang: string = 'fr'): Promise<Pro
           orderCounter: orderCount,
           rowOrder: item.row_order !== undefined && item.row_order !== null ? parseInt(item.row_order, 10) : undefined,
         };
-      });
+      })
+      .filter(isDedicatedSoukdayProduct);
     }
   } catch (err) {
     console.warn('Live Soukday direct products fetch failed:', err);
