@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from '@/utils/translation';
-import { ChevronDown, HelpCircle, ArrowRight } from 'lucide-react';
-import { LocalizedLink as Link } from '@/utils/localizedNav';
+import { ChevronDown } from 'lucide-react';
 
 interface FAQItem {
   id: number;
@@ -230,10 +229,6 @@ export default function SoukdayFaqSection() {
 
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto space-y-2.5">
-          <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F68B62] px-3 py-1 rounded-full bg-[#FCEFEA] border border-[#F68B62]/20 shadow-2xs">
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>{isFr ? 'Foire aux questions' : 'Frequently Asked Questions'}</span>
-          </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-stone-900 tracking-tight leading-tight">
             {isFr ? 'Des questions ? On vous répond !' : 'Have questions? We have answers!'}
           </h2>
@@ -298,25 +293,8 @@ export default function SoukdayFaqSection() {
           })}
         </div>
 
-        {/* Footer Support Prompt */}
-        <div className="pt-2 text-center">
-          <div className="inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#FCEFEA]/60 border border-[#F68B62]/20 text-xs sm:text-sm">
-            <span className="font-semibold text-stone-800">
-              {isFr
-                ? 'Vous avez une autre question ? Notre équipe est là pour vous aider.'
-                : 'Have another question? Our support team is here to help.'}
-            </span>
-            <Link
-              href="/contact-us"
-              className="inline-flex items-center gap-1 font-bold text-[#D9531E] hover:text-[#b83e10] transition-colors"
-            >
-              <span>{isFr ? 'Nous contacter' : 'Contact Us'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
-
       </div>
     </section>
   );
 }
+
