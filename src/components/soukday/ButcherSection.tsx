@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { useCart } from '@/context/SoukdayCartContext';
 import { Store as StoreType, LiveWebSettings } from '@/types';
 import { DEFAULT_LIVE_SETTINGS } from '@/services/soukdayApi';
+import { STORES } from '@/data/mockData';
 import { useTranslation } from '@/utils/translation';
 import { setFilterBySeller } from '@/redux/slices/productFilterSlice';
 import { 
@@ -31,21 +32,8 @@ export default function ButcherSection({
   const isFr = isFrench || currentCode === 'fr' || !currentCode || currentCode.startsWith('fr');
   const sourceStores = stores || [];
 
-  // All butchers
-  const allButchers = sourceStores.filter((s) => s.type === 'butcher');
-
-  // Filter based on user address city or postal code
-  const activeCity = selectedAddress?.city?.toLowerCase() || '';
-  const localButchers = activeCity ? allButchers.filter((b) => {
-    if (activeCity.includes('laval')) return b.city.toLowerCase() === 'laval';
-    if (activeCity.includes('jérôme') || activeCity.includes('jerome')) return b.city.toLowerCase().includes('jérôme');
-    if (activeCity.includes('léonard') || activeCity.includes('leonard')) {
-      return b.city.toLowerCase().includes('léonard') || b.city.toLowerCase() === 'montréal';
-    }
-    return b.city.toLowerCase() === 'montréal' || b.city.toLowerCase().includes('léonard');
-  }) : allButchers;
-
-  const displayButchers = localButchers.length > 0 ? localButchers : allButchers;
+  // Show all vendors which are registered in admin
+  const displayButchers = (sourceStores && sourceStores.length > 0) ? sourceStores : (STORES || []);
 
   const handleStoreClick = (butcher: StoreType) => {
     try {
@@ -163,7 +151,9 @@ export default function ButcherSection({
             const deliveryText = getDeliveryByText(butcher);
             const pickupText = getPickupText(butcher);
             const categoriesText = getCategoriesText(butcher);
-            const distance = butcher.distanceKm ? `${butcher.distanceKm.toFixed(1)} km` : '2.1 km';
+            const distance = butcher.distanceKm && butcher.distanceKm < 500
+              ? `${butcher.distanceKm.toFixed(1)} km` 
+              : (isFr ? 'Livraison locale' : 'Local delivery');
             const priceTier = typeof butcher.priceTier === 'string' && butcher.priceTier !== '[object Object]'
               ? butcher.priceTier
               : (butcher.minOrder > 30 ? '$$$' : butcher.minOrder > 20 ? '$$' : '$');
@@ -193,15 +183,25 @@ export default function ButcherSection({
                 className="group relative bg-white rounded-2xl border border-stone-200/80 p-4 sm:p-5 shadow-2xs hover:border-[#F68B62]/50 hover:shadow-md transition-all duration-200 flex items-start gap-3.5 sm:gap-4 cursor-pointer"
               >
                 {/* Left: Square Store Logo Container */}
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl border border-stone-100 bg-white p-2 shrink-0 flex items-center justify-center overflow-hidden shadow-2xs group-hover:scale-105 transition-transform duration-200">
-                  <img
-                    src={logoSrc}
-                    alt={storeName}
-                    className="w-full h-full object-contain"
-                    onError={(e) => {
-                      e.currentTarget.src = '/images/favicon.png';
-                    }}
-                  />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl border border-stone-100 bg-[#FCEFEA]/40 p-2 shrink-0 flex items-center justify-center overflow-hidden shadow-2xs group-hover:scale-105 transition-transform duration-200">
+                  {logoSrc && logoSrc !== '/images/favicon.png' ? (
+                    <img
+                      src={logoSrc}
+                      alt={storeName}
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div
+                    className="w-full h-full bg-[#FCEFEA] text-[#F68B62] rounded-lg flex items-center justify-center text-lg sm:text-xl font-black select-none"
+                    style={{ display: (logoSrc && logoSrc !== '/images/favicon.png') ? 'none' : 'flex' }}
+                  >
+                    {storeName.slice(0, 1).toUpperCase()}
+                  </div>
                 </div>
 
                 {/* Right: Store Details Stack */}
