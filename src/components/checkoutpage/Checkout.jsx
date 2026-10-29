@@ -1075,7 +1075,7 @@ const Checkout = () => {
         ) : (
           <div className="flex justify-center flex-col items-center">
             <div className="w-full flex justify-end mb-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#e06836] dark:text-[#FF7A45] bg-[#FFF5EF] dark:bg-emerald-950/60 px-3.5 py-1.5 rounded-full border border-[#FF7A45]/30 dark:border-emerald-800/60 w-fit">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#e06836] dark:text-[#FF7A45] bg-[#FFF5EF] dark:bg-[#F68B62]/10 px-3.5 py-1.5 rounded-full border border-[#FF7A45]/30 dark:border-[#F68B62]/30 w-fit">
                 <span>🔒</span>
                 <span>{t("secure_checkout_guaranteed") || "Paiement sécurisé SSL 256-bit"}</span>
               </div>
@@ -1178,7 +1178,7 @@ const Checkout = () => {
                             <button
                               type="button"
                               onClick={() => setIsEnteringNewAddress(!isEnteringNewAddress)}
-                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md border border-[#FF7A45] text-[#FF7A45] hover:bg-[#FFF5EF] dark:hover:bg-emerald-950 transition-colors"
+                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md border border-[#FF7A45] text-[#FF7A45] hover:bg-[#FFF5EF] dark:hover:bg-[#F68B62]/10 transition-colors"
                             >
                               {isEnteringNewAddress ? (
                                 <>
@@ -1234,7 +1234,7 @@ const Checkout = () => {
                             {/* Contact Information Section */}
                             <div>
                               <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-zinc-800">
-                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-emerald-900/40 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">1</span>
+                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-[#F68B62]/20 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">1</span>
                                 <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100">
                                   {t("contact_information") || "Contact Information"}
                                 </h3>
@@ -1324,7 +1324,7 @@ const Checkout = () => {
                             {/* Delivery Address Section */}
                             <div>
                               <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-zinc-800">
-                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-emerald-900/40 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">2</span>
+                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-[#F68B62]/20 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">2</span>
                                 <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100">
                                   {t("delivery_address") || "Delivery Address"}
                                 </h3>
@@ -1439,7 +1439,7 @@ const Checkout = () => {
                             {/* Delivery Instructions Section */}
                             <div>
                               <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-zinc-800">
-                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-emerald-900/40 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">3</span>
+                                <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-[#F68B62]/20 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">3</span>
                                 <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100">
                                   {t("delivery_instructions") || "Delivery Instructions & Notes"}
                                 </h3>
@@ -1538,7 +1538,7 @@ const Checkout = () => {
                         {/* Pickup Contact Information Form */}
                         <div className="flex flex-col cardBorder rounded-lg bg-white dark:bg-zinc-900 overflow-hidden shadow-sm p-4 md:p-6 space-y-4">
                           <div className="flex items-center gap-2 pb-2 border-b border-gray-100 dark:border-zinc-800">
-                            <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-emerald-900/40 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">1</span>
+                            <span className="w-6 h-6 rounded-full bg-[#FCEFEA] dark:bg-[#F68B62]/20 text-[#FF7A45] dark:text-[#FF7A45] flex items-center justify-center text-xs font-bold">1</span>
                             <h3 className="font-semibold text-sm md:text-base text-gray-900 dark:text-gray-100">
                               {t("pickup_contact_information") || "Who will pick up this order?"}
                             </h3>

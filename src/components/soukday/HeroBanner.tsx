@@ -117,7 +117,7 @@ export default function HeroBanner({ settings = DEFAULT_LIVE_SETTINGS }: HeroBan
 
               {/* Success Notification Feedback */}
               {successNotice && selectedAddress && (
-                <div className="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5 px-2 animate-fade-in">
+                <div className="mt-2 text-xs font-semibold text-[#F68B62] flex items-center gap-1.5 px-2 animate-fade-in">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>
                     {isFrench 

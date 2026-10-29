@@ -213,8 +213,8 @@ export default function ButcherSection({
                   </h3>
 
                   {/* Line 2: Delivery Line (Green Lightning Bolt) */}
-                  <div className="flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-emerald-700 leading-tight">
-                    <Zap className="w-3.5 h-3.5 fill-emerald-600 text-emerald-600 shrink-0" />
+                  <div className="flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#F68B62] leading-tight">
+                    <Zap className="w-3.5 h-3.5 fill-[#F68B62] text-[#F68B62] shrink-0" />
                     <span className="truncate">
                       {deliveryText}
                       <span className="mx-1 text-stone-300 font-normal">•</span>

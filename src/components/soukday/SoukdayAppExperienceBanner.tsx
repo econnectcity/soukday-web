@@ -156,8 +156,8 @@ export default function SoukdayAppExperienceBanner({
                   {isFr ? '1ère livraison offerte' : 'Free 1st delivery'}
                 </span>
 
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-100">
-                  <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#FCEFEA] text-[#F68B62] text-[11px] font-bold border border-[#F68B62]/20">
+                  <ShieldCheck className="w-3 h-3 text-[#F68B62]" />
                   {isFr ? 'Boucheries 100% Halal' : '100% Halal Butchers'}
                 </span>
 

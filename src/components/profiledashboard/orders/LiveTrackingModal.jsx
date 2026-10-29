@@ -132,7 +132,7 @@ const LiveTrackingModal = ({
 
   const polylineOptions = isLoaded
     ? {
-        strokeColor: "#16a34a",
+        strokeColor: "#F68B62",
         strokeOpacity: 0.9,
         strokeWeight: 6,
         icons: [
@@ -140,9 +140,9 @@ const LiveTrackingModal = ({
             icon: {
               path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
               scale: 3,
-              strokeColor: "#16a34a",
+              strokeColor: "#F68B62",
               strokeWeight: 2,
-              fillColor: "#16a34a",
+              fillColor: "#F68B62",
               fillOpacity: 1,
             },
             offset: "50%",

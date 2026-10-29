@@ -641,7 +641,8 @@ const ProductDetail = ({ slug: propSlug }) => {
           >
             {t("go_back")}
           </LocalizedLink>
-        </div>      ) : (
+        </div>
+      ) : (
         <>
           <div className="container mx-auto px-3 sm:px-4 py-4 mb-8">
             <div className="grid grid-cols-12 gap-6 items-start">
@@ -968,7 +969,7 @@ const ProductDetail = ({ slug: propSlug }) => {
                             {/* Delivery Information: Only show if customer has address! */}
                             {hasCustomerAddress ? (
                               <div className="flex items-center gap-1.5 text-xs text-stone-600 font-medium mt-1">
-                                <span className="text-emerald-600 font-bold flex items-center gap-0.5">
+                                <span className="text-[#F68B62] font-bold flex items-center gap-0.5">
                                   ⚡ {isFrench ? `Livraison à ${selectedAddress.city}` : `Delivery to ${selectedAddress.city}`}
                                 </span>
                                 {calculatedDistance ? (
@@ -1004,12 +1005,12 @@ const ProductDetail = ({ slug: propSlug }) => {
                                 </span>
                               ) : null}
                               {product?.indicator == 1 ? (
-                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/20">
                                   {isFrench ? "Végétarien" : "Vegetarian"}
                                 </span>
                               ) : null}
                               {hasDiscount ? (
-                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#FCEFEA] text-[#F68B62] border border-[#F68B62]/20">
                                   {isFrench ? "En promotion" : "Special deal"}
                                 </span>
                               ) : null}
@@ -1079,7 +1080,7 @@ const ProductDetail = ({ slug: propSlug }) => {
                             value={quantity}
                             onChange={(e) => setQuantity(Number(e.target.value))}
                             disabled={!isVariantAvailable}
-                            className="w-full bg-stone-100/90 hover:bg-stone-100 text-stone-900 font-bold text-sm rounded-2xl py-3 px-4 border border-stone-200/90 appearance-none focus:outline-hidden focus:ring-2 focus:ring-[#0aad0a]/30 transition-all cursor-pointer"
+                            className="w-full bg-stone-100/90 hover:bg-stone-100 text-stone-900 font-bold text-sm rounded-2xl py-3 px-4 border border-stone-200/90 appearance-none focus:outline-hidden focus:ring-2 focus:ring-[#F68B62]/30 transition-all cursor-pointer"
                           >
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                               <option key={num} value={num}>
@@ -1098,7 +1099,7 @@ const ProductDetail = ({ slug: propSlug }) => {
                         <button
                           type="button"
                           onClick={handleAddToCart}
-                          className="w-full bg-[#0aad0a] hover:bg-[#089608] active:scale-[0.99] text-white font-extrabold text-base py-3.5 px-6 rounded-full shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center gap-2"
+                          className="w-full bg-[#F68B62] hover:bg-[#e07750] active:scale-[0.99] text-white font-extrabold text-base py-3.5 px-6 rounded-full shadow-md shadow-[#F68B62]/25 transition-all flex items-center justify-center gap-2"
                         >
                           <FaShoppingBasket className="w-5 h-5" />
                           <span>{isFrench ? "Ajouter au panier" : "Add to cart"}</span>

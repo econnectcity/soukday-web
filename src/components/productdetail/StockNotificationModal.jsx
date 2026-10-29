@@ -107,7 +107,7 @@ export default function StockNotificationModal({
         <div className="p-6">
           {isSuccess ? (
             <div className="py-8 flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-[#FCEFEA] text-[#F68B62] flex items-center justify-center mb-4">
                 <CheckCircle2 className="w-9 h-9 stroke-[2.5]" />
               </div>
               <h4 className="text-lg font-bold text-stone-900 mb-1">
@@ -175,7 +175,7 @@ export default function StockNotificationModal({
                     />
                   </div>
                   {user?.email && (
-                    <p className="text-[11px] text-emerald-600 font-semibold mt-1">
+                    <p className="text-[11px] text-[#F68B62] font-semibold mt-1">
                       ✓ Pré-rempli avec votre compte Soukday
                     </p>
                   )}

@@ -146,7 +146,7 @@ export default function CartDrawer() {
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         isSoukdayDirect
                           ? 'bg-amber-100 text-amber-800'
-                          : 'bg-[#FCEFEA] text-emerald-800'
+                          : 'bg-[#FCEFEA] text-[#F68B62]'
                       }`}>
                         {isSoukdayDirect ? 'Expédition Canada & USA' : 'Livraison Locale'}
                       </span>

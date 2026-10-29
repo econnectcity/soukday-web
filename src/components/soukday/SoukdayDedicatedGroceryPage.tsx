@@ -649,7 +649,7 @@ export default function SoukdayDedicatedGroceryPage({
 
                           {/* Discount Tag like Instacart */}
                           {discountPercent > 0 && (
-                            <div className="text-[11px] font-bold text-emerald-600 mt-0.5">
+                            <div className="text-[11px] font-bold text-[#F68B62] mt-0.5">
                               {isFrench ? `Réduction de ${discountPercent}%` : `${discountPercent}% off`}
                             </div>
                           )}
