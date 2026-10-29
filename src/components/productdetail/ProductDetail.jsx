@@ -66,7 +66,7 @@ import { useRedirectHomeOnModuleChange } from "@/utils/useRedirectHomeOnModuleCh
 import ProductCategorySidebar from "./ProductCategorySidebar";
 import StockNotificationModal from "./StockNotificationModal";
 import { Bell, Search, ChevronDown, ChevronRight } from "lucide-react";
-import { useCart } from "@/context/SoukdayCartContext";
+import { useCart, normalizeProductForCart } from "@/context/SoukdayCartContext";
 
 const ProductDetail = ({ slug: propSlug }) => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 765px)" });
@@ -86,7 +86,14 @@ const ProductDetail = ({ slug: propSlug }) => {
   const activeModuleId = useSelector((state) => state.Module.activeModuleId);
   const modules = useSelector((state) => state.Module.modules);
   const user = useSelector((state) => state.User);
-  const { selectedAddress, setIsAddressModalOpen } = useCart();
+  const {
+    selectedAddress,
+    setIsAddressModalOpen,
+    addToCart: addToSoukdayCart,
+    openCartDrawer,
+    getItemQuantity,
+    updateQuantity: updateSoukdayQuantity,
+  } = useCart();
 
   // In Soukday single-module mode, don't bounce out on load
   // useRedirectHomeOnModuleChange();
@@ -306,6 +313,23 @@ const ProductDetail = ({ slug: propSlug }) => {
   };
 
   const handleAddToCart = async () => {
+    if (Number(product?.is_unlimited_stock) == 0 && selectVariant?.stock <= 0) {
+      toast.error(t('out_of_stock_message'));
+      return;
+    }
+
+    if (addToSoukdayCart) {
+      const normalizedItem = normalizeProductForCart(product, selectVariant);
+      if (normalizedItem) {
+        addToSoukdayCart(normalizedItem, quantity);
+        toast.success(t('product_added_successfully'));
+        if (openCartDrawer) {
+          openCartDrawer();
+        }
+        return;
+      }
+    }
+
     let productQuantity = cart?.isGuest
       ? getProductQuantities(cart?.guestCart)
       : getProductQuantities(cart?.cartProducts);

@@ -21,9 +21,11 @@ import { BiHeart, BiMinus, BiPlus, BiSolidHeart } from "react-icons/bi";
 import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
+import { useCart, normalizeProductForCart } from "@/context/SoukdayCartContext";
 
 const HorizontalProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const { addToCart: addToSoukdayCart, updateQuantity: updateSoukdayQuantity, getItemQuantity } = useCart();
 
   const cart = useSelector((state) => state.Cart);
   const activeModuleId = useSelector((state) => state.Module.activeModuleId);
@@ -279,6 +281,15 @@ const HorizontalProductCard = ({ product }) => {
   const handleIntialAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (addToSoukdayCart) {
+      const normalized = normalizeProductForCart(product, selectedVariant);
+      if (normalized) {
+        addToSoukdayCart(normalized, 1);
+        return;
+      }
+    }
+
     if (cart?.isGuest) {
       const quantity = getProductQuantities(cart?.cartProducts);
       handleAddNewProductGuest(quantity, product);
@@ -290,6 +301,12 @@ const HorizontalProductCard = ({ product }) => {
   const handleQuantityIncrease = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (updateSoukdayQuantity) {
+      updateSoukdayQuantity(product.id, addedQuantity + 1, selectedVariant?.id);
+      return;
+    }
+
     if (cart?.isGuest) {
       const productQuantity = getProductQuantities(cart?.guestCart);
       handleValidateAddExistingGuestProduct(
@@ -343,6 +360,12 @@ const HorizontalProductCard = ({ product }) => {
   const handleQuantityDecrease = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (updateSoukdayQuantity) {
+      updateSoukdayQuantity(product.id, addedQuantity - 1, selectedVariant?.id);
+      return;
+    }
+
     if (cart?.isGuest) {
       AddToGuestCart(
         product,
@@ -427,7 +450,11 @@ const HorizontalProductCard = ({ product }) => {
 
   const productsVariants = product.variants;
 
+  const currentVariantId = selectedVariant?.id || product?.variants?.[0]?.id;
+  const soukdayQty = getItemQuantity ? getItemQuantity(product?.id, currentVariantId) : 0;
+
   const isProductAlreadyAdded =
+    soukdayQty > 0 ||
     (cart?.isGuest === false &&
       cart?.cartProducts?.find(
         (prdct) => prdct?.product_variant_id == selectedVariant?.id
@@ -437,14 +464,15 @@ const HorizontalProductCard = ({ product }) => {
         (prdct) => prdct?.product_variant_id === selectedVariant?.id
       )?.qty > 0);
 
-  const addedQuantity =
+  const addedQuantity = soukdayQty > 0 ? soukdayQty : (
     cart.isGuest === false
       ? cart?.cartProducts?.find(
         (prdct) => prdct?.product_variant_id == selectedVariant?.id
-      )?.qty
+      )?.qty || 0
       : cart?.guestCart?.find(
         (prdct) => prdct?.product_variant_id == selectedVariant?.id
-      )?.qty;
+      )?.qty || 0
+  );
 
   const isProductAvailabel =
     (product?.variants?.length <= 1 &&

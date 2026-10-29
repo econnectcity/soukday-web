@@ -27,9 +27,11 @@ import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import { BiHeart, BiSolidHeart } from "react-icons/bi";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
+import { useCart, normalizeProductForCart } from "@/context/SoukdayCartContext";
 
 const ListViewProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const { addToCart: addToSoukdayCart, updateQuantity: updateSoukdayQuantity, getItemQuantity } = useCart();
 
   const cart = useSelector((state) => state.Cart);
   const activeModuleId = useSelector((state) => state.Module.activeModuleId);
@@ -284,6 +286,15 @@ const ListViewProductCard = ({ product }) => {
   const handleIntialAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (addToSoukdayCart) {
+      const normalized = normalizeProductForCart(product, selectedVariant);
+      if (normalized) {
+        addToSoukdayCart(normalized, 1);
+        return;
+      }
+    }
+
     if (cart?.isGuest) {
       const quantity = getProductQuantities(cart?.cartProducts);
       handleAddNewProductGuest(quantity, product);
@@ -327,6 +338,12 @@ const ListViewProductCard = ({ product }) => {
   const handleQuantityIncrease = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (updateSoukdayQuantity) {
+      updateSoukdayQuantity(product.id, addedQuantity + 1, selectedVariant?.id);
+      return;
+    }
+
     if (cart?.isGuest) {
       const productQuantity = getProductQuantities(cart?.guestCart);
       handleValidateAddExistingGuestProduct(
@@ -346,6 +363,12 @@ const ListViewProductCard = ({ product }) => {
   const handleQuantityDecrease = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (updateSoukdayQuantity) {
+      updateSoukdayQuantity(product.id, addedQuantity - 1, selectedVariant?.id);
+      return;
+    }
+
     if (cart?.isGuest) {
       AddToGuestCart(
         product,
@@ -429,7 +452,11 @@ const ListViewProductCard = ({ product }) => {
 
   const productsVariants = product.variants;
 
+  const currentVariantId = selectedVariant?.id || product?.variants?.[0]?.id;
+  const soukdayQty = getItemQuantity ? getItemQuantity(product?.id, currentVariantId) : 0;
+
   const isProductAlreadyAdded =
+    soukdayQty > 0 ||
     (cart?.isGuest === false &&
       cart?.cartProducts?.find(
         (prdct) => prdct?.product_variant_id == selectedVariant?.id
@@ -439,14 +466,15 @@ const ListViewProductCard = ({ product }) => {
         (prdct) => prdct?.product_variant_id === selectedVariant?.id
       )?.qty > 0);
 
-  const addedQuantity =
+  const addedQuantity = soukdayQty > 0 ? soukdayQty : (
     cart.isGuest === false
       ? cart?.cartProducts?.find(
         (prdct) => prdct?.product_variant_id == selectedVariant?.id
-      )?.qty
+      )?.qty || 0
       : cart?.guestCart?.find(
         (prdct) => prdct?.product_variant_id == selectedVariant?.id
-      )?.qty;
+      )?.qty || 0
+  );
 
   const isProductAvailabel =
     (product?.variants?.length <= 1 &&

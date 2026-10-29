@@ -18,12 +18,19 @@ import { toast } from "react-toastify";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
 import { useState } from "react";
+import { useCart, normalizeProductForCart } from "@/context/SoukdayCartContext";
 
 const VariantsModal = ({ product, showVariants, setShowVariants }) => {
   const dispatch = useDispatch();
   const setting = useSelector((state) => state.Setting);
   const cart = useSelector((state) => state.Cart);
   const activeModuleId = useSelector((state) => state.Module.activeModuleId);
+  const {
+    addToCart: addToSoukdayCart,
+    updateQuantity: updateSoukdayQuantity,
+    getItemQuantity,
+    openCartDrawer,
+  } = useCart();
 
   const [selectedVariant, setSelectedVariant] = useState([]);
   const [showSingleSellerModal, setSingleSellerModal] = useState(false);
@@ -31,26 +38,21 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
   const handleHideVariantModal = () => {
     setShowVariants(false);
   };
-  const isAlreadyAdded = (variant) => {
-    return (
-      (cart?.isGuest === false &&
-        cart?.cartProducts?.find(
-          (prdct) => prdct?.product_variant_id == variant?.id
-        )?.qty > 0) ||
-      (cart?.isGuest === true &&
-        cart?.guestCart?.find(
-          (prdct) => prdct?.product_variant_id === variant?.id
-        )?.qty > 0)
-    );
-  };
   const addedQuantity = (variant) => {
+    const soukdayQty = getItemQuantity ? getItemQuantity(product?.id, variant?.id) : 0;
+    if (soukdayQty > 0) return soukdayQty;
+
     return cart.isGuest === false
       ? cart?.cartProducts?.find(
         (prdct) => prdct?.product_variant_id == variant?.id
-      )?.qty
+      )?.qty || 0
       : cart?.guestCart?.find(
         (prdct) => prdct?.product_variant_id == variant?.id
-      )?.qty;
+      )?.qty || 0;
+  };
+
+  const isAlreadyAdded = (variant) => {
+    return addedQuantity(variant) > 0;
   };
 
   const isVariantAvailable = (variant) => {
@@ -260,6 +262,16 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
   };
   const handleIntialAddToCart = (e, variant) => {
     e.preventDefault();
+    e.stopPropagation();
+
+    if (addToSoukdayCart) {
+      const normalized = normalizeProductForCart(product, variant);
+      if (normalized) {
+        addToSoukdayCart(normalized, 1);
+        toast.success(t("product_added_successfully"));
+        return;
+      }
+    }
     const quantity = getProductQuantities(cart?.cartProducts);
     if (cart?.isGuest) {
       handleAddNewProductGuest(quantity, product, variant);
@@ -306,6 +318,12 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
   const handleQuantityIncrease = (e, variant) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const currentQty = addedQuantity(variant);
+    if (updateSoukdayQuantity) {
+      updateSoukdayQuantity(product?.id, currentQty + 1, variant?.id);
+      return;
+    }
     if (cart?.isGuest) {
       const productQuantity = getProductQuantities(cart?.guestCart);
       handleValidateAddExistingGuestProduct(
@@ -326,6 +344,12 @@ const VariantsModal = ({ product, showVariants, setShowVariants }) => {
   const handleQuantityDecrease = (e, variant) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const currentQty = addedQuantity(variant);
+    if (updateSoukdayQuantity) {
+      updateSoukdayQuantity(product?.id, currentQty - 1, variant?.id);
+      return;
+    }
     if (cart?.isGuest) {
       AddToGuestCart(
         product,

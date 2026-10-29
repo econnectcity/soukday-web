@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -56,7 +56,8 @@ export default function CartDrawer() {
 
   // Group items by store
   const storeGroups = cart.reduce((acc, item) => {
-    const key = item.product.storeName;
+    const p = item.product || item;
+    const key = p.storeName || (p as any).seller_name || 'Soukday';
     if (!acc[key]) acc[key] = [];
     acc[key].push(item);
     return acc;
@@ -130,7 +131,8 @@ export default function CartDrawer() {
               </div>
             ) : (
               Object.entries(storeGroups).map(([storeName, items]) => {
-                const isSoukdayDirect = items[0]?.product.storeType === 'soukday_direct';
+                const firstP = items[0]?.product || items[0];
+                const isSoukdayDirect = (firstP as any)?.storeType === 'soukday_direct' || (firstP as any)?.seller_id == 11;
                 return (
                   <div key={storeName} className={`space-y-3 p-3.5 rounded-2xl border ${
                     isSoukdayDirect ? 'bg-[#FCEFEA]/45 border-[#F68B62]/30' : 'bg-stone-50/70 border-stone-200/70'
@@ -152,55 +154,62 @@ export default function CartDrawer() {
 
                     {/* Store Items */}
                     <div className="space-y-3">
-                      {items.map((item) => (
-                        <div key={item.product.id} className="flex items-center justify-between gap-3 bg-white p-2.5 rounded-xl border border-stone-100">
-                          <img
-                            src={item.product.image}
-                            alt={item.product.name}
-                            className="w-12 h-12 rounded-lg object-cover bg-stone-100 shrink-0"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-xs font-bold text-stone-900 truncate">
-                              {item.product.name}
-                            </h4>
-                            <div className="text-[11px] text-stone-500">
-                              {item.product.price.toFixed(2)}$ / {item.product.unit}
-                            </div>
-                            <div className="text-xs font-black text-[#F68B62] mt-0.5">
-                              {(item.product.price * item.quantity).toFixed(2)}$
-                            </div>
-                          </div>
+                      {items.map((item, idx) => {
+                        const p = item.product || item;
+                        const variantId = (p as any).variant_id || (p as any).variantId;
+                        const price = Number(p.price) || 0;
+                        const itemKey = `${p.id || idx}-${variantId || 'base'}`;
 
-                          {/* Quantity control */}
-                          <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-lg shrink-0">
+                        return (
+                          <div key={itemKey} className="flex items-center justify-between gap-3 bg-white p-2.5 rounded-xl border border-stone-100">
+                            <img
+                              src={p.image || '/images/placeholder.png'}
+                              alt={p.name}
+                              className="w-12 h-12 rounded-lg object-cover bg-stone-100 shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-xs font-bold text-stone-900 truncate">
+                                {p.name}
+                              </h4>
+                              <div className="text-[11px] text-stone-500">
+                                {price.toFixed(2)}$ {p.unit ? `/ ${p.unit}` : ''}
+                              </div>
+                              <div className="text-xs font-black text-[#F68B62] mt-0.5">
+                                {(price * item.quantity).toFixed(2)}$
+                              </div>
+                            </div>
+
+                            {/* Quantity control */}
+                            <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-lg shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(p.id, item.quantity - 1, variantId)}
+                                className="w-6 h-6 rounded bg-white hover:bg-stone-200 flex items-center justify-center text-stone-700 cursor-pointer"
+                              >
+                                <Minus className="w-3 h-3" />
+                              </button>
+                              <span className="text-xs font-bold w-5 text-center">
+                                {item.quantity}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(p.id, item.quantity + 1, variantId)}
+                                className="w-6 h-6 rounded bg-white hover:bg-stone-200 flex items-center justify-center text-stone-700 cursor-pointer"
+                              >
+                                <Plus className="w-3 h-3" />
+                              </button>
+                            </div>
+
                             <button
                               type="button"
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                              className="w-6 h-6 rounded bg-white hover:bg-stone-200 flex items-center justify-center text-stone-700 cursor-pointer"
+                              onClick={() => removeFromCart(p.id, variantId)}
+                              className="text-stone-300 hover:text-red-500 p-1 transition-colors cursor-pointer"
                             >
-                              <Minus className="w-3 h-3" />
-                            </button>
-                            <span className="text-xs font-bold w-5 text-center">
-                              {item.quantity}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                              className="w-6 h-6 rounded bg-white hover:bg-stone-200 flex items-center justify-center text-stone-700 cursor-pointer"
-                            >
-                              <Plus className="w-3 h-3" />
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
-
-                          <button
-                            type="button"
-                            onClick={() => removeFromCart(item.product.id)}
-                            className="text-stone-300 hover:text-red-500 p-1 transition-colors cursor-pointer"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 );

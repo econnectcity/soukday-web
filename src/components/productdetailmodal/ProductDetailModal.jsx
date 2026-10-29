@@ -39,6 +39,7 @@ import { setFavoriteProductIds } from "@/redux/slices/FavoriteSlice";
 import Loader from "../loader/Loader";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
+import { useCart, normalizeProductForCart } from "@/context/SoukdayCartContext";
 import { isRtl } from "@/lib/utils";
 
 const ProductDetailModal = ({
@@ -56,6 +57,12 @@ const ProductDetailModal = ({
   const favoriteProducts = useSelector(
     (state) => state.Favorite.favouriteProductIds
   );
+  const {
+    addToCart: addToSoukdayCart,
+    openCartDrawer,
+    getItemQuantity,
+    updateQuantity: updateSoukdayQuantity,
+  } = useCart();
 
   const ratingsCount = 10;
   const currency = setting?.setting?.currency;

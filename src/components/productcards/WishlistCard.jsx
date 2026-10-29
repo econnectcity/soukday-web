@@ -15,6 +15,7 @@ import { t } from "@/utils/translation";
 import { formatPriceDisplay } from "@/lib/utils";
 import ImageWithPlaceholder from "../image-with-placeholder/ImageWithPlaceholder";
 import SingleSellerConfirmationModal from "../single-seller-confirmation-modal/SingleSellerConfirmationModal";
+import { useCart, normalizeProductForCart } from "@/context/SoukdayCartContext";
 
 const WishlistCard = ({
   product,
@@ -26,6 +27,12 @@ const WishlistCard = ({
   const dispatch = useDispatch();
   const setting = useSelector((state) => state.Setting.setting);
   const cart = useSelector((state) => state.Cart);
+  const {
+    addToCart: addToSoukdayCart,
+    updateQuantity: updateSoukdayQuantity,
+    getItemQuantity,
+    openCartDrawer,
+  } = useCart();
 
   const [showVariants, setShowVariants] = useState(false);
   const [showSingleSellerModal, setSingleSellerModal] = useState(false);
@@ -219,14 +226,19 @@ const WishlistCard = ({
     handleValidateAddNewProduct(quantity, product);
   };
 
+  const targetVariant = product?.variants?.[0];
+  const soukdayQty = getItemQuantity ? getItemQuantity(product?.id, targetVariant?.id) : 0;
   const isProductAlreadyAdded =
-    cart?.isGuest === false &&
+    soukdayQty > 0 ||
+    (cart?.isGuest === false &&
+      cart?.cartProducts?.find(
+        (prdct) => prdct?.product_variant_id == targetVariant?.id,
+      )?.qty > 0);
+  const addedQuantity = soukdayQty > 0 ? soukdayQty : (
     cart?.cartProducts?.find(
-      (prdct) => prdct?.product_variant_id == product?.variants[0]?.id,
-    )?.qty > 0;
-  const addedQuantity = cart?.cartProducts?.find(
-    (prdct) => prdct?.product_variant_id == product?.variants[0]?.id,
-  )?.qty;
+      (prdct) => prdct?.product_variant_id == targetVariant?.id,
+    )?.qty || 0
+  );
 
   return (
     <div className="cardBorder p-4 w-full overflow-hidden border-b ">

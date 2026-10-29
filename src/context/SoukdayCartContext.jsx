@@ -9,13 +9,95 @@ import {
   setCartSubTotal,
   setIsGuest
 } from '@/redux/slices/cartSlice';
+import * as api from '@/api/apiRoutes';
 import { toast } from 'react-toastify';
+
+/**
+ * Standardizes any product representation (from search, listing, detail page, modal)
+ * into the unified shape required by SoukdayCartContext and CartDrawer.
+ */
+export function normalizeProductForCart(product, selectedVariant = null) {
+  if (!product) return null;
+
+  // Selected or first variant
+  const variant =
+    selectedVariant ||
+    (Array.isArray(product.variants) && product.variants.length > 0
+      ? product.variants[0]
+      : {});
+
+  // Determine price (discounted_price if > 0, else price)
+  const variantPrice = Number(variant.discounted_price) > 0
+    ? Number(variant.discounted_price)
+    : Number(variant.price) > 0
+    ? Number(variant.price)
+    : 0;
+
+  const productPrice = Number(product.discounted_price) > 0
+    ? Number(product.discounted_price)
+    : Number(product.price) > 0
+    ? Number(product.price)
+    : 0;
+
+  const finalPrice = variantPrice > 0 ? variantPrice : productPrice;
+
+  // Format unit (e.g., "500 g", "1 kg", or product.unit)
+  const unitParts = [
+    variant.measurement,
+    variant.stock_unit_name ||
+      variant.unit?.translations?.short_code ||
+      variant.measurement_unit_name ||
+      variant.unit
+  ].filter(Boolean);
+
+  const unit = unitParts.length > 0 ? unitParts.join(' ') : (product.unit || '');
+
+  // Extract best image
+  const image =
+    product.image_url ||
+    product.image ||
+    (Array.isArray(product.images) && (product.images[0]?.image_url || product.images[0])) ||
+    '/images/placeholder.png';
+
+  // Store information
+  const isSoukdayDirectCheck =
+    product.seller_id === 0 ||
+    product.seller_id === 11 ||
+    String(product.seller_name || '').toLowerCase().includes('soukday') ||
+    String(product.seller?.translations?.name || '').toLowerCase().includes('soukday') ||
+    String(product.seller?.name || '').toLowerCase().includes('soukday');
+
+  const sellerId = product.seller_id || product.seller?.id || product.store_id || 11;
+  const storeName = isSoukdayDirectCheck
+    ? 'Soukday'
+    : product.seller?.translations?.name ||
+      product.seller_name ||
+      product.store_name ||
+      product.seller?.store_name ||
+      product.seller?.name ||
+      'Soukday';
+
+  const isSoukdayDirect = isSoukdayDirectCheck;
+  const variantId = variant.id || product.variant_id || product.variantId || product.id;
+
+  return {
+    id: Number(product.id),
+    name: product.translations?.name || product.name || '',
+    price: finalPrice,
+    image: image,
+    unit: unit,
+    storeName: storeName,
+    storeType: isSoukdayDirect ? 'soukday_direct' : 'partner_store',
+    variant_id: variantId,
+    variantId: variantId,
+    seller_id: sellerId,
+  };
+}
 
 const SoukdayCartContext = createContext(undefined);
 
 export function SoukdayCartProvider({ children }) {
   const dispatch = useDispatch();
-  const city = useSelector((state) => state.City?.city);
 
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -71,21 +153,28 @@ export function SoukdayCartProvider({ children }) {
   }, []);
 
   const syncWithRedux = (items) => {
-    const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-    const guestItems = items.map((item) => ({
-      id: item.product.id,
-      product_id: item.product.id,
-      product_variant_id: item.product.variant_id || item.product.variantId || item.product.id,
-      qty: item.quantity,
-      price: item.product.price,
-      productPrice: item.product.price,
-      title: item.product.name,
-      name: item.product.name,
-      image_url: item.product.image,
-      image: item.product.image,
-      unit: item.product.unit,
-      module_id: 1,
-    }));
+    const total = items.reduce((sum, item) => {
+      const p = item.product || item;
+      return sum + ((Number(p.price) || 0) * item.quantity);
+    }, 0);
+    const guestItems = items.map((item) => {
+      const p = item.product || item;
+      return {
+        id: p.id,
+        product_id: p.id,
+        product_variant_id: p.variant_id || p.variantId || p.id,
+        qty: item.quantity,
+        price: p.price,
+        productPrice: p.price,
+        title: p.name,
+        name: p.name,
+        image_url: p.image,
+        image: p.image,
+        unit: p.unit,
+        storeName: p.storeName,
+        module_id: 1,
+      };
+    });
 
     dispatch(setIsGuest({ data: !user?.jwtToken }));
     dispatch(addtoGuestCart({ data: guestItems }));
@@ -103,7 +192,19 @@ export function SoukdayCartProvider({ children }) {
   };
 
   const addToCart = (product, quantity = 1) => {
-    const existingIndex = cart.findIndex((i) => i.product.id === product.id);
+    if (!product) return;
+    const variantId = product.variant_id || product.variantId;
+    
+    const existingIndex = cart.findIndex((i) => {
+      if (variantId && (i.product.variant_id || i.product.variantId)) {
+        return (
+          Number(i.product.id) === Number(product.id) &&
+          Number(i.product.variant_id || i.product.variantId) === Number(variantId)
+        );
+      }
+      return Number(i.product.id) === Number(product.id);
+    });
+
     let nextCart = [];
     if (existingIndex > -1) {
       nextCart = cart.map((i, idx) =>
@@ -113,26 +214,85 @@ export function SoukdayCartProvider({ children }) {
       nextCart = [...cart, { product, quantity }];
     }
     persistCart(nextCart);
+
+    // Sync with backend API if user is authenticated
+    if (user?.jwtToken) {
+      const targetItem = nextCart.find((i) => {
+        if (variantId && (i.product.variant_id || i.product.variantId)) {
+          return (
+            Number(i.product.id) === Number(product.id) &&
+            Number(i.product.variant_id || i.product.variantId) === Number(variantId)
+          );
+        }
+        return Number(i.product.id) === Number(product.id);
+      });
+      api.addToCart({
+        product_id: product.id,
+        product_variant_id: variantId || product.id,
+        qty: targetItem?.quantity || quantity,
+      }).catch((e) => console.log('Cart API sync:', e));
+    }
+
     toast.success(`${product.name} ajouté au panier !`, {
       position: 'bottom-right',
       autoClose: 2000,
     });
   };
 
-  const updateQuantity = (productId, quantity) => {
+  const updateQuantity = (productId, quantity, variantId = null) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId, variantId);
       return;
     }
-    const nextCart = cart.map((i) =>
-      i.product.id === productId ? { ...i, quantity } : i
-    );
+    const nextCart = cart.map((i) => {
+      const match = variantId && (i.product.variant_id || i.product.variantId)
+        ? (Number(i.product.id) === Number(productId) && Number(i.product.variant_id || i.product.variantId) === Number(variantId))
+        : (Number(i.product.id) === Number(productId));
+      return match ? { ...i, quantity } : i;
+    });
     persistCart(nextCart);
+
+    if (user?.jwtToken) {
+      api.addToCart({
+        product_id: productId,
+        product_variant_id: variantId || productId,
+        qty: quantity,
+      }).catch((e) => console.log('Cart API sync:', e));
+    }
   };
 
-  const removeFromCart = (productId) => {
-    const nextCart = cart.filter((i) => i.product.id !== productId);
+  const removeFromCart = (productId, variantId = null) => {
+    const nextCart = cart.filter((i) => {
+      if (variantId && (i.product.variant_id || i.product.variantId)) {
+        return !(Number(i.product.id) === Number(productId) && Number(i.product.variant_id || i.product.variantId) === Number(variantId));
+      }
+      return Number(i.product.id) !== Number(productId);
+    });
     persistCart(nextCart);
+
+    if (user?.jwtToken) {
+      api.removeFromCart({
+        product_id: productId,
+        product_variant_id: variantId || productId,
+      }).catch((e) => console.log('Cart API sync:', e));
+    }
+  };
+
+  const getItemQuantity = (productId, variantId = null) => {
+    const found = cart.find((i) => {
+      if (variantId && (i.product.variant_id || i.product.variantId)) {
+        return (
+          Number(i.product.id) === Number(productId) &&
+          Number(i.product.variant_id || i.product.variantId) === Number(variantId)
+        );
+      }
+      return Number(i.product.id) === Number(productId);
+    });
+    return found ? found.quantity : 0;
+  };
+
+  const isItemInCart = (productId, variantId = null) => {
+    return getItemQuantity(productId, variantId) > 0;
   };
 
   const clearCart = () => {
@@ -140,7 +300,10 @@ export function SoukdayCartProvider({ children }) {
   };
 
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
-  const cartSubtotal = cart.reduce((sum, i) => sum + (i.product.price * i.quantity), 0);
+  const cartSubtotal = cart.reduce((sum, i) => {
+    const p = i.product || i;
+    return sum + ((Number(p.price) || 0) * i.quantity);
+  }, 0);
 
   const setSelectedAddress = (addr) => {
     setSessionAddress(addr);
@@ -160,6 +323,8 @@ export function SoukdayCartProvider({ children }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        getItemQuantity,
+        isItemInCart,
         clearCart,
         cartCount,
         cartSubtotal,
