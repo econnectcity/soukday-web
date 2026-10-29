@@ -19,16 +19,6 @@ export default function Footer() {
   const setting = settingState?.setting || {};
   const webSettings = setting?.web_settings || {};
 
-  const footerLogo =
-    webSettings?.web_footer_logo ||
-    webSettings?.web_header_logo ||
-    webSettings?.web_logo ||
-    setting?.web_logo ||
-    setting?.logo ||
-    '/images/logo.png';
-
-  const siteTitle = webSettings?.site_title || setting?.app_name || 'Soukday';
-
   return (
     <>
       <PreFooterAppBanner />
@@ -84,31 +74,22 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-10 text-xs">
             
-            {/* Column 1: Logo in white (1) & Tagline (2) */}
+            {/* Column 1: Logo (white text + orange bag) & Tagline */}
             <div className="col-span-2 md:col-span-1 lg:col-span-1 space-y-3">
               <div className="flex items-center gap-2">
-                {footerLogo ? (
-                  <img 
-                    src={footerLogo} 
-                    alt={siteTitle} 
-                    className="h-9 sm:h-10 w-auto max-w-[190px] object-contain brightness-0 invert" 
-                    onError={(e) => {
-                      if (typeof window !== 'undefined' && e.currentTarget.src !== window.location.origin + '/images/logo.png') {
-                        e.currentTarget.src = '/images/logo.png';
-                      }
-                    }}
-                  />
-                ) : (
-                  <span className="text-2xl font-black text-white tracking-tight">
-                    Soukday
-                  </span>
-                )}
+                <img 
+                  src="/images/soukdaywhite.png" 
+                  alt="Soukday" 
+                  className="h-10 sm:h-11 w-auto max-w-[210px] object-contain" 
+                  onError={(e) => {
+                    if (typeof window !== 'undefined' && e.currentTarget.src !== window.location.origin + '/images/logo.png') {
+                      e.currentTarget.src = '/images/logo.png';
+                    }
+                  }}
+                />
               </div>
               <p className="text-stone-200 text-sm sm:text-[15px] font-bold tracking-tight leading-snug">
                 Le souk à votre porte
-              </p>
-              <p className="text-stone-400 text-xs leading-relaxed max-w-xs pt-1">
-                {webSettings?.footer_about_text || 'Faites votre marché en toute confiance et recevez vos viandes halal et produits d’épicerie partout chez vous.'}
               </p>
               <div className="text-stone-400 text-xs space-y-1.5 pt-2">
                 <div className="flex items-center gap-2">
@@ -223,7 +204,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a 
-                    href="https://admin.soukday.ca/#/seller/login"
+                    href="https://admin.soukday.ca/seller/login"
                     target="_blank"
                     rel="noreferrer"
                     className="hover:text-white transition-colors"
@@ -256,9 +237,9 @@ export default function Footer() {
 
           </div>
 
-          {/* Bottom Bar: Signature */}
-          <div className="pt-8 mt-10 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-400">
-            <div>
+          {/* Bottom Bar: Signature Centered (No other links) */}
+          <div className="pt-8 mt-10 border-t border-stone-800/80 flex items-center justify-center text-center text-xs text-stone-400">
+            <p>
               © Soukday, 2026. Tous droits réservés. Site web conçu par l’Agence Web{' '}
               <a 
                 href="https://econnectcity.ca/" 
@@ -268,20 +249,7 @@ export default function Footer() {
               >
                 eConnect City
               </a>
-            </div>
-            <div className="flex items-center gap-4 text-stone-500">
-              <Link href="/terms-and-conditions" className="hover:text-stone-300 transition-colors">
-                Conditions d’utilisation
-              </Link>
-              <span>•</span>
-              <Link href="/privacy-policy" className="hover:text-stone-300 transition-colors">
-                Politique de confidentialité
-              </Link>
-              <span>•</span>
-              <Link href="/shipping-policy" className="hover:text-stone-300 transition-colors">
-                Frais de livraison
-              </Link>
-            </div>
+            </p>
           </div>
 
         </div>
