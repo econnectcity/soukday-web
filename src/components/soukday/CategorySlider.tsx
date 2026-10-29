@@ -35,7 +35,7 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
   };
 
   return (
-    <section className="py-16 border-b border-stone-200/60 bg-[#F5F5F4]">
+    <section className="py-16 border-b border-stone-200/60 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

@@ -111,28 +111,28 @@ export default function SoukdayHomepage() {
       {/* 1. Main Banner + Address Field */}
       <HeroBanner settings={webSettings || DEFAULT_LIVE_SETTINGS} />
 
-      {/* 2. Product Categories (Live from Admin API) */}
+      {/* 2. Product Categories (Live from Admin API) - White BG */}
       <CategorySlider categories={categories} />
 
-      {/* 3. Dedicated Soukday Grocery (Only products sold by Soukday / Admin) */}
-      <SoukdayGrocerySection products={soukdayProducts} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
-
-      {/* 3.5 Instacart-Style Soukday App Experience Banner with QR code and mobile app graphic */}
-      <SoukdayAppExperienceBanner settings={webSettings || DEFAULT_LIVE_SETTINGS} />
-
-      {/* 4. Butchers Delivering to You (Based on customer address / postal code) */}
+      {/* 3. Butchers Delivering to You (Vos boucheries halal à proximité - White BG) */}
       <ButcherSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
 
-      {/* 4.5 How It Works / Combined Order Explanation (Instacart 3-card style) */}
+      {/* 4. Instacart-Style Soukday App Experience Banner (Vivez l'expérience Soukday) */}
+      <SoukdayAppExperienceBanner settings={webSettings || DEFAULT_LIVE_SETTINGS} />
+
+      {/* 5. Combined Order Explanation (Vous commandez épicerie et boucherie?) */}
       <SoukdayHowItWorksSection />
 
-      {/* 5. Other Stores Available (Supermarkets, specialty stores, bakeries, caterers) */}
-      <OtherStoresSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
-
-      {/* 5.5 FAQ Section: Des questions ? On vous répond ! */}
+      {/* 6. FAQ Section (Des questions ? On vous répond !) */}
       <SoukdayFaqSection />
 
-      {/* 6. Popular Products (Live from Admin/Seller product inventory) */}
+      {/* 7. Dedicated Soukday Grocery (L’épicerie Soukday) */}
+      <SoukdayGrocerySection products={soukdayProducts} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
+
+      {/* 8. Other Stores Available (Encore plus à découvrir) */}
+      <OtherStoresSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
+
+      {/* 9. Popular Products (Live from Admin/Seller product inventory) */}
       <PopularProductsSection products={products} />
     </div>
   );
