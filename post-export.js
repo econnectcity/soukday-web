@@ -15,7 +15,11 @@ if (fse.existsSync(oldDir)) {
   } catch (err) {
     console.warn('moveSync retry fallback:', err.message);
     fse.copySync(oldDir, newDir, { overwrite: true });
-    fse.removeSync(oldDir);
+    try {
+      fse.removeSync(oldDir);
+    } catch (e) {
+      // On Windows file locks, silently ignore
+    }
     console.log('Copied and removed _next folder to next-assets');
   }
 }
@@ -31,6 +35,7 @@ function safeReplace(content) {
 }
 
 function walk(dir) {
+  if (!fs.existsSync(dir)) return;
   const files = fs.readdirSync(dir);
   for (const f of files) {
     const full = path.join(dir, f);

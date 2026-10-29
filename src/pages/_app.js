@@ -8,15 +8,7 @@ import { useRouter } from "next/router";
 import { ThemeProvider } from "next-themes";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Nunito } from 'next/font/google';
 import { SoukdayCartProvider } from "@/context/SoukdayCartContext";
-
-const nunito = Nunito({
-  subsets: ['latin'],
-  weight: ['200','300','400','500','600','700','800','900'],
-  variable: '--font-family',
-  display: 'swap',
-});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,7 +47,7 @@ function AppContent({ Component, pageProps }) {
 
 export default function App({ Component, pageProps }) {
   return (
-    <main className={`${nunito.variable} `}>
+    <main>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
