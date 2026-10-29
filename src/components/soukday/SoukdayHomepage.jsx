@@ -126,14 +126,12 @@ export default function SoukdayHomepage() {
       {/* 6. FAQ Section (Des questions ? On vous répond !) */}
       <SoukdayFaqSection />
 
-      {/* 7. Dedicated Soukday Grocery (L’épicerie Soukday) */}
+      {/* Bottom sections hidden for now as requested - preserved for future use */}
+      {/*
       <SoukdayGrocerySection products={soukdayProducts} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
-
-      {/* 8. Other Stores Available (Encore plus à découvrir) */}
       <OtherStoresSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
-
-      {/* 9. Popular Products (Live from Admin/Seller product inventory) */}
       <PopularProductsSection products={products} />
+      */}
     </div>
   );
 }
