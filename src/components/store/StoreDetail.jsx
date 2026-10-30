@@ -315,6 +315,7 @@ export default function StoreDetail() {
 
           return {
             id: item.id,
+            slug: item.slug || variant.product?.slug || String(item.id),
             name: pName,
             categoryName: catInfo.name,
             categorySlug: catInfo.slug,
@@ -1216,6 +1217,7 @@ export default function StoreDetail() {
     const qty = getProductQty(product.id);
     const wholePrice = Math.floor(product.price);
     const cents = String(Math.round((product.price - wholePrice) * 100)).padStart(2, '0');
+    const productSlug = product.slug || String(product.id);
 
     return (
       <div
@@ -1224,21 +1226,36 @@ export default function StoreDetail() {
       >
         {/* Top Image + Floating Orange "+ Ajouter" button */}
         <div className="relative w-full h-32 sm:h-36 rounded-xl overflow-hidden bg-white mb-2 flex items-center justify-center">
-          <img
-            src={product.image || '/images/default-product.png'}
-            alt={product.name}
-            className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
-            onError={(e) => {
-              e.currentTarget.src = '/images/default-product.png';
-            }}
-          />
+          <Link
+            href={`/product/${productSlug}`}
+            className="w-full h-full flex items-center justify-center cursor-pointer"
+          >
+            <img
+              src={product.image || '/images/default-product.png'}
+              alt={product.name}
+              className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+              onError={(e) => {
+                e.currentTarget.src = '/images/default-product.png';
+              }}
+            />
+          </Link>
 
           {/* Floating Orange "+ Ajouter" button or Stepper */}
-          <div className="absolute top-2 right-2">
+          <div
+            className="absolute top-2 right-2 z-10"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             {qty === 0 ? (
               <button
                 type="button"
-                onClick={() => addToCart(product)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  addToCart(product);
+                }}
                 className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#F68B62] hover:bg-[#e07750] active:scale-90 text-white text-xs font-bold shadow-md shadow-[#F68B62]/30 transition-all cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -1248,7 +1265,11 @@ export default function StoreDetail() {
               <div className="inline-flex items-center bg-[#F68B62] text-white rounded-full p-0.5 shadow-md">
                 <button
                   type="button"
-                  onClick={() => updateQuantity(product.id, qty - 1)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    updateQuantity(product.id, qty - 1);
+                  }}
                   className="w-6 h-6 rounded-full hover:bg-black/20 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
                 >
                   <Minus className="w-3 h-3 text-white" />
@@ -1256,7 +1277,11 @@ export default function StoreDetail() {
                 <span className="text-xs font-black px-2">{qty}</span>
                 <button
                   type="button"
-                  onClick={() => updateQuantity(product.id, qty + 1)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    updateQuantity(product.id, qty + 1);
+                  }}
                   className="w-6 h-6 rounded-full hover:bg-black/20 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
                 >
                   <Plus className="w-3 h-3 text-white" />
@@ -1266,17 +1291,17 @@ export default function StoreDetail() {
           </div>
 
           {/* Seasonal / Fresh Badge */}
-          <span className="absolute bottom-1 right-1 text-[10px] font-semibold text-stone-500 bg-white/80 backdrop-blur-2xs px-1.5 py-0.5 rounded">
+          <span className="absolute bottom-1 right-1 text-[10px] font-semibold text-stone-500 bg-white/80 backdrop-blur-2xs px-1.5 py-0.5 rounded pointer-events-none">
             {isFrench ? 'De saison' : 'Fresh'}
           </span>
         </div>
 
         {/* Product Details */}
         <div className="flex-1 flex flex-col justify-between">
-          <div>
+          <Link href={`/product/${productSlug}`} className="block group/link cursor-pointer">
             {/* Price (Instacart style with superscript cents: e.g. 15^27 $) */}
             <div className="flex items-baseline gap-1.5 leading-none">
-              <span className="text-lg sm:text-xl font-black text-stone-900 tracking-tight">
+              <span className="text-lg sm:text-xl font-black text-stone-900 tracking-tight group-hover/link:text-[#F68B62] transition-colors">
                 {wholePrice}
                 <sup className="text-xs font-black ml-0.5">{cents}</sup>
                 <span className="text-sm font-black ml-1">$</span>
@@ -1296,13 +1321,13 @@ export default function StoreDetail() {
             )}
 
             {/* Title & Unit */}
-            <h3 className="text-xs sm:text-sm font-semibold text-stone-900 line-clamp-2 mt-1.5 group-hover:text-[#F68B62] transition-colors leading-snug">
+            <h3 className="text-xs sm:text-sm font-semibold text-stone-900 line-clamp-2 mt-1.5 group-hover/link:text-[#F68B62] transition-colors leading-snug">
               {product.name}
             </h3>
             <p className="text-[11px] text-stone-500 font-medium mt-0.5">
               {product.unit}
             </p>
-          </div>
+          </Link>
 
           {/* Stock status (Soukday Orange bar style) */}
           <div className="mt-2.5 pt-2 border-t border-stone-100 flex items-center gap-1.5 text-[11px] font-bold text-[#F68B62]">
