@@ -2,241 +2,241 @@
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
     <loc>http://localhost:3000/404</loc>
-    <lastmod>2026-10-30T16:53:48.602Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.554Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/about-us</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://localhost:3000/app</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/blogs</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/brands</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/app</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/cancellation-policy</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/cart</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/categories/[...slug]</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/category/[...slug]</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/checkout</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/contact-us</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://localhost:3000/countries</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/epicerie-soukday</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/countries</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/faqs</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/privacy-policy</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://localhost:3000/profile</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/products</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/profile</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/return-and-echange-policy</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://localhost:3000/seller/[...slug]</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/sellers</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://localhost:3000/shipping-policy</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <loc>http://localhost:3000/seller/[...slug]</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/store/[...slug]</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/terms-and-conditions</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/shipping-policy</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/web-payment-status</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/blog/[slug]</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/order-detail/[orderid]</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://localhost:3000/profile/activeorders</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://localhost:3000/profile/address</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://localhost:3000/profile/notification-setting</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>http://localhost:3000/profile/notifications</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/product/[slug]</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/profile/activeorders</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/profile/address</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/profile/notification-setting</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3000/profile/notifications</loc>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/profile/orderhistory</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/profile/requested-products</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/profile/resetpassword</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/profile/subscription</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/profile/transaction</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/profile/wallethistory</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/profile/wishlist</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://localhost:3000/profile/orderhistory/[orderid]</loc>
-    <lastmod>2026-10-30T16:53:48.603Z</lastmod>
+    <lastmod>2026-10-30T17:14:09.555Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
