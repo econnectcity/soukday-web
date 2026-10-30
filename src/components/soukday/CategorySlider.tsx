@@ -42,38 +42,16 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
     <section className="pt-16 pb-0 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="min-w-0">
-            <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight leading-tight">
-              {isFrench ? "Tout un souk à découvrir" : "A whole souk to discover"}
-            </h2>
-            <p className="text-xs sm:text-sm text-stone-500 font-medium truncate sm:whitespace-normal mt-0.5">
-              {isFrench 
-                ? "Épicerie, viandes halal, pâtisseries et bien plus." 
-                : "Groceries, halal meats, pastries and much more."}
-            </p>
-          </div>
-
-          {/* Navigation Arrows */}
-          <div className="hidden sm:flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => scroll('left')}
-              className="w-9 h-9 rounded-full border border-[#F68B62] bg-[#F68B62] hover:bg-[#e07750] hover:border-[#e07750] flex items-center justify-center text-white shadow-xs hover:shadow-sm active:scale-95 transition-all duration-200 cursor-pointer"
-              aria-label={isFrench ? "Précédent" : "Previous"}
-            >
-              <ChevronLeft className="w-4 h-4 text-white" />
-            </button>
-            <button
-              type="button"
-              onClick={() => scroll('right')}
-              className="w-9 h-9 rounded-full border border-[#F68B62] bg-[#F68B62] hover:bg-[#e07750] hover:border-[#e07750] flex items-center justify-center text-white shadow-xs hover:shadow-sm active:scale-95 transition-all duration-200 cursor-pointer"
-              aria-label={isFrench ? "Suivant" : "Next"}
-            >
-              <ChevronRight className="w-4 h-4 text-white" />
-            </button>
-          </div>
+        {/* Section Header (Centered title and description) */}
+        <div className="text-center mb-6 max-w-2xl mx-auto">
+          <h2 className="text-xl sm:text-3xl font-black text-stone-900 tracking-tight leading-tight">
+            {isFrench ? "Tout un souk à découvrir" : "A whole souk to discover"}
+          </h2>
+          <p className="text-xs sm:text-base text-stone-500 font-medium mt-1.5">
+            {isFrench 
+              ? "Épicerie, viandes halal, pâtisseries et bien plus." 
+              : "Groceries, halal meats, pastries and much more."}
+          </p>
         </div>
 
         {/* Horizontal Swipeable Track */}
@@ -147,6 +125,26 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
               </button>
             );
           })}
+        </div>
+
+        {/* Navigation Arrows at the bottom */}
+        <div className="flex items-center justify-center gap-3 mt-5">
+          <button
+            type="button"
+            onClick={() => scroll('left')}
+            className="w-10 h-10 rounded-full border border-[#F68B62] bg-[#F68B62] hover:bg-[#e07750] hover:border-[#e07750] flex items-center justify-center text-white shadow-md shadow-[#F68B62]/20 hover:shadow-lg active:scale-95 transition-all duration-200 cursor-pointer"
+            aria-label={isFrench ? "Précédent" : "Previous"}
+          >
+            <ChevronLeft className="w-5 h-5 text-white" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scroll('right')}
+            className="w-10 h-10 rounded-full border border-[#F68B62] bg-[#F68B62] hover:bg-[#e07750] hover:border-[#e07750] flex items-center justify-center text-white shadow-md shadow-[#F68B62]/20 hover:shadow-lg active:scale-95 transition-all duration-200 cursor-pointer"
+            aria-label={isFrench ? "Suivant" : "Next"}
+          >
+            <ChevronRight className="w-5 h-5 text-white" />
+          </button>
         </div>
 
       </div>
