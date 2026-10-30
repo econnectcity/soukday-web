@@ -35,7 +35,7 @@ const AddressModal = dynamic(
   { ssr: false }
 );
 
-const Layout = ({ children }) => {
+const Layout = ({ children, hideHeader = false, hideFooter = false }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.Theme.theme);
@@ -162,11 +162,11 @@ const Layout = ({ children }) => {
         <MaintanceMode message={setting?.setting?.web_settings?.website_mode_remark} />
       ) : (
         <PushNotification>
-          <Header />
+          {!hideHeader && <Header />}
           <main className="min-h-[70vh] bg-stone-50">
             {children}
           </main>
-          <Footer />
+          {!hideFooter && <Footer />}
           <CartDrawer />
           <AddressModal />
           <ToastContainer
