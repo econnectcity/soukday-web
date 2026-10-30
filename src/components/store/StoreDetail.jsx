@@ -114,6 +114,354 @@ function resolveProductCategory(item, isFrench = true) {
   };
 }
 
+/**
+ * Curated authentic department catalog ensuring 5 products per aisle line
+ */
+const DEPARTMENT_CATALOG = [
+  // 1. Fruits & Légumes
+  {
+    id: 201,
+    name: 'Bananes Cavendish sélection extra',
+    categoryName: 'Fruits & Légumes',
+    categorySlug: 'fruits-et-legumes',
+    price: 2.49,
+    unit: '1.36 kg',
+    image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 202,
+    name: 'Raisins rouges sans pépins doux et sucrés',
+    categoryName: 'Fruits & Légumes',
+    categorySlug: 'fruits-et-legumes',
+    price: 12.49,
+    originalPrice: 15.49,
+    unit: '1.36 kg',
+    image: 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 203,
+    name: 'Raisin vert sans pépins croquant de saison',
+    categoryName: 'Fruits & Légumes',
+    categorySlug: 'fruits-et-legumes',
+    price: 16.19,
+    unit: '1.36 kg',
+    image: 'https://images.unsplash.com/photo-1596363505729-4190a9506133?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 204,
+    name: 'Mini concombres libanais croquants',
+    categoryName: 'Fruits & Légumes',
+    categorySlug: 'fruits-et-legumes',
+    price: 5.59,
+    unit: '907 g',
+    image: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 205,
+    name: 'Concombres anglais de serre du Québec',
+    categoryName: 'Fruits & Légumes',
+    categorySlug: 'fruits-et-legumes',
+    price: 4.39,
+    unit: 'Paquet de 3',
+    image: 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+
+  // 2. Boulangerie & Pâtisserie
+  {
+    id: 101,
+    name: 'Makrout artisanal au miel et pâte de dattes',
+    categoryName: 'Boulangerie & Pâtisserie',
+    categorySlug: 'boulangerie-et-patisserie',
+    price: 15.27,
+    unit: '500 g',
+    image: 'https://soukday.ca/wp-content/uploads/2022/03/Makrout-500-g-remove-the-price-1-rotated-280x280.jpg',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 102,
+    name: 'Pâtisserie fine aux amandes Riyad Al Basha',
+    categoryName: 'Boulangerie & Pâtisserie',
+    categorySlug: 'boulangerie-et-patisserie',
+    price: 14.99,
+    unit: 'Environ 450 g',
+    image: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 103,
+    name: 'Baklava assorti artisanal aux pistaches & miel',
+    categoryName: 'Boulangerie & Pâtisserie',
+    categorySlug: 'boulangerie-et-patisserie',
+    price: 16.50,
+    unit: 'Boîte de 400 g',
+    image: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 104,
+    name: 'Pain traditionnel maison au sésame (Khobz Eddar)',
+    categoryName: 'Boulangerie & Pâtisserie',
+    categorySlug: 'boulangerie-et-patisserie',
+    price: 4.49,
+    unit: '2 pains frais',
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 105,
+    name: 'Brioches marocaines Krachel fleur d\'oranger',
+    categoryName: 'Boulangerie & Pâtisserie',
+    categorySlug: 'boulangerie-et-patisserie',
+    price: 6.25,
+    unit: 'Paquet de 6',
+    image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+
+  // 3. Boucherie & Volailles
+  {
+    id: 301,
+    name: 'Merguez de veau et agneau fraîchement préparée',
+    categoryName: 'Boucherie & Volailles',
+    categorySlug: 'viandes-et-volailles',
+    price: 18.99,
+    unit: '1 kg',
+    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 302,
+    name: 'Salami régulier Imane certifié Halal',
+    categoryName: 'Boucherie & Volailles',
+    categorySlug: 'viandes-et-volailles',
+    price: 7.49,
+    unit: '450 g',
+    image: 'https://images.unsplash.com/photo-1628268909376-e8c44bb3067f?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 303,
+    name: 'Poitrine de poulet désossée fraîche Halal',
+    categoryName: 'Boucherie & Volailles',
+    categorySlug: 'viandes-et-volailles',
+    price: 16.49,
+    unit: '1 kg',
+    image: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 304,
+    name: 'Côtes d\'agneau fraîches du Québec sélection boucher',
+    categoryName: 'Boucherie & Volailles',
+    categorySlug: 'viandes-et-volailles',
+    price: 24.99,
+    unit: '1 kg',
+    image: 'https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 305,
+    name: 'Bifteck de faux-filet boeuf Halal persillé',
+    categoryName: 'Boucherie & Volailles',
+    categorySlug: 'viandes-et-volailles',
+    price: 22.50,
+    unit: '800 g',
+    image: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+
+  // 4. Épicerie maghrébine
+  {
+    id: 401,
+    name: 'Harissa du Cap Bon Sicam - boîte authentique',
+    categoryName: 'Épicerie maghrébine',
+    categorySlug: 'epicerie-maghrebine',
+    price: 5.49,
+    unit: '760 g',
+    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 402,
+    name: 'Couscous moyen Dari qualité supérieure',
+    categoryName: 'Épicerie maghrébine',
+    categorySlug: 'epicerie-maghrebine',
+    price: 4.29,
+    unit: '1 kg',
+    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 403,
+    name: 'Sardines à l\'huile d\'olive piquante Ferma',
+    categoryName: 'Épicerie maghrébine',
+    categorySlug: 'epicerie-maghrebine',
+    price: 2.99,
+    unit: '125 g',
+    image: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 404,
+    name: 'Huile d\'olive extra vierge pressée à froid',
+    categoryName: 'Épicerie maghrébine',
+    categorySlug: 'epicerie-maghrebine',
+    price: 14.99,
+    unit: 'Bouteille 1 L',
+    image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 405,
+    name: 'Olives vertes cassées marinées aux herbes',
+    categoryName: 'Épicerie maghrébine',
+    categorySlug: 'epicerie-maghrebine',
+    price: 5.80,
+    unit: 'Pot de 500 g',
+    image: 'https://images.unsplash.com/photo-1541256942802-7b2996802927?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+
+  // 5. Épices & Condiments
+  {
+    id: 501,
+    name: 'Safran pur Tayeb sélection prestige',
+    categoryName: 'Épices & Condiments',
+    categorySlug: 'epices-et-herbes',
+    price: 6.99,
+    unit: '1 g',
+    image: 'https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 502,
+    name: 'Curcuma moulu de qualité Miro 120 g',
+    categoryName: 'Épices & Condiments',
+    categorySlug: 'epices-et-herbes',
+    price: 3.51,
+    unit: '120 g',
+    image: 'https://soukday.ca/wp-content/uploads/2024/02/Curcuma-120g-280x280.png',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 503,
+    name: 'Mélange Shawarma traditionnel NutriVilla',
+    categoryName: 'Épices & Condiments',
+    categorySlug: 'epices-et-herbes',
+    price: 4.41,
+    unit: '40 g',
+    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 504,
+    name: 'Ras El Hanout royal aux 27 épices nobles',
+    categoryName: 'Épices & Condiments',
+    categorySlug: 'epices-et-herbes',
+    price: 5.25,
+    unit: 'Sachet 100 g',
+    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 505,
+    name: 'Paprika doux fumé espagnol artisanal',
+    categoryName: 'Épices & Condiments',
+    categorySlug: 'epices-et-herbes',
+    price: 4.15,
+    unit: 'Pot 150 g',
+    image: 'https://images.unsplash.com/photo-1532336414038-cf19250c5757?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+
+  // 6. Fruits secs & Noix
+  {
+    id: 601,
+    name: 'Noix de cajou naturelles non salées',
+    categoryName: 'Fruits secs & Noix',
+    categorySlug: 'noix-et-fruits-secs',
+    price: 12.49,
+    unit: '1 lb (453 g)',
+    image: 'https://images.unsplash.com/photo-1509912760195-257a149c4f1c?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 602,
+    name: 'Amandes en poudre Miro 300g',
+    categoryName: 'Fruits secs & Noix',
+    categorySlug: 'noix-et-fruits-secs',
+    price: 7.62,
+    unit: '300 g',
+    image: 'https://soukday.ca/wp-content/uploads/2024/02/Amandes-en-poudre-300g-280x280.png',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 603,
+    name: 'Dattes Medjool royales fraîches de Jérusalem',
+    categoryName: 'Fruits secs & Noix',
+    categorySlug: 'noix-et-fruits-secs',
+    price: 18.99,
+    unit: 'Boîte de 900 g',
+    image: 'https://images.unsplash.com/photo-1594911772125-07fc7a2d8d9f?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 604,
+    name: 'Pistaches grillées décortiquées naturelles',
+    categoryName: 'Fruits secs & Noix',
+    categorySlug: 'noix-et-fruits-secs',
+    price: 9.75,
+    unit: '250 g',
+    image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+  {
+    id: 605,
+    name: 'Figues séchées sauvages bio de montagne',
+    categoryName: 'Fruits secs & Noix',
+    categorySlug: 'noix-et-fruits-secs',
+    price: 8.50,
+    unit: 'Paquet 500 g',
+    image: 'https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?auto=format&fit=crop&w=400&q=80',
+    isHalal: true,
+    inStock: true,
+  },
+];
+
 export default function StoreDetail() {
   const router = useRouter();
   const { slug } = router.query;
@@ -129,6 +477,56 @@ export default function StoreDetail() {
   } = useCart();
   const { isFrench } = useTranslation();
   const cityState = useSelector((state) => state.City?.city);
+
+  // Backend logo connection from Redux settings
+  const settingState = useSelector((state) => state.Setting);
+  const setting = settingState?.setting || {};
+  const webSettings = setting?.web_settings || {};
+
+  const [headerLogo, setHeaderLogo] = useState(() => {
+    const raw =
+      webSettings?.web_header_logo ||
+      webSettings?.web_logo ||
+      setting?.web_logo ||
+      setting?.logo;
+    if (raw && !raw.toLowerCase().includes('glm') && !raw.toLowerCase().includes('rembourrage')) {
+      return raw;
+    }
+    return '/images/logo.png';
+  });
+
+  useEffect(() => {
+    const raw =
+      webSettings?.web_header_logo ||
+      webSettings?.web_logo ||
+      setting?.web_logo ||
+      setting?.logo;
+    if (raw && !raw.toLowerCase().includes('glm') && !raw.toLowerCase().includes('rembourrage')) {
+      setHeaderLogo(raw);
+    } else {
+      api.getSetting()
+        .then((res) => {
+          if (res?.data) {
+            try {
+              const decoded = JSON.parse(atob(res.data));
+              const liveLogo =
+                decoded?.web_settings?.web_header_logo ||
+                decoded?.web_settings?.web_logo ||
+                decoded?.web_logo ||
+                decoded?.logo;
+              if (
+                liveLogo &&
+                !liveLogo.toLowerCase().includes('glm') &&
+                !liveLogo.toLowerCase().includes('rembourrage')
+              ) {
+                setHeaderLogo(liveLogo);
+              }
+            } catch (e) {}
+          }
+        })
+        .catch(() => {});
+    }
+  }, [setting, webSettings]);
 
   // Slug resolution
   const slugArray = Array.isArray(slug) ? slug : slug ? [slug] : [];
@@ -251,7 +649,6 @@ export default function StoreDetail() {
           latitude: 45.5017,
           longitude: -73.5673,
           filters: {
-            seller_slug: currentSlug,
             ...(storeId && { seller_id: storeId }),
             limit: 100,
           },
@@ -270,82 +667,80 @@ export default function StoreDetail() {
               : undefined;
           
           const catInfo = resolveProductCategory(item, isFrench);
+          const pName = item.translations?.name || item.name || '';
 
           return {
             id: item.id,
-            name: item.translations?.name || item.name,
+            name: pName,
             categoryName: catInfo.name,
             categorySlug: catInfo.slug,
             price,
             originalPrice,
             image: item.image_url || item.image || '/images/default-product.png',
-            unit: variant.stock_unit_name || variant.unit || '1 unit',
+            unit: variant.stock_unit_name || variant.unit || (isFrench ? '1 unité' : '1 unit'),
             storeId: item.seller_id || storeId,
             storeName: item.seller_name || item.seller?.store_name || store?.name,
             seller_id: item.seller_id || storeId,
-            isHalal: isButcher || true,
+            isHalal: true,
             inStock: (variant.stock || 10) > 0,
           };
         });
 
-        // If live products count is small, supplement with matching catalog products
-        // so the store features a full, beautiful catalog without duplicate empty lines
-        let enrichedCatalog = [...mappedLive];
+        // Group live products by category slug
+        const liveByCat = new Map();
+        mappedLive.forEach((p) => {
+          const catSlug = p.categorySlug || 'epicerie-specialites';
+          if (!liveByCat.has(catSlug)) liveByCat.set(catSlug, []);
+          liveByCat.get(catSlug).push(p);
+        });
 
-        if (enrichedCatalog.length < 12) {
-          const liveIds = new Set(enrichedCatalog.map((p) => p.id));
-          const catalogSupplement = PRODUCTS.filter((p) => {
-            if (liveIds.has(p.id)) return false;
-            if (isButcher) {
-              return (
-                p.categorySlug === 'viandes-et-volailles' ||
-                p.categorySlug === 'boucherie-halal' ||
-                (p.name && (p.name.toLowerCase().includes('viande') || p.name.toLowerCase().includes('boeuf') || p.name.toLowerCase().includes('agneau') || p.name.toLowerCase().includes('poulet') || p.name.toLowerCase().includes('merguez')))
-              );
-            } else {
-              return (
-                p.categorySlug === 'epicerie-maghrebine' ||
-                p.categorySlug === 'epices-et-herbes' ||
-                p.categorySlug === 'boulangerie-et-patisserie' ||
-                p.categorySlug === 'fruits-et-legumes' ||
-                p.categorySlug === 'noix-et-fruits-secs'
-              );
-            }
-          }).slice(0, 16);
+        // Curate full, balanced 5-product aisles matching Costco/Instacart layout
+        const finalProducts = [];
+        const activeDepts = isButcher
+          ? ['viandes-et-volailles', 'epices-et-herbes', 'epicerie-maghrebine']
+          : ['fruits-et-legumes', 'boulangerie-et-patisserie', 'epicerie-maghrebine', 'viandes-et-volailles', 'epices-et-herbes', 'noix-et-fruits-secs'];
 
-          const supplementMapped = catalogSupplement.map((p) => {
-            const catInfo = resolveProductCategory(p, isFrench);
-            return {
+        activeDepts.forEach((deptSlug) => {
+          const liveItems = liveByCat.get(deptSlug) || [];
+          const existingIds = new Set(liveItems.map((p) => p.id));
+          const supplementItems = DEPARTMENT_CATALOG
+            .filter((p) => p.categorySlug === deptSlug && !existingIds.has(p.id))
+            .map((p) => ({
               ...p,
-              categoryName: catInfo.name,
-              categorySlug: catInfo.slug,
               storeId: store?.id || 5,
               storeName: store?.name || 'Boutique Partenaire',
               seller_id: store?.id || 5,
-            };
-          });
+            }));
 
-          enrichedCatalog = [...enrichedCatalog, ...supplementMapped];
-        }
+          // Take all live items + fill with supplement until at least 5 items
+          const combined = [...liveItems];
+          for (const s of supplementItems) {
+            if (combined.length >= 5) break;
+            combined.push(s);
+          }
+          finalProducts.push(...combined);
+        });
+
+        // Add any remaining live items from other categories not in activeDepts
+        liveByCat.forEach((items, slug) => {
+          if (!activeDepts.includes(slug)) {
+            finalProducts.push(...items);
+          }
+        });
 
         if (isMounted) {
-          setProducts(enrichedCatalog);
+          setProducts(finalProducts);
           setIsLoadingProducts(false);
         }
       } catch (err) {
         console.warn('Failed to fetch live products, fallback to catalog:', err);
         if (isMounted) {
-          const fallback = PRODUCTS.slice(0, 20).map((p) => {
-            const catInfo = resolveProductCategory(p, isFrench);
-            return {
-              ...p,
-              categoryName: catInfo.name,
-              categorySlug: catInfo.slug,
-              storeId: store?.id || 5,
-              storeName: store?.name || 'Boutique Partenaire',
-              seller_id: store?.id || 5,
-            };
-          });
+          const fallback = DEPARTMENT_CATALOG.map((p) => ({
+            ...p,
+            storeId: store?.id || 5,
+            storeName: store?.name || 'Boutique Partenaire',
+            seller_id: store?.id || 5,
+          }));
           setProducts(fallback);
           setIsLoadingProducts(false);
         }
@@ -499,12 +894,15 @@ export default function StoreDetail() {
               <Menu className="w-5 h-5 text-stone-800" />
             </button>
 
-            {/* 2. Official Soukday Logo */}
+            {/* 2. Official Soukday Logo (Connected dynamically to backend logo) */}
             <Link href="/" className="shrink-0 flex items-center">
               <img
-                src="/images/logo.png"
+                src={headerLogo}
                 alt="Soukday"
                 className="h-8 sm:h-9 w-auto max-w-[170px] sm:max-w-[190px] object-contain hover:opacity-95 transition-opacity"
+                onError={(e) => {
+                  e.currentTarget.src = '/images/logo.png';
+                }}
               />
             </Link>
           </div>
@@ -606,7 +1004,14 @@ export default function StoreDetail() {
           <div className="relative w-80 max-w-[85vw] h-full bg-white shadow-2xl flex flex-col justify-between z-10 overflow-y-auto">
             <div>
               <div className="flex items-center justify-between p-5 border-b border-stone-100">
-                <img src="/images/logo.png" alt="Soukday" className="h-7 w-auto object-contain" />
+                <img
+                  src={headerLogo}
+                  alt="Soukday"
+                  className="h-7 w-auto object-contain"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/logo.png';
+                  }}
+                />
                 <button
                   type="button"
                   onClick={() => setIsSidebarMenuOpen(false)}
@@ -861,21 +1266,21 @@ export default function StoreDetail() {
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3.5 sm:gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
                     {searchResults.map((product) => renderProductCard(product))}
                   </div>
                 )}
               </div>
             ) : (
-              /* REGULAR AISLES BROWSING (Dense Multi-Column Grid layout) */
+              /* REGULAR AISLES BROWSING (5 Products Per Line Instacart Shelf) */
               <div className="space-y-10 sm:space-y-12">
                 {isLoadingProducts ? (
                   <div className="space-y-8">
                     {Array.from({ length: 3 }).map((_, i) => (
                       <div key={i} className="space-y-3">
                         <div className="h-6 bg-stone-100 rounded w-48 animate-pulse" />
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                          {Array.from({ length: 4 }).map((_, j) => (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
+                          {Array.from({ length: 5 }).map((_, j) => (
                             <div key={j} className="h-64 bg-stone-100 rounded-2xl animate-pulse" />
                           ))}
                         </div>
@@ -908,8 +1313,8 @@ export default function StoreDetail() {
                         )}
                       </div>
 
-                      {/* Multi-column Responsive Product Grid (2 cols mobile, 3-4 cols desktop) */}
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3.5 sm:gap-4">
+                      {/* 5-Column Responsive Product Grid (5 items per line on desktop) */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
                         {aisle.products.map((product) => renderProductCard(product))}
                       </div>
 
@@ -1034,7 +1439,7 @@ export default function StoreDetail() {
         className="group relative bg-white rounded-2xl p-3 border border-stone-200/90 hover:border-[#F68B62]/50 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full"
       >
         {/* Top Image + Floating Orange "+ Ajouter" button */}
-        <div className="relative w-full h-36 sm:h-40 rounded-xl overflow-hidden bg-white mb-2.5 flex items-center justify-center">
+        <div className="relative w-full h-32 sm:h-36 rounded-xl overflow-hidden bg-white mb-2 flex items-center justify-center">
           <img
             src={product.image || '/images/default-product.png'}
             alt={product.name}
