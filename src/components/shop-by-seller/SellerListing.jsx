@@ -38,7 +38,13 @@ const SellerListing = () => {
 
     const handleSellerClick = (seller) => {
         dispatch(setFilterBySeller({ data: seller?.id }));
-        router.push(`/products`)
+        const storeSlug = seller?.slug || String(seller?.store_name || seller?.name || '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '') || `store-${seller?.id}`;
+        router.push(`/store/${storeSlug}`);
     }
 
     return (

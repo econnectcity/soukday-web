@@ -807,7 +807,7 @@ const ProductDetail = ({ slug: propSlug }) => {
                       {/* Shop All Store Link */}
                       <div>
                         <LocalizedLink
-                          href={isSoukdayVendor ? "/products" : `/products?seller=${product?.seller_id}`}
+                          href={isSoukdayVendor ? "/epicerie-soukday" : `/store/${product?.seller?.slug || String(storeName).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "store"}`}
                           className="text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 hover:underline"
                         >
                           {isFrench ? `Voir toute la sélection ${storeName}` : `Shop all ${storeName}`}
@@ -1127,7 +1127,7 @@ const ProductDetail = ({ slug: propSlug }) => {
 
                       {/* Secondary Action: Browse Store */}
                       <LocalizedLink
-                        href={isSoukdayVendor ? "/products" : `/products?seller=${product?.seller_id}`}
+                        href={isSoukdayVendor ? "/epicerie-soukday" : `/store/${product?.seller?.slug || String(storeName).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "store"}`}
                         className="w-full bg-[#E8E9EB] hover:bg-[#DCDDE0] text-stone-900 font-extrabold text-sm py-3 px-6 rounded-full transition-all flex items-center justify-center block text-center"
                       >
                         {isFrench ? `Explorer ${storeName}` : `Browse ${storeName}`}

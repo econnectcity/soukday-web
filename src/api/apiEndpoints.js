@@ -16,6 +16,7 @@ export const getBrands = "brands";
 export const getCategory = "categories";
 export const modules = "modules";
 export const getSellers = "sellers";
+export const getSeller = "seller";
 export const getSlider = "sliders";
 export const getOffer = "offers";
 export const getSection = "sections";

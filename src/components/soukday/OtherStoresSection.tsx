@@ -67,7 +67,13 @@ export default function OtherStoresSection({
     } catch (e) {
       console.warn('Dispatch failed:', e);
     }
-    router.push(`/products?seller_id=${store.id}`);
+    const storeSlug = store.slug || String(store.name || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '') || `store-${store.id}`;
+    router.push(`/store/${storeSlug}`);
   };
 
   /**

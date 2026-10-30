@@ -976,6 +976,19 @@ export const liveOrderTracking = async ({ orderId }) => {
   return response.data;
 };
 
+export const getSeller = async ({ seller_id, slug, product_id }) => {
+  const params = {
+    ...(seller_id && { seller_id }),
+    ...(slug && { slug, seller_slug: slug }),
+    ...(product_id && { product_id }),
+  };
+  const response = await api.get(`${apiEndPoints.getSeller}`, {
+    params,
+    headers: moduleHeader(),
+  });
+  return response.data;
+};
+
 export const getSellers = async ({ limit, offset, latitude, longitude }) => {
   const params = {
     limit,

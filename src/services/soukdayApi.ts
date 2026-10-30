@@ -322,7 +322,7 @@ export async function fetchLiveSellers(lat: number = 45.5017, lng: number = -73.
         return {
           id: item.id,
           name: storeName,
-          slug: item.slug || `store-${item.id}`,
+          slug: item.slug || String(storeName).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `store-${item.id}`,
           type: isButcher ? 'butcher' : 'grocery',
           typeLabel: isButcher ? 'Boucherie Halal' : 'Supermarché & Épicerie',
           address: typeof item.street === 'string' ? item.street : (typeof item.formatted_address === 'string' ? item.formatted_address : 'Montréal, QC'),

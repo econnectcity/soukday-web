@@ -43,7 +43,13 @@ export default function ButcherSection({
     } catch (e) {
       console.warn('Dispatch failed:', e);
     }
-    router.push(`/products?seller_id=${butcher.id}`);
+    const storeSlug = butcher.slug || String(butcher.name || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '') || `store-${butcher.id}`;
+    router.push(`/store/${storeSlug}`);
   };
 
   /**
