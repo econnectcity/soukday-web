@@ -406,8 +406,8 @@ const CategoryDetail = () => {
         </div>
 
         <div className="grid grid-cols-12 gap-6 items-start">
-          {/* Sidebar filter (desktop) */}
-          <div className="col-span-12 md:col-span-4 lg:col-span-3 rounded-2xl hidden md:block sticky top-24">
+          {/* Sidebar filter (desktop, independent smooth scroll) */}
+          <div className="col-span-12 md:col-span-4 lg:col-span-3 rounded-2xl hidden md:block sticky top-24 max-h-[calc(100vh-110px)] overflow-y-auto overscroll-contain custom-sidebar-scroll pr-1">
             <Filter
               setProductResult={setProductResult}
               setOffset={setOffset}

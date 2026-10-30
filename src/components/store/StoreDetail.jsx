@@ -879,8 +879,8 @@ export default function StoreDetail() {
           - Delivery: Accurate delivery window with customer address
           - Cart: Free delivery threshold pill ($150 limit)
          ═══════════════════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-40 bg-white border-b border-stone-200/90 shadow-2xs">
-        <div className="max-w-[1520px] mx-auto px-3 sm:px-5 lg:px-7 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
+      <header className="sticky top-0 z-40 bg-white border-b border-stone-200/90 shadow-2xs h-[68px] flex items-center">
+        <div className="w-full max-w-[1520px] mx-auto px-3 sm:px-5 lg:px-7 flex items-center justify-between gap-2 sm:gap-4">
           
           {/* LEFT: 1 (Hamburger) + 2 (Official Soukday Logo) */}
           <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
@@ -1118,14 +1118,15 @@ export default function StoreDetail() {
 
       {/* ═══════════════════════════════════════════════════════════════════════
           MAIN STORE BODY (Two-Column Instacart Architecture)
-          - Left: Sticky Store Brand, Navigation tabs, and Clean Deduplicated Aisles
-          - Right: Multi-column responsive product grids (no single-item lines)
+          - Left: 100% Fixed Sticky Store Brand, Navigation tabs, and Clean Deduplicated Aisles
+            with completely independent smooth scrolling (never shifts with main page)
+          - Right: Multi-column responsive product grids (5 items per line)
          ═══════════════════════════════════════════════════════════════════════ */}
-      <div className="max-w-[1520px] mx-auto px-3 sm:px-5 lg:px-7 py-6 flex-1 w-full">
+      <div className="max-w-[1520px] mx-auto px-3 sm:px-5 lg:px-7 flex-1 w-full">
         <div className="flex gap-8 items-start">
           
-          {/* ─── LEFT SIDEBAR (Sticky, Instacart Style) ──────────────── */}
-          <aside className="w-60 shrink-0 hidden lg:block sticky top-20 space-y-6">
+          {/* ─── LEFT SIDEBAR (100% Fixed, Independent Scroll) ──────────────── */}
+          <aside className="w-60 shrink-0 hidden lg:flex flex-col sticky top-[68px] h-[calc(100vh-68px)] overflow-y-auto overscroll-contain custom-sidebar-scroll py-6 pb-16 pr-3 space-y-6 select-none">
             
             {/* Store Brand Card */}
             <div className="space-y-3">
@@ -1163,6 +1164,7 @@ export default function StoreDetail() {
                   setActiveTab('shop');
                   setInStoreSearchQuery('');
                   setSelectedAisleSlug(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   activeTab === 'shop'
@@ -1176,7 +1178,10 @@ export default function StoreDetail() {
 
               <button
                 type="button"
-                onClick={() => setActiveTab('buy_again')}
+                onClick={() => {
+                  setActiveTab('buy_again');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   activeTab === 'buy_again'
                     ? 'bg-[#2B2B2B] text-white shadow-xs'
@@ -1197,7 +1202,11 @@ export default function StoreDetail() {
                 {/* Option for All Aisles */}
                 <button
                   type="button"
-                  onClick={() => setSelectedAisleSlug(null)}
+                  onClick={() => {
+                    setSelectedAisleSlug(null);
+                    setInStoreSearchQuery('');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                     selectedAisleSlug === null
                       ? 'bg-orange-50 text-[#F68B62] font-bold'
@@ -1213,7 +1222,11 @@ export default function StoreDetail() {
                   <button
                     key={aisle.slug}
                     type="button"
-                    onClick={() => setSelectedAisleSlug(aisle.slug)}
+                    onClick={() => {
+                      setSelectedAisleSlug(aisle.slug);
+                      setInStoreSearchQuery('');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                       selectedAisleSlug === aisle.slug
                         ? 'bg-orange-50 text-[#F68B62] font-bold'
@@ -1230,7 +1243,7 @@ export default function StoreDetail() {
           </aside>
 
           {/* ─── RIGHT FLUID CONTENT (Dense multi-column product grids) ── */}
-          <main className="flex-1 min-w-0">
+          <main className="flex-1 min-w-0 py-6">
             
             {/* SEARCH RESULTS VIEW (when in-store search is used) */}
             {inStoreSearchQuery.trim() ? (
