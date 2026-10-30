@@ -217,12 +217,16 @@ export default function Header() {
     setSearchQuery 
   } = useCart();
 
-  const headerLogo =
+  const rawLogo =
     webSettings?.web_header_logo ||
     webSettings?.web_logo ||
     setting?.web_logo ||
     setting?.logo ||
     '/images/logo.png';
+  const headerLogo =
+    typeof rawLogo === 'string' && (rawLogo.toLowerCase().includes('glm') || rawLogo.toLowerCase().includes('rembourrage'))
+      ? '/images/logo.png'
+      : (rawLogo || '/images/logo.png');
 
   const siteTitle = webSettings?.site_title || setting?.app_name || 'Soukday';
 

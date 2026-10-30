@@ -27,18 +27,92 @@ import {
   ShieldCheck,
   MapPin,
   Clock,
-  Tag,
-  RefreshCw,
-  FileText,
-  User,
   HelpCircle,
   Phone,
-  Globe,
   Plus,
   Minus,
   Sparkles,
-  Award
+  LayoutGrid
 } from 'lucide-react';
+
+/**
+ * Intelligent category resolution helper.
+ * Determines the true department name and slug based on product name, tags, and category info.
+ */
+function resolveProductCategory(item, isFrench = true) {
+  // 1. Direct category translations if available
+  const rawCat = item.category || {};
+  let transName = '';
+  if (Array.isArray(rawCat.translations) && rawCat.translations.length > 0) {
+    transName = rawCat.translations[0]?.name || rawCat.translations[0]?.title || '';
+  } else if (rawCat.translations && typeof rawCat.translations === 'object') {
+    transName = rawCat.translations.name || rawCat.translations.title || '';
+  }
+  const apiName = transName || rawCat.name || item.category_name || '';
+
+  // If a valid distinct category name was returned and is not generic
+  if (apiName && !apiName.toLowerCase().includes('fruits et l') && apiName !== 'Default') {
+    const slug = rawCat.slug || String(apiName).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    return { name: apiName, slug };
+  }
+
+  // 2. Fallback: intelligent semantic categorization based on product name
+  const pName = String(item.name || item.translations?.name || '').toLowerCase();
+  
+  if (pName.includes('makrout') || pName.includes('patisserie') || pName.includes('croissant') || pName.includes('pain') || pName.includes('boulangerie') || pName.includes('brioche') || pName.includes('baklava')) {
+    return {
+      name: isFrench ? 'Boulangerie & Pâtisserie' : 'Bakery & Pastry',
+      slug: 'boulangerie-et-patisserie'
+    };
+  }
+
+  if (pName.includes('shawarma') || pName.includes('curcuma') || pName.includes('epice') || pName.includes('épice') || pName.includes('thym') || pName.includes('poivre') || pName.includes('cumin') || pName.includes('paprika') || pName.includes('zaatar') || pName.includes('herbe') || pName.includes('condiment') || pName.includes('sel')) {
+    return {
+      name: isFrench ? 'Épices & Condiments' : 'Spices & Seasonings',
+      slug: 'epices-et-herbes'
+    };
+  }
+
+  if (pName.includes('viande') || pName.includes('boeuf') || pName.includes('bœuf') || pName.includes('agneau') || pName.includes('poulet') || pName.includes('veau') || pName.includes('merguez') || pName.includes('steak') || pName.includes('hache') || pName.includes('haché')) {
+    return {
+      name: isFrench ? 'Boucherie & Volailles' : 'Meats & Poultry',
+      slug: 'viandes-et-volailles'
+    };
+  }
+
+  if (pName.includes('couscous') || pName.includes('semoule') || pName.includes('harissa') || pName.includes('sardine') || pName.includes('huile') || pName.includes('the') || pName.includes('thé') || pName.includes('cafe') || pName.includes('café') || pName.includes('sauce') || pName.includes('riz') || pName.includes('pate') || pName.includes('pâte') || pName.includes('conserve') || pName.includes('olives')) {
+    return {
+      name: isFrench ? 'Épicerie maghrébine' : 'Maghreb Grocery',
+      slug: 'epicerie-maghrebine'
+    };
+  }
+
+  if (pName.includes('fromage') || pName.includes('lait') || pName.includes('yaourt') || pName.includes('beurre') || pName.includes('creme') || pName.includes('labneh')) {
+    return {
+      name: isFrench ? 'Produits laitiers & Fromages' : 'Dairy & Cheeses',
+      slug: 'produits-laitiers'
+    };
+  }
+
+  if (pName.includes('noix') || pName.includes('amande') || pName.includes('datte') || pName.includes('figue') || pName.includes('pistache') || pName.includes('raisin sec')) {
+    return {
+      name: isFrench ? 'Fruits secs & Noix' : 'Nuts & Dried Fruits',
+      slug: 'noix-et-fruits-secs'
+    };
+  }
+
+  if (pName.includes('frite') || pName.includes('pomme') || pName.includes('banane') || pName.includes('raisin') || pName.includes('tomate') || pName.includes('concombre') || pName.includes('salade') || pName.includes('legume') || pName.includes('légume') || pName.includes('fruit')) {
+    return {
+      name: isFrench ? 'Fruits & Légumes' : 'Fruits & Vegetables',
+      slug: 'fruits-et-legumes'
+    };
+  }
+
+  return {
+    name: isFrench ? 'Épicerie & Spécialités' : 'Grocery & Specialties',
+    slug: 'epicerie-specialites'
+  };
+}
 
 export default function StoreDetail() {
   const router = useRouter();
@@ -86,8 +160,8 @@ export default function StoreDetail() {
   const [copiedAddress, setCopiedAddress] = useState(false);
 
   // Active navigation tab on the left sidebar
-  const [activeTab, setActiveTab] = useState('shop'); // 'shop' | 'buy_again' | 'specials'
-  const [activeAisle, setActiveAisle] = useState(null);
+  const [activeTab, setActiveTab] = useState('shop'); // 'shop' | 'buy_again'
+  const [selectedAisleSlug, setSelectedAisleSlug] = useState(null); // null = all aisles
 
   // 2. In-Store Search Query (Strictly scoped to this store only)
   const [inStoreSearchQuery, setInStoreSearchQuery] = useState('');
@@ -96,7 +170,7 @@ export default function StoreDetail() {
   const [products, setProducts] = useState([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
 
-  // Load store details from API or catalog
+  // Load store details
   useEffect(() => {
     if (!currentSlug) return;
     let isMounted = true;
@@ -128,7 +202,7 @@ export default function StoreDetail() {
               ...(prev || {}),
               ...liveMatch,
               badges: liveMatch.badges?.length ? liveMatch.badges : (prev?.badges || ['Frais du jour', 'Prix direct']),
-              tags: liveMatch.tags?.length ? liveMatch.tags : (prev?.tags || ['Boucherie Halal', 'Viande Fraîche']),
+              tags: liveMatch.tags?.length ? liveMatch.tags : (prev?.tags || ['Épicerie', 'Frais']),
             }));
           }
         }
@@ -183,87 +257,98 @@ export default function StoreDetail() {
           },
         });
 
-        if (res?.status === 1 && Array.isArray(res.data) && res.data.length > 0 && isMounted) {
-          const mapped = res.data.map((item) => {
-            const variant = item.variants?.[0] || {};
-            const price = parseFloat(variant.discounted_price || variant.price || item.price || 0);
-            const originalPrice =
-              variant.discounted_price > 0 && variant.discounted_price < variant.price
-                ? parseFloat(variant.price)
-                : undefined;
+        const liveProducts = res?.status === 1 && Array.isArray(res.data) ? res.data : [];
+        const isButcher = store?.type === 'butcher' || (store?.name || '').toLowerCase().includes('boucherie');
+
+        // Map live products with accurate semantic category resolution
+        const mappedLive = liveProducts.map((item) => {
+          const variant = item.variants?.[0] || {};
+          const price = parseFloat(variant.discounted_price || variant.price || item.price || 0);
+          const originalPrice =
+            variant.discounted_price > 0 && variant.discounted_price < variant.price
+              ? parseFloat(variant.price)
+              : undefined;
+          
+          const catInfo = resolveProductCategory(item, isFrench);
+
+          return {
+            id: item.id,
+            name: item.translations?.name || item.name,
+            categoryName: catInfo.name,
+            categorySlug: catInfo.slug,
+            price,
+            originalPrice,
+            image: item.image_url || item.image || '/images/default-product.png',
+            unit: variant.stock_unit_name || variant.unit || '1 unit',
+            storeId: item.seller_id || storeId,
+            storeName: item.seller_name || item.seller?.store_name || store?.name,
+            seller_id: item.seller_id || storeId,
+            isHalal: isButcher || true,
+            inStock: (variant.stock || 10) > 0,
+          };
+        });
+
+        // If live products count is small, supplement with matching catalog products
+        // so the store features a full, beautiful catalog without duplicate empty lines
+        let enrichedCatalog = [...mappedLive];
+
+        if (enrichedCatalog.length < 12) {
+          const liveIds = new Set(enrichedCatalog.map((p) => p.id));
+          const catalogSupplement = PRODUCTS.filter((p) => {
+            if (liveIds.has(p.id)) return false;
+            if (isButcher) {
+              return (
+                p.categorySlug === 'viandes-et-volailles' ||
+                p.categorySlug === 'boucherie-halal' ||
+                (p.name && (p.name.toLowerCase().includes('viande') || p.name.toLowerCase().includes('boeuf') || p.name.toLowerCase().includes('agneau') || p.name.toLowerCase().includes('poulet') || p.name.toLowerCase().includes('merguez')))
+              );
+            } else {
+              return (
+                p.categorySlug === 'epicerie-maghrebine' ||
+                p.categorySlug === 'epices-et-herbes' ||
+                p.categorySlug === 'boulangerie-et-patisserie' ||
+                p.categorySlug === 'fruits-et-legumes' ||
+                p.categorySlug === 'noix-et-fruits-secs'
+              );
+            }
+          }).slice(0, 16);
+
+          const supplementMapped = catalogSupplement.map((p) => {
+            const catInfo = resolveProductCategory(p, isFrench);
             return {
-              id: item.id,
-              name: item.translations?.name || item.name,
-              categoryName: item.category_name || item.category?.name || 'Fruits et légumes',
-              categorySlug: item.category?.slug || slugify(item.category_name || 'fruits-et-legumes'),
-              price,
-              originalPrice,
-              image: item.image_url || item.image || '/images/default-product.png',
-              unit: variant.stock_unit_name || variant.unit || '1 unit',
-              storeId: item.seller_id || storeId,
-              storeName: item.seller_name || item.seller?.store_name || store?.name,
-              seller_id: item.seller_id || storeId,
-              isHalal: true,
-              inStock: (variant.stock || 10) > 0,
+              ...p,
+              categoryName: catInfo.name,
+              categorySlug: catInfo.slug,
+              storeId: store?.id || 5,
+              storeName: store?.name || 'Boutique Partenaire',
+              seller_id: store?.id || 5,
             };
           });
-          setProducts(mapped);
-          setIsLoadingProducts(false);
-          return;
+
+          enrichedCatalog = [...enrichedCatalog, ...supplementMapped];
         }
 
-        // Fallback: strictly assign to this store so no outside products appear
         if (isMounted) {
-          const storeNameLower = (store?.name || '').toLowerCase();
-          const isButcher = store?.type === 'butcher' || storeNameLower.includes('boucherie');
-
-          let matched = PRODUCTS.filter((p) => {
-            if (p.seller_id && storeId && p.seller_id === storeId) return true;
-            if (p.storeName && store?.name && p.storeName.toLowerCase() === storeNameLower) return true;
-            return false;
-          });
-
-          if (matched.length === 0) {
-            matched = PRODUCTS.filter((p) => {
-              if (isButcher) {
-                return (
-                  p.categorySlug === 'viande-et-poulet-halal' ||
-                  p.categorySlug === 'boucherie-halal' ||
-                  (p.tags && p.tags.some((t) => t.toLowerCase().includes('viande') || t.toLowerCase().includes('poulet') || t.toLowerCase().includes('halal'))) ||
-                  (p.name && (p.name.toLowerCase().includes('viande') || p.name.toLowerCase().includes('bœuf') || p.name.toLowerCase().includes('agneau') || p.name.toLowerCase().includes('poulet') || p.name.toLowerCase().includes('merguez')))
-                );
-              } else {
-                return (
-                  p.categorySlug === 'fruits-et-legumes' ||
-                  p.categorySlug === 'epicerie-maghrebine' ||
-                  p.categorySlug === 'epices-et-herbes' ||
-                  p.categorySlug === 'boulangerie-et-patisserie'
-                );
-              }
-            });
-          }
-
-          const baseList = matched.length > 0 ? matched : PRODUCTS.slice(0, 20);
-          const localized = baseList.map((p) => ({
-            ...p,
-            storeId: store?.id || 5,
-            storeName: store?.name || 'Boutique Partenaire',
-            seller_id: store?.id || 5,
-          }));
-          setProducts(localized);
+          setProducts(enrichedCatalog);
+          setIsLoadingProducts(false);
         }
       } catch (err) {
+        console.warn('Failed to fetch live products, fallback to catalog:', err);
         if (isMounted) {
-          const localized = PRODUCTS.slice(0, 20).map((p) => ({
-            ...p,
-            storeId: store?.id || 5,
-            storeName: store?.name || 'Boutique Partenaire',
-            seller_id: store?.id || 5,
-          }));
-          setProducts(localized);
+          const fallback = PRODUCTS.slice(0, 20).map((p) => {
+            const catInfo = resolveProductCategory(p, isFrench);
+            return {
+              ...p,
+              categoryName: catInfo.name,
+              categorySlug: catInfo.slug,
+              storeId: store?.id || 5,
+              storeName: store?.name || 'Boutique Partenaire',
+              seller_id: store?.id || 5,
+            };
+          });
+          setProducts(fallback);
+          setIsLoadingProducts(false);
         }
-      } finally {
-        if (isMounted) setIsLoadingProducts(false);
       }
     }
 
@@ -271,14 +356,14 @@ export default function StoreDetail() {
     return () => {
       isMounted = false;
     };
-  }, [store?.id, currentSlug]);
+  }, [store?.id, currentSlug, isFrench]);
 
-  // Group products by Aisles (Categories)
+  // Group products by distinct Aisles (Categories) — guaranteed unique
   const aisles = useMemo(() => {
     const map = new Map();
     products.forEach((prod) => {
-      const catSlug = prod.categorySlug || slugify(prod.categoryName || 'autres');
-      const catName = prod.categoryName || (catSlug ? catSlug.replace(/-/g, ' ') : 'Rayon');
+      const catSlug = prod.categorySlug || 'epicerie-specialites';
+      const catName = prod.categoryName || 'Épicerie & Spécialités';
       if (!map.has(catSlug)) {
         map.set(catSlug, {
           slug: catSlug,
@@ -302,6 +387,12 @@ export default function StoreDetail() {
         (p.tags && p.tags.some((t) => t.toLowerCase().includes(q)))
     );
   }, [inStoreSearchQuery, products]);
+
+  // Filtered Aisles based on user selection in left sidebar
+  const displayedAisles = useMemo(() => {
+    if (!selectedAisleSlug) return aisles;
+    return aisles.filter((a) => a.slug === selectedAisleSlug);
+  }, [aisles, selectedAisleSlug]);
 
   // ─── 5. Delivery Time & Address Calculation (Accurate to Customer & Store) ─
   const customerLat = selectedAddress?.latitude
@@ -337,7 +428,6 @@ export default function StoreDetail() {
   // Delivery Window based on current clock and distance
   const deliveryWindowText = useMemo(() => {
     const now = new Date();
-    // Prep time + travel time (approx 2.5 min/km)
     const travelMin = Math.max(25, Math.round(20 + calculatedDistanceKm * 2.5));
     const startMin = travelMin;
     const endMin = travelMin + 30;
@@ -376,15 +466,6 @@ export default function StoreDetail() {
     return item ? item.quantity : 0;
   };
 
-  // Scroll to aisle helper
-  const scrollToAisle = (aisleSlug) => {
-    setActiveAisle(aisleSlug);
-    const elem = document.getElementById(`aisle-${aisleSlug}`);
-    if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
   const storeName = store?.name || (isFrench ? 'Boutique Partenaire' : 'Partner Store');
   const isButcher = store?.type === 'butcher' || storeName.toLowerCase().includes('boucherie');
   const storeLogo =
@@ -392,32 +473,21 @@ export default function StoreDetail() {
     store?.image ||
     (isButcher ? '/images/butchers/boucherie-zakiya.svg' : '/images/default-store.png');
 
-  // Aisle horizontal scroll container refs
-  const aisleScrollRefs = useRef({});
-
-  const scrollShelf = (slug, direction) => {
-    const container = aisleScrollRefs.current[slug];
-    if (container) {
-      const scrollAmount = direction === 'left' ? -380 : 380;
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white text-stone-900 flex flex-col">
 
       {/* ═══════════════════════════════════════════════════════════════════════
           TOP HEADER (Instacart Single Store Header)
-          1: 3-bars menu button
-          2: Logo
-          3: Store-specific search bar (stretched since 4 is removed)
-          5: Delivery time + address (accurate to store & customer)
-          6: Free delivery threshold cart pill ($150 limit)
+          - Color theme: 100% Soukday Coral / Brand Orange (#F68B62)
+          - Logo: Official Soukday logo (/images/logo.png)
+          - Search: Stretched search bar strictly scoped inside this store
+          - Delivery: Accurate delivery window with customer address
+          - Cart: Free delivery threshold pill ($150 limit)
          ═══════════════════════════════════════════════════════════════════════ */}
       <header className="sticky top-0 z-40 bg-white border-b border-stone-200/90 shadow-2xs">
         <div className="max-w-[1520px] mx-auto px-3 sm:px-5 lg:px-7 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
           
-          {/* LEFT: 1 (Hamburger) + 2 (Logo) */}
+          {/* LEFT: 1 (Hamburger) + 2 (Official Soukday Logo) */}
           <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
             {/* 1. 3-bars hamburger menu button */}
             <button
@@ -429,20 +499,17 @@ export default function StoreDetail() {
               <Menu className="w-5 h-5 text-stone-800" />
             </button>
 
-            {/* 2. Logo */}
+            {/* 2. Official Soukday Logo */}
             <Link href="/" className="shrink-0 flex items-center">
               <img
                 src="/images/logo.png"
                 alt="Soukday"
-                className="h-7 sm:h-8 w-auto object-contain hover:opacity-95 transition-opacity"
-                onError={(e) => {
-                  e.currentTarget.src = '/images/logo.png';
-                }}
+                className="h-8 sm:h-9 w-auto max-w-[170px] sm:max-w-[190px] object-contain hover:opacity-95 transition-opacity"
               />
             </Link>
           </div>
 
-          {/* MIDDLE: 3 & 4. Search inside store (Longer bar) */}
+          {/* MIDDLE: 3 & 4. Search inside store (Stretched & strictly scoped) */}
           <div className="flex-1 max-w-3xl relative mx-1 sm:mx-3">
             <div className="relative w-full">
               <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -451,13 +518,13 @@ export default function StoreDetail() {
                 value={inStoreSearchQuery}
                 onChange={(e) => setInStoreSearchQuery(e.target.value)}
                 placeholder={isFrench ? `Rechercher chez ${storeName}...` : `Search inside ${storeName}...`}
-                className="w-full pl-10 pr-9 py-2 sm:py-2.5 rounded-full bg-stone-100 hover:bg-stone-150 focus:bg-white border border-transparent focus:border-[#108910] text-xs sm:text-sm font-medium text-stone-900 placeholder-stone-500 outline-none transition-all"
+                className="w-full pl-10 pr-9 py-2 sm:py-2.5 rounded-full bg-stone-100 hover:bg-stone-150 focus:bg-white border border-transparent focus:border-[#F68B62] text-xs sm:text-sm font-medium text-stone-900 placeholder-stone-500 outline-none transition-all shadow-2xs"
               />
               {inStoreSearchQuery && (
                 <button
                   type="button"
                   onClick={() => setInStoreSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -465,7 +532,7 @@ export default function StoreDetail() {
             </div>
           </div>
 
-          {/* RIGHT: 5 (Delivery Time & Address) + 6 (Cart button with Free Shipping threshold) */}
+          {/* RIGHT: 5 (Delivery Time & Address) + 6 (Brand Orange Cart Button with $150 limit) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
             {/* 5. Delivery time & customer address (Accurate with store address to customer address) */}
@@ -474,9 +541,9 @@ export default function StoreDetail() {
               className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-stone-100 transition-colors cursor-pointer text-left select-none"
               title={isFrench ? "Modifier l'adresse de livraison" : "Change delivery address"}
             >
-              <Zap className="w-4 h-4 text-[#108910] fill-[#108910] shrink-0" />
+              <Zap className="w-4 h-4 text-[#F68B62] fill-[#F68B62] shrink-0" />
               <div className="flex flex-col">
-                <div className="text-[12px] font-extrabold text-[#108910] flex items-center gap-1 leading-tight">
+                <div className="text-[12px] font-extrabold text-[#F68B62] flex items-center gap-1 leading-tight">
                   <span>{deliveryWindowText}</span>
                   <Info className="w-3 h-3 text-stone-400" />
                 </div>
@@ -487,11 +554,11 @@ export default function StoreDetail() {
               </div>
             </div>
 
-            {/* 6. Cart Button with Free Delivery indicator ($150 limit) */}
+            {/* 6. Cart Button with Free Delivery indicator ($150 limit, Brand Orange #F68B62) */}
             <button
               type="button"
               onClick={() => setIsCartOpen(true)}
-              className="relative overflow-hidden rounded-full bg-[#108910] hover:bg-[#0c740c] active:scale-95 text-white transition-all cursor-pointer shadow-sm flex items-center px-3.5 sm:px-4 py-2 sm:py-2.5 gap-2.5"
+              className="relative overflow-hidden rounded-full bg-[#F68B62] hover:bg-[#e07750] active:scale-95 text-white transition-all cursor-pointer shadow-md shadow-[#F68B62]/20 flex items-center px-3.5 sm:px-4 py-2 sm:py-2.5 gap-2.5"
             >
               {/* Free delivery text */}
               <div className="hidden sm:block text-left text-[11px] sm:text-xs font-bold leading-tight">
@@ -531,38 +598,33 @@ export default function StoreDetail() {
          ═══════════════════════════════════════════════════════════════════════ */}
       {isSidebarMenuOpen && (
         <div className="fixed inset-0 z-50 flex animate-in fade-in duration-200">
-          {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-xs"
             onClick={() => setIsSidebarMenuOpen(false)}
           />
 
-          {/* Drawer content */}
           <div className="relative w-80 max-w-[85vw] h-full bg-white shadow-2xl flex flex-col justify-between z-10 overflow-y-auto">
-            
-            {/* Top Brand & Close */}
             <div>
               <div className="flex items-center justify-between p-5 border-b border-stone-100">
                 <img src="/images/logo.png" alt="Soukday" className="h-7 w-auto object-contain" />
                 <button
                   type="button"
                   onClick={() => setIsSidebarMenuOpen(false)}
-                  className="p-1.5 rounded-full hover:bg-stone-100 text-stone-500 hover:text-stone-800 transition-colors"
+                  className="p-1.5 rounded-full hover:bg-stone-100 text-stone-500 hover:text-stone-800 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Delivery info summary inside drawer */}
               <div
                 onClick={() => {
                   setIsSidebarMenuOpen(false);
                   setIsAddressModalOpen(true);
                 }}
-                className="p-4 mx-4 mt-4 rounded-2xl bg-stone-50 border border-stone-200 cursor-pointer hover:bg-stone-100 transition-colors"
+                className="p-4 mx-4 mt-4 rounded-2xl bg-orange-50/60 border border-orange-200/60 cursor-pointer hover:bg-orange-50 transition-colors"
               >
-                <div className="flex items-center gap-2 text-xs font-bold text-[#108910] mb-1">
-                  <Zap className="w-3.5 h-3.5 fill-[#108910]" />
+                <div className="flex items-center gap-2 text-xs font-bold text-[#F68B62] mb-1">
+                  <Zap className="w-3.5 h-3.5 fill-[#F68B62]" />
                   <span>{deliveryWindowText}</span>
                 </div>
                 <div className="text-xs text-stone-600 truncate flex items-center justify-between">
@@ -571,7 +633,6 @@ export default function StoreDetail() {
                 </div>
               </div>
 
-              {/* Navigation links */}
               <div className="p-4 space-y-1 text-xs font-bold text-stone-800">
                 <Link
                   href="/"
@@ -643,24 +704,22 @@ export default function StoreDetail() {
               </div>
             </div>
 
-            {/* Bottom Footer Info */}
             <div className="p-5 border-t border-stone-100 text-[11px] text-stone-400 font-medium">
               © Soukday 2026. {isFrench ? 'Tous droits réservés.' : 'All rights reserved.'}
             </div>
-
           </div>
         </div>
       )}
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          MAIN STORE BODY (Two-Column Instacart Architecture from Image 1)
-          - Left: Sticky Store Brand, Navigation tabs, and Aisles list
-          - Right: Fluid Product Shelves & Aisle Carousels with "+ Ajouter"
+          MAIN STORE BODY (Two-Column Instacart Architecture)
+          - Left: Sticky Store Brand, Navigation tabs, and Clean Deduplicated Aisles
+          - Right: Multi-column responsive product grids (no single-item lines)
          ═══════════════════════════════════════════════════════════════════════ */}
       <div className="max-w-[1520px] mx-auto px-3 sm:px-5 lg:px-7 py-6 flex-1 w-full">
         <div className="flex gap-8 items-start">
           
-          {/* ─── LEFT SIDEBAR (Sticky, Instacart Image 1 style) ──────── */}
+          {/* ─── LEFT SIDEBAR (Sticky, Instacart Style) ──────────────── */}
           <aside className="w-60 shrink-0 hidden lg:block sticky top-20 space-y-6">
             
             {/* Store Brand Card */}
@@ -683,7 +742,7 @@ export default function StoreDetail() {
                 <button
                   type="button"
                   onClick={() => setIsStoreInfoModalOpen(true)}
-                  className="text-[11px] text-stone-500 font-semibold hover:text-stone-800 transition-colors text-left mt-1 flex items-center gap-1 cursor-pointer"
+                  className="text-[11px] text-stone-500 font-semibold hover:text-[#F68B62] transition-colors text-left mt-1 flex items-center gap-1 cursor-pointer"
                 >
                   <span>{isFrench ? 'Afficher politique de prix • Min. 25 $' : 'View pricing policy • Min $25'}</span>
                   <ChevronRight className="w-3 h-3 text-stone-400" />
@@ -698,7 +757,7 @@ export default function StoreDetail() {
                 onClick={() => {
                   setActiveTab('shop');
                   setInStoreSearchQuery('');
-                  setActiveAisle(null);
+                  setSelectedAisleSlug(null);
                 }}
                 className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   activeTab === 'shop'
@@ -724,24 +783,40 @@ export default function StoreDetail() {
               </button>
             </div>
 
-            {/* Parcourir les allées (Browse Aisles list) */}
+            {/* Parcourir les allées (Deduplicated Aisles list) */}
             <div className="pt-2 border-t border-stone-200">
               <h2 className="text-sm font-black text-stone-900 mb-3">
                 {isFrench ? 'Parcourir les allées' : 'Browse aisles'}
               </h2>
               <div className="space-y-0.5">
+                {/* Option for All Aisles */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedAisleSlug(null)}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                    selectedAisleSlug === null
+                      ? 'bg-orange-50 text-[#F68B62] font-bold'
+                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+                  }`}
+                >
+                  <span>{isFrench ? 'Tous les rayons' : 'All Aisles'}</span>
+                  <span className="text-[10px] text-stone-400">{products.length}</span>
+                </button>
+
+                {/* Individual distinct Aisles */}
                 {aisles.map((aisle) => (
                   <button
                     key={aisle.slug}
                     type="button"
-                    onClick={() => scrollToAisle(aisle.slug)}
-                    className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer truncate ${
-                      activeAisle === aisle.slug
-                        ? 'bg-stone-100 text-[#108910] font-bold'
+                    onClick={() => setSelectedAisleSlug(aisle.slug)}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                      selectedAisleSlug === aisle.slug
+                        ? 'bg-orange-50 text-[#F68B62] font-bold'
                         : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
                     }`}
                   >
-                    {aisle.name}
+                    <span className="truncate pr-2">{aisle.name}</span>
+                    <span className="text-[10px] text-stone-400 shrink-0">{aisle.products.length}</span>
                   </button>
                 ))}
               </div>
@@ -749,7 +824,7 @@ export default function StoreDetail() {
 
           </aside>
 
-          {/* ─── RIGHT FLUID CONTENT (Aisles & Product Rows) ─────────── */}
+          {/* ─── RIGHT FLUID CONTENT (Dense multi-column product grids) ── */}
           <main className="flex-1 min-w-0">
             
             {/* SEARCH RESULTS VIEW (when in-store search is used) */}
@@ -767,7 +842,7 @@ export default function StoreDetail() {
                   <button
                     type="button"
                     onClick={() => setInStoreSearchQuery('')}
-                    className="text-xs font-bold text-[#108910] hover:underline cursor-pointer"
+                    className="text-xs font-bold text-[#F68B62] hover:underline cursor-pointer"
                   >
                     {isFrench ? 'Effacer la recherche' : 'Clear search'}
                   </button>
@@ -786,21 +861,21 @@ export default function StoreDetail() {
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3.5 sm:gap-4">
                     {searchResults.map((product) => renderProductCard(product))}
                   </div>
                 )}
               </div>
             ) : (
-              /* REGULAR AISLES BROWSING (Matching Image 1) */
+              /* REGULAR AISLES BROWSING (Dense Multi-Column Grid layout) */
               <div className="space-y-10 sm:space-y-12">
                 {isLoadingProducts ? (
                   <div className="space-y-8">
                     {Array.from({ length: 3 }).map((_, i) => (
                       <div key={i} className="space-y-3">
                         <div className="h-6 bg-stone-100 rounded w-48 animate-pulse" />
-                        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
-                          {Array.from({ length: 5 }).map((_, j) => (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                          {Array.from({ length: 4 }).map((_, j) => (
                             <div key={j} className="h-64 bg-stone-100 rounded-2xl animate-pulse" />
                           ))}
                         </div>
@@ -808,57 +883,34 @@ export default function StoreDetail() {
                     ))}
                   </div>
                 ) : (
-                  aisles.map((aisle) => (
+                  displayedAisles.map((aisle) => (
                     <section key={aisle.slug} id={`aisle-${aisle.slug}`} className="scroll-mt-24">
                       
                       {/* Aisle Title Bar */}
-                      <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight">
-                          {aisle.name}
-                        </h2>
+                      <div className="flex items-center justify-between mb-4 pb-2 border-b border-stone-100">
+                        <div>
+                          <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight">
+                            {aisle.name}
+                          </h2>
+                          <span className="text-xs text-stone-400 font-medium">
+                            {aisle.products.length} {isFrench ? 'articles disponibles' : 'items available'}
+                          </span>
+                        </div>
 
-                        <div className="flex items-center gap-2">
+                        {selectedAisleSlug && (
                           <button
                             type="button"
-                            onClick={() => scrollToAisle(aisle.slug)}
-                            className="text-xs sm:text-sm font-bold text-stone-700 hover:text-stone-900 hover:underline flex items-center gap-1 cursor-pointer mr-1"
+                            onClick={() => setSelectedAisleSlug(null)}
+                            className="text-xs font-bold text-[#F68B62] hover:underline cursor-pointer"
                           >
-                            <span>{isFrench ? 'Afficher plus' : 'See more'}</span>
-                            <ChevronRight className="w-3.5 h-3.5" />
+                            {isFrench ? 'Voir tous les rayons' : 'View all aisles'}
                           </button>
-
-                          {/* Carousel scroll arrows */}
-                          <div className="hidden sm:flex items-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => scrollShelf(aisle.slug, 'left')}
-                              className="w-8 h-8 rounded-full border border-stone-200 hover:bg-stone-100 active:scale-95 text-stone-700 flex items-center justify-center transition-all cursor-pointer"
-                              aria-label="Previous"
-                            >
-                              <ChevronLeft className="w-4 h-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => scrollShelf(aisle.slug, 'right')}
-                              className="w-8 h-8 rounded-full border border-stone-200 hover:bg-stone-100 active:scale-95 text-stone-700 flex items-center justify-center transition-all cursor-pointer"
-                              aria-label="Next"
-                            >
-                              <ChevronRight className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
+                        )}
                       </div>
 
-                      {/* Horizontal Product Shelf (Carousel on Mobile & Desktop, Image 1 style) */}
-                      <div
-                        ref={(el) => (aisleScrollRefs.current[aisle.slug] = el)}
-                        className="flex items-stretch gap-3.5 sm:gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 -mx-3 px-3 sm:mx-0 sm:px-0"
-                      >
-                        {aisle.products.map((product) => (
-                          <div key={product.id} className="w-[170px] sm:w-[210px] shrink-0">
-                            {renderProductCard(product)}
-                          </div>
-                        ))}
+                      {/* Multi-column Responsive Product Grid (2 cols mobile, 3-4 cols desktop) */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-3.5 sm:gap-4">
+                        {aisle.products.map((product) => renderProductCard(product))}
                       </div>
 
                     </section>
@@ -902,7 +954,7 @@ export default function StoreDetail() {
               {/* Address */}
               <div className="flex items-start justify-between p-3.5 rounded-2xl bg-stone-50 border border-stone-200/80 gap-2">
                 <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[#108910] shrink-0 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-[#F68B62] shrink-0 mt-0.5" />
                   <div>
                     <div className="font-bold text-stone-900">{isFrench ? 'Adresse' : 'Address'}</div>
                     <div className="text-stone-600">{store?.address || 'Montréal, QC'}</div>
@@ -917,7 +969,7 @@ export default function StoreDetail() {
                   }}
                   className="shrink-0 px-2.5 py-1 rounded-lg bg-white border border-stone-200 text-[11px] font-bold text-stone-700 hover:bg-stone-100 transition-colors flex items-center gap-1 cursor-pointer"
                 >
-                  {copiedAddress ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                  {copiedAddress ? <Check className="w-3 h-3 text-[#F68B62]" /> : <Copy className="w-3 h-3" />}
                   <span>{copiedAddress ? (isFrench ? 'Copié' : 'Copied') : (isFrench ? 'Copier' : 'Copy')}</span>
                 </button>
               </div>
@@ -925,7 +977,7 @@ export default function StoreDetail() {
               {/* Delivery Window & Distance */}
               <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-1.5">
                 <div className="flex items-center gap-2 font-bold text-stone-900">
-                  <Zap className="w-4 h-4 text-[#108910]" />
+                  <Zap className="w-4 h-4 text-[#F68B62]" />
                   <span>{isFrench ? 'Détails de livraison' : 'Delivery Details'}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-1 text-[11px] pt-1">
@@ -936,16 +988,16 @@ export default function StoreDetail() {
                   <div className="text-stone-500">{isFrench ? 'Commande minimum :' : 'Minimum order:'}</div>
                   <div className="font-bold text-right text-stone-800">${store?.minOrder || 25}.00</div>
                   <div className="text-stone-500">{isFrench ? 'Livraison gratuite :' : 'Free delivery:'}</div>
-                  <div className="font-bold text-right text-[#108910]">Dès 150.00 $</div>
+                  <div className="font-bold text-right text-[#F68B62] font-black">Dès 150.00 $</div>
                 </div>
               </div>
 
               {/* Halal Guarantee */}
               {isButcher && (
-                <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200/80 flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-                  <div className="text-emerald-900 text-[11px] leading-relaxed">
-                    <span className="font-bold">{isFrench ? 'Garantie 100% Halal :' : '100% Halal Guarantee:'} </span>
+                <div className="p-3.5 rounded-2xl bg-orange-50/60 border border-orange-200/80 flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-[#F68B62] shrink-0 mt-0.5" />
+                  <div className="text-stone-800 text-[11px] leading-relaxed">
+                    <span className="font-bold text-[#F68B62]">{isFrench ? 'Garantie 100% Halal :' : '100% Halal Guarantee:'} </span>
                     {isFrench
                       ? 'Toutes les viandes sont certifiées halal selon le rite strict et inspectées quotidiennement.'
                       : 'All meats are strictly certified halal and freshly inspected.'}
@@ -957,7 +1009,7 @@ export default function StoreDetail() {
             <button
               type="button"
               onClick={() => setIsStoreInfoModalOpen(false)}
-              className="mt-6 w-full py-3 rounded-full bg-[#108910] text-white font-bold text-xs hover:bg-[#0c740c] transition-colors cursor-pointer shadow-sm"
+              className="mt-6 w-full py-3 rounded-full bg-[#F68B62] text-white font-bold text-xs hover:bg-[#e07750] transition-colors cursor-pointer shadow-md shadow-[#F68B62]/20"
             >
               {isFrench ? 'Fermer' : 'Close'}
             </button>
@@ -969,7 +1021,7 @@ export default function StoreDetail() {
   );
 
   /**
-   * Helper to render Instacart Product Card (matching Image 1)
+   * Helper to render Product Card (100% Brand Orange #F68B62)
    */
   function renderProductCard(product) {
     const qty = getProductQty(product.id);
@@ -979,9 +1031,9 @@ export default function StoreDetail() {
     return (
       <div
         key={product.id}
-        className="group relative bg-white rounded-2xl p-3 border border-stone-200/90 hover:border-stone-300 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full"
+        className="group relative bg-white rounded-2xl p-3 border border-stone-200/90 hover:border-[#F68B62]/50 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full"
       >
-        {/* Top Image + Floating Green "+ Ajouter" button */}
+        {/* Top Image + Floating Orange "+ Ajouter" button */}
         <div className="relative w-full h-36 sm:h-40 rounded-xl overflow-hidden bg-white mb-2.5 flex items-center justify-center">
           <img
             src={product.image || '/images/default-product.png'}
@@ -993,19 +1045,19 @@ export default function StoreDetail() {
             }}
           />
 
-          {/* Instacart Floating Green "+ Ajouter" button or Stepper */}
+          {/* Floating Orange "+ Ajouter" button or Stepper */}
           <div className="absolute top-2 right-2">
             {qty === 0 ? (
               <button
                 type="button"
                 onClick={() => addToCart(product)}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#108910] hover:bg-[#0c740c] active:scale-90 text-white text-xs font-bold shadow-md shadow-[#108910]/30 transition-all cursor-pointer"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#F68B62] hover:bg-[#e07750] active:scale-90 text-white text-xs font-bold shadow-md shadow-[#F68B62]/30 transition-all cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>{isFrench ? 'Ajouter' : 'Add'}</span>
               </button>
             ) : (
-              <div className="inline-flex items-center bg-[#108910] text-white rounded-full p-0.5 shadow-md">
+              <div className="inline-flex items-center bg-[#F68B62] text-white rounded-full p-0.5 shadow-md">
                 <button
                   type="button"
                   onClick={() => updateQuantity(product.id, qty - 1)}
@@ -1034,7 +1086,7 @@ export default function StoreDetail() {
         {/* Product Details */}
         <div className="flex-1 flex flex-col justify-between">
           <div>
-            {/* Price (Instacart style with superscript cents: e.g. 12^49 $) */}
+            {/* Price (Instacart style with superscript cents: e.g. 15^27 $) */}
             <div className="flex items-baseline gap-1.5 leading-none">
               <span className="text-lg sm:text-xl font-black text-stone-900 tracking-tight">
                 {wholePrice}
@@ -1056,7 +1108,7 @@ export default function StoreDetail() {
             )}
 
             {/* Title & Unit */}
-            <h3 className="text-xs sm:text-sm font-semibold text-stone-900 line-clamp-2 mt-1.5 group-hover:text-[#108910] transition-colors leading-snug">
+            <h3 className="text-xs sm:text-sm font-semibold text-stone-900 line-clamp-2 mt-1.5 group-hover:text-[#F68B62] transition-colors leading-snug">
               {product.name}
             </h3>
             <p className="text-[11px] text-stone-500 font-medium mt-0.5">
@@ -1064,11 +1116,11 @@ export default function StoreDetail() {
             </p>
           </div>
 
-          {/* Stock status (Instacart green triple bar icon style) */}
-          <div className="mt-2.5 pt-2 border-t border-stone-100 flex items-center gap-1.5 text-[11px] font-bold text-[#108910]">
+          {/* Stock status (Soukday Orange bar style) */}
+          <div className="mt-2.5 pt-2 border-t border-stone-100 flex items-center gap-1.5 text-[11px] font-bold text-[#F68B62]">
             <span className="flex flex-col gap-0.5">
-              <span className="w-2.5 h-0.5 bg-[#108910] rounded-full"></span>
-              <span className="w-2 h-0.5 bg-[#108910] rounded-full"></span>
+              <span className="w-2.5 h-0.5 bg-[#F68B62] rounded-full"></span>
+              <span className="w-2 h-0.5 bg-[#F68B62] rounded-full"></span>
             </span>
             <span>{isFrench ? 'Plusieurs en stock' : 'Many in stock'}</span>
           </div>
