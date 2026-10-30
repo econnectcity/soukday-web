@@ -79,6 +79,8 @@ const htaccessContent = `<IfModule mod_rewrite.c>
   RewriteRule ^product/?$ /products.html [L]
   RewriteRule ^categories/(.+)/?$ /categories/[...slug].html [L]
   RewriteRule ^categories/?$ /404.html [L]
+  RewriteRule ^category/(.+)/?$ /category/[...slug].html [L]
+  RewriteRule ^category/?$ /404.html [L]
   RewriteRule ^order-detail/([^/]+)/?$ /order-detail/[orderid].html [L]
   RewriteRule ^order-detail/?$ /order-detail.html [L]
   RewriteRule ^profile/orderhistory/([^/]+)/?$ /profile/orderhistory/[orderid].html [L]

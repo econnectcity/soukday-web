@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import { useRouter } from 'next/router';
 import { useCart } from '@/context/SoukdayCartContext';
 import { Category } from '@/types';
 import { useTranslation } from '@/utils/translation';
@@ -13,6 +14,7 @@ interface CategorySliderProps {
 }
 
 export default function CategorySlider({ categories = [] }: CategorySliderProps) {
+  const router = useRouter();
   const { selectedCategory, setSelectedCategory } = useCart();
   const { isFrench } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -26,11 +28,13 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
     }
   };
 
-  const handleSelect = (slug: string) => {
-    if (selectedCategory === slug) {
+  const handleCategoryClick = (catSlug: string | null) => {
+    if (!catSlug) {
       setSelectedCategory(null);
+      router.push('/products');
     } else {
-      setSelectedCategory(slug);
+      setSelectedCategory(catSlug);
+      router.push(`/categories/${catSlug}`);
     }
   };
 
@@ -77,10 +81,10 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
           ref={scrollContainerRef}
           className="flex items-center gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
-          {/* 'All' button - styled with identical height & layout as category cards */}
+          {/* 'All' button - Navigates to all products */}
           <button
             type="button"
-            onClick={() => setSelectedCategory(null)}
+            onClick={() => handleCategoryClick(null)}
             className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
               selectedCategory === null
                 ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/30'
@@ -105,13 +109,14 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
 
           {/* Categories List */}
           {displayCategories.map((cat) => {
-            const isSelected = selectedCategory === cat.slug;
+            const catSlug = cat.slug || String(cat.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            const isSelected = selectedCategory === catSlug;
             const categoryTitle = getTranslatedCategoryName(cat, isFrench);
             return (
               <button
-                key={cat.id}
+                key={cat.id || catSlug}
                 type="button"
-                onClick={() => handleSelect(cat.slug)}
+                onClick={() => handleCategoryClick(catSlug)}
                 className={`category-chip group shrink-0 flex items-center gap-3 p-1.5 pr-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
                   isSelected
                     ? 'bg-[#F68B62] text-white border-[#F68B62] shadow-md shadow-[#F68B62]/30'
@@ -128,9 +133,11 @@ export default function CategorySlider({ categories = [] }: CategorySliderProps)
                     }}
                     className="w-full h-full object-cover group-hover:scale-115 transition-transform duration-500 ease-out"
                   />
-                  <span className="absolute bottom-0.5 right-0.5 text-xs drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
-                    {cat.icon}
-                  </span>
+                  {cat.icon && (
+                    <span className="absolute bottom-0.5 right-0.5 text-xs drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
+                      {cat.icon}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <div className={`text-xs font-bold leading-tight transition-colors ${isSelected ? 'text-white' : 'text-black'}`}>
