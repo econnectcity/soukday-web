@@ -33,6 +33,7 @@ import {
   Phone,
   Plus,
   Minus,
+  Trash2,
   Sparkles,
   LayoutGrid
 } from 'lucide-react';
@@ -1359,8 +1360,14 @@ export default function StoreDetail() {
                     updateQuantity(product.id, qty - 1);
                   }}
                   className="w-6 h-6 rounded-full hover:bg-black/20 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
+                  title={qty === 1 ? (isFrench ? 'Supprimer' : 'Delete') : (isFrench ? 'Diminuer' : 'Decrease')}
+                  aria-label={qty === 1 ? (isFrench ? 'Supprimer' : 'Delete') : (isFrench ? 'Diminuer' : 'Decrease')}
                 >
-                  <Minus className="w-3 h-3 text-white" />
+                  {qty === 1 ? (
+                    <Trash2 className="w-3.5 h-3.5 text-white" />
+                  ) : (
+                    <Minus className="w-3 h-3 text-white" />
+                  )}
                 </button>
                 <span className="text-xs font-black px-2">{qty}</span>
                 <button
@@ -1371,6 +1378,8 @@ export default function StoreDetail() {
                     updateQuantity(product.id, qty + 1);
                   }}
                   className="w-6 h-6 rounded-full hover:bg-black/20 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
+                  title={isFrench ? 'Ajouter un de plus' : 'Add one more'}
+                  aria-label={isFrench ? 'Ajouter un de plus' : 'Add one more'}
                 >
                   <Plus className="w-3 h-3 text-white" />
                 </button>

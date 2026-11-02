@@ -11,7 +11,8 @@ import { useTranslation } from '@/utils/translation';
 import { getTranslatedCategoryName } from '@/utils/categoryTranslation';
 import { 
   Plus, 
-  Minus, 
+  Minus,
+  Trash2,
   ShieldCheck, 
   ChevronLeft,
   ChevronRight,
@@ -286,7 +287,11 @@ export default function SoukdayGrocerySection({
                               }}
                               className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black/15 hover:bg-black/25 active:scale-90 flex items-center justify-center text-white transition-all cursor-pointer"
                             >
+                              {qty === 1 ? (
+                              <Trash2 className="w-3 h-3" />
+                            ) : (
                               <Minus className="w-3 h-3" />
+                            )}
                             </button>
                             <span className="text-[11px] sm:text-xs font-black px-1 sm:px-1.5 min-w-[1.1rem] sm:min-w-[1.25rem] text-center">{qty}</span>
                             <button
