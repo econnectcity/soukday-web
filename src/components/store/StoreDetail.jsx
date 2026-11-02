@@ -9,7 +9,8 @@ import { Store as StoreType, Product } from '@/types';
 import * as api from '@/api/apiRoutes';
 import { fetchLiveSellers } from '@/services/soukdayApi';
 import { useTranslation } from '@/utils/translation';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSelectedLanguage } from '@/redux/slices/languageSlice';
 import {
   Menu,
   Search,
@@ -34,6 +35,21 @@ import {
   Sparkles,
   LayoutGrid
 } from 'lucide-react';
+
+function CanadaFlag({ className = "w-4 h-3" }) {
+  return (
+    <svg 
+      viewBox="0 0 640 480" 
+      className={className} 
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path fill="#d80621" d="M0 0h640v480H0z"/>
+      <path fill="#ffffff" d="M160 0h320v480H160z"/>
+      <path fill="#d80621" d="m320 72.8 13.6 42.6 30.6-20.9-10 40 44-7.4-23.7 34.3 43.1 19.3-43 14 18.3 38.6-35.3-7.5 4.3 39-31.9-25.7-4 75.8h-12l-4-75.8-31.9 25.7 4.3-39-35.3 7.5 18.3-38.6-43-14 43.1-19.3-23.7-34.3 44 7.4-10-40 30.6 20.9z"/>
+    </svg>
+  );
+}
 
 /**
  * Extract authentic category information directly from backend product data.
@@ -84,7 +100,9 @@ export default function StoreDetail() {
     selectedAddress,
     setIsAddressModalOpen
   } = useCart();
-  const { isFrench } = useTranslation();
+  const dispatch = useDispatch();
+  const languageState = useSelector((state) => state.Language);
+  const { currentCode, isFrench } = useTranslation();
   const cityState = useSelector((state) => state.City?.city);
 
   // Backend logo connection from Redux settings
@@ -165,6 +183,26 @@ export default function StoreDetail() {
   const [isSidebarMenuOpen, setIsSidebarMenuOpen] = useState(false);
   const [isStoreInfoModalOpen, setIsStoreInfoModalOpen] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
+
+  // Lock body scroll and close drawer on Escape key when slide-out menu is active
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsSidebarMenuOpen(false);
+        setIsStoreInfoModalOpen(false);
+      }
+    };
+    if (isSidebarMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSidebarMenuOpen]);
 
   // Active navigation tab on the left sidebar
   const [activeTab, setActiveTab] = useState('shop'); // 'shop' | 'buy_again'
@@ -534,7 +572,7 @@ export default function StoreDetail() {
             </div>
           </div>
 
-          {/* RIGHT: 5 (Delivery Time & Address) + 6 (Brand Orange Cart Button with $150 limit) */}
+          {/* RIGHT: 5 (Delivery Time & Address) + Language Switcher + 6 (Brand Orange Cart Button with $150 limit) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
             {/* 5. Delivery time & customer address (Accurate with store address to customer address) */}
@@ -555,6 +593,34 @@ export default function StoreDetail() {
                 </div>
               </div>
             </div>
+
+            {/* Language Switcher (Matches homepage - placed right after delivery button) */}
+            <button 
+              type="button" 
+              onClick={() => {
+                const available = languageState?.availableLanguages || [];
+                const activeCode = (currentCode || 'fr').toLowerCase();
+                let nextLang = available.find(l => (l.code || '').toLowerCase() !== activeCode);
+                if (!nextLang) {
+                  nextLang = activeCode === 'fr' 
+                    ? { id: 3, name: "English", code: "en", type: "LTR", display_name: "English" }
+                    : { id: 5, name: "Français", code: "fr", type: "LTR", display_name: "Français (CA)" };
+                }
+                dispatch(setSelectedLanguage({ data: nextLang }));
+              }}
+              title={isFrench ? "Passer en anglais / Switch to English" : "Passer en français / Switch to French"}
+              aria-label={isFrench ? "Passer en anglais" : "Switch to French"}
+              className="group relative flex items-center justify-center w-10 sm:w-11 h-10 sm:h-11 rounded-full border border-stone-200/80 bg-white hover:bg-stone-50 hover:border-stone-400 text-stone-900 shadow-2xs hover:shadow-xs hover:-translate-y-0.5 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
+            >
+              <div className="flex items-center justify-center gap-1 select-none">
+                <span className="w-4 h-3 rounded-[2px] overflow-hidden border border-stone-200/60 shadow-2xs shrink-0 flex items-center justify-center">
+                  <CanadaFlag className="w-full h-full object-cover" />
+                </span>
+                <span className="text-[11px] sm:text-xs font-black tracking-tight text-stone-800 group-hover:text-[#F68B62] transition-colors">
+                  {isFrench ? "EN" : "FR"}
+                </span>
+              </div>
+            </button>
 
             {/* 6. Cart Button with Free Delivery indicator ($150 limit, Brand Orange #F68B62) */}
             <button
@@ -597,128 +663,146 @@ export default function StoreDetail() {
 
       {/* ═══════════════════════════════════════════════════════════════════════
           1. SLIDE-OUT MENU DRAWER (Triggered by 3-bars hamburger button)
+             - Smooth sliding animation:
+               * Open: slides in smoothly from left to right (translate-x-0)
+               * Close: slides out smoothly from right to left (-translate-x-full)
+               * Backdrop overlay fades in/out with ease-in-out transition
          ═══════════════════════════════════════════════════════════════════════ */}
-      {isSidebarMenuOpen && (
-        <div className="fixed inset-0 z-50 flex animate-in fade-in duration-200">
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
-            onClick={() => setIsSidebarMenuOpen(false)}
-          />
+      <div
+        className={`fixed inset-0 z-50 transition-all duration-300 ease-in-out ${
+          isSidebarMenuOpen
+            ? 'visible pointer-events-auto'
+            : 'invisible pointer-events-none delay-300'
+        }`}
+        aria-hidden={!isSidebarMenuOpen}
+      >
+        {/* Backdrop overlay */}
+        <div
+          className={`fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity duration-300 ease-in-out ${
+            isSidebarMenuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={() => setIsSidebarMenuOpen(false)}
+        />
 
-          <div className="relative w-80 max-w-[85vw] h-full bg-white shadow-2xl flex flex-col justify-between z-10 overflow-y-auto">
-            <div>
-              <div className="flex items-center justify-between p-5 border-b border-stone-100">
-                <img
-                  src={headerLogo}
-                  alt="Soukday"
-                  className="h-7 w-auto object-contain"
-                  onError={(e) => {
-                    e.currentTarget.src = '/images/logo.png';
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setIsSidebarMenuOpen(false)}
-                  className="p-1.5 rounded-full hover:bg-stone-100 text-stone-500 hover:text-stone-800 transition-colors cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div
-                onClick={() => {
-                  setIsSidebarMenuOpen(false);
-                  setIsAddressModalOpen(true);
+        {/* Drawer Panel: slides from left (-translate-x-full) to right (translate-x-0) */}
+        <div
+          className={`fixed top-0 bottom-0 left-0 w-80 max-w-[85vw] h-full bg-white shadow-2xl flex flex-col justify-between z-10 overflow-y-auto transition-transform duration-300 ease-in-out transform ${
+            isSidebarMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div>
+            <div className="flex items-center justify-between p-5 border-b border-stone-100">
+              <img
+                src={headerLogo}
+                alt="Soukday"
+                className="h-7 w-auto object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = '/images/logo.png';
                 }}
-                className="p-4 mx-4 mt-4 rounded-2xl bg-orange-50/60 border border-orange-200/60 cursor-pointer hover:bg-orange-50 transition-colors"
+              />
+              <button
+                type="button"
+                onClick={() => setIsSidebarMenuOpen(false)}
+                className="p-1.5 rounded-full hover:bg-stone-100 text-stone-500 hover:text-stone-800 transition-colors cursor-pointer"
+                aria-label={isFrench ? "Fermer le menu" : "Close menu"}
               >
-                <div className="flex items-center gap-2 text-xs font-bold text-[#F68B62] mb-1">
-                  <Zap className="w-3.5 h-3.5 fill-[#F68B62]" />
-                  <span>{deliveryWindowText}</span>
-                </div>
-                <div className="text-xs text-stone-600 truncate flex items-center justify-between">
-                  <span className="truncate">{activeAddressDisplay}</span>
-                  <span className="text-[11px] font-bold text-[#F68B62] shrink-0 ml-1">{isFrench ? 'Changer' : 'Change'}</span>
-                </div>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div
+              onClick={() => {
+                setIsSidebarMenuOpen(false);
+                setIsAddressModalOpen(true);
+              }}
+              className="p-4 mx-4 mt-4 rounded-2xl bg-orange-50/60 border border-orange-200/60 cursor-pointer hover:bg-orange-50 transition-colors"
+            >
+              <div className="flex items-center gap-2 text-xs font-bold text-[#F68B62] mb-1">
+                <Zap className="w-3.5 h-3.5 fill-[#F68B62]" />
+                <span>{deliveryWindowText}</span>
               </div>
-
-              <div className="p-4 space-y-1 text-xs font-bold text-stone-800">
-                <Link
-                  href="/"
-                  onClick={() => setIsSidebarMenuOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
-                >
-                  <StoreIcon className="w-4 h-4 text-stone-500" />
-                  <span>{isFrench ? 'Accueil' : 'Home'}</span>
-                </Link>
-
-                <Link
-                  href="/sellers"
-                  onClick={() => setIsSidebarMenuOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
-                >
-                  <StoreIcon className="w-4 h-4 text-stone-500" />
-                  <span>{isFrench ? 'Tous les commerces & boucheries' : 'All Stores & Butchers'}</span>
-                </Link>
-
-                <Link
-                  href="/epicerie-soukday"
-                  onClick={() => setIsSidebarMenuOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
-                >
-                  <Sparkles className="w-4 h-4 text-[#F68B62]" />
-                  <span>{isFrench ? 'Toute l’épicerie Soukday' : 'All Soukday Grocery'}</span>
-                </Link>
-
-                <Link
-                  href="/categories/all"
-                  onClick={() => setIsSidebarMenuOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
-                >
-                  <ShoppingBag className="w-4 h-4 text-stone-500" />
-                  <span>{isFrench ? 'Tous les rayons' : 'All Aisles'}</span>
-                </Link>
-
-                <div className="pt-3 pb-2 px-3.5 text-[10px] font-extrabold text-stone-400 uppercase tracking-wider">
-                  {isFrench ? 'Aide & Espace pro' : 'Help & Professional'}
-                </div>
-
-                <Link
-                  href="/faqs"
-                  onClick={() => setIsSidebarMenuOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
-                >
-                  <HelpCircle className="w-4 h-4 text-stone-500" />
-                  <span>{isFrench ? 'Questions fréquentes (FAQs)' : 'FAQs'}</span>
-                </Link>
-
-                <Link
-                  href="/contact-us"
-                  onClick={() => setIsSidebarMenuOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
-                >
-                  <Phone className="w-4 h-4 text-stone-500" />
-                  <span>{isFrench ? 'Nous contacter' : 'Contact Us'}</span>
-                </Link>
-
-                <a
-                  href="https://admin.soukday.ca/seller/login"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors"
-                >
-                  <ShieldCheck className="w-4 h-4 text-stone-400" />
-                  <span>{isFrench ? 'Portail Vendeur' : 'Seller Portal'}</span>
-                </a>
+              <div className="text-xs text-stone-600 truncate flex items-center justify-between">
+                <span className="truncate">{activeAddressDisplay}</span>
+                <span className="text-[11px] font-bold text-[#F68B62] shrink-0 ml-1">{isFrench ? 'Changer' : 'Change'}</span>
               </div>
             </div>
 
-            <div className="p-5 border-t border-stone-100 text-[11px] text-stone-400 font-medium">
-              © Soukday 2026. {isFrench ? 'Tous droits réservés.' : 'All rights reserved.'}
+            <div className="p-4 space-y-1 text-xs font-bold text-stone-800">
+              <Link
+                href="/"
+                onClick={() => setIsSidebarMenuOpen(false)}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
+              >
+                <StoreIcon className="w-4 h-4 text-stone-500" />
+                <span>{isFrench ? 'Accueil' : 'Home'}</span>
+              </Link>
+
+              <Link
+                href="/sellers"
+                onClick={() => setIsSidebarMenuOpen(false)}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
+              >
+                <StoreIcon className="w-4 h-4 text-stone-500" />
+                <span>{isFrench ? 'Tous les commerces & boucheries' : 'All Stores & Butchers'}</span>
+              </Link>
+
+              <Link
+                href="/epicerie-soukday"
+                onClick={() => setIsSidebarMenuOpen(false)}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
+              >
+                <Sparkles className="w-4 h-4 text-[#F68B62]" />
+                <span>{isFrench ? 'Toute l’épicerie Soukday' : 'All Soukday Grocery'}</span>
+              </Link>
+
+              <Link
+                href="/categories/all"
+                onClick={() => setIsSidebarMenuOpen(false)}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
+              >
+                <ShoppingBag className="w-4 h-4 text-stone-500" />
+                <span>{isFrench ? 'Tous les rayons' : 'All Aisles'}</span>
+              </Link>
+
+              <div className="pt-3 pb-2 px-3.5 text-[10px] font-extrabold text-stone-400 uppercase tracking-wider">
+                {isFrench ? 'Aide & Espace pro' : 'Help & Professional'}
+              </div>
+
+              <Link
+                href="/faqs"
+                onClick={() => setIsSidebarMenuOpen(false)}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
+              >
+                <HelpCircle className="w-4 h-4 text-stone-500" />
+                <span>{isFrench ? 'Questions fréquentes (FAQs)' : 'FAQs'}</span>
+              </Link>
+
+              <Link
+                href="/contact-us"
+                onClick={() => setIsSidebarMenuOpen(false)}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
+              >
+                <Phone className="w-4 h-4 text-stone-500" />
+                <span>{isFrench ? 'Nous contacter' : 'Contact Us'}</span>
+              </Link>
+
+              <a
+                href="https://admin.soukday.ca/seller/login"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors"
+              >
+                <ShieldCheck className="w-4 h-4 text-stone-400" />
+                <span>{isFrench ? 'Portail Vendeur' : 'Seller Portal'}</span>
+              </a>
             </div>
           </div>
+
+          <div className="p-5 border-t border-stone-100 text-[11px] text-stone-400 font-medium">
+            © Soukday 2026. {isFrench ? 'Tous droits réservés.' : 'All rights reserved.'}
+          </div>
         </div>
-      )}
+      </div>
 
       {/* ═══════════════════════════════════════════════════════════════════════
           MAIN STORE BODY (Two-Column Instacart Architecture)
