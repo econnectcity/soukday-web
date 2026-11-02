@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { LocalizedLink as Link } from '@/utils/localizedNav';
 import { useCart } from '@/context/SoukdayCartContext';
@@ -1022,36 +1022,23 @@ export default function StoreDetail() {
                   </div>
                 ) : (
                   displayedAisles.map((aisle) => (
-                    <section key={aisle.slug} id={`aisle-${aisle.slug}`} className="scroll-mt-24">
-                      
-                      {/* Aisle Title Bar */}
-                      <div className="flex items-center justify-between mb-4 pb-2 border-b border-stone-100">
-                        <div>
-                          <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight">
-                            {aisle.name}
-                          </h2>
-                          <span className="text-xs text-stone-400 font-medium">
-                            {aisle.products.length} {isFrench ? 'articles disponibles' : 'items available'}
-                          </span>
-                        </div>
-
-                        {selectedAisleSlug && (
-                          <button
-                            type="button"
-                            onClick={() => setSelectedAisleSlug(null)}
-                            className="text-xs font-bold text-[#F68B62] hover:underline cursor-pointer"
-                          >
-                            {isFrench ? 'Voir tous les rayons' : 'View all aisles'}
-                          </button>
-                        )}
-                      </div>
-
-                      {/* 5-Column Responsive Product Grid (5 items per line on desktop) */}
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
-                        {aisle.products.map((product) => renderProductCard(product))}
-                      </div>
-
-                    </section>
+                    <AisleShelfRow
+                      key={aisle.slug}
+                      aisle={aisle}
+                      isFrench={isFrench}
+                      isSingleAisleView={Boolean(selectedAisleSlug)}
+                      onSelectAisle={(slug) => {
+                        setSelectedAisleSlug(slug);
+                        setInStoreSearchQuery('');
+                        setActiveTab('shop');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      onClearAisle={() => {
+                        setSelectedAisleSlug(null);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      renderProductCard={renderProductCard}
+                    />
                   ))
                 )}
               </div>
@@ -1342,4 +1329,146 @@ export default function StoreDetail() {
       </div>
     );
   }
+}
+
+/**
+ * Individual Aisle Row Component with 5-Product Carousel + Show All Button
+ * Matches Costco/Instacart layout:
+ * - 5 products visible across desktop line
+ * - Left/Right arrows to slide to next 5 products
+ * - "Afficher plus ›" / "Show all ›" button to view all products in grid
+ */
+function AisleShelfRow({
+  aisle,
+  isFrench,
+  isSingleAisleView,
+  onSelectAisle,
+  onClearAisle,
+  renderProductCard,
+}) {
+  const rowRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = useCallback(() => {
+    if (rowRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = rowRef.current;
+      setCanScrollLeft(scrollLeft > 6);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 6);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkScroll();
+    const el = rowRef.current;
+    if (el) {
+      el.addEventListener('scroll', checkScroll, { passive: true });
+      window.addEventListener('resize', checkScroll);
+      return () => {
+        el.removeEventListener('scroll', checkScroll);
+        window.removeEventListener('resize', checkScroll);
+      };
+    }
+  }, [checkScroll, aisle.products]);
+
+  const handleScroll = (direction) => {
+    if (rowRef.current) {
+      const clientWidth = rowRef.current.clientWidth;
+      // Scroll by 1 viewport width (5 products)
+      const offset = direction === 'left' ? -clientWidth : clientWidth;
+      rowRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <section id={`aisle-${aisle.slug}`} className="scroll-mt-24">
+      {/* Aisle Title Bar */}
+      <div className="flex items-center justify-between mb-4 pb-2 border-b border-stone-100">
+        <div className="flex items-baseline gap-2">
+          <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight">
+            {aisle.name}
+          </h2>
+          <span className="text-xs text-stone-400 font-medium">
+            ({aisle.products.length})
+          </span>
+        </div>
+
+        {/* Right Actions: Show all / Afficher plus + Left/Right Carousel Arrows */}
+        <div className="flex items-center gap-3">
+          {isSingleAisleView ? (
+            <button
+              type="button"
+              onClick={onClearAisle}
+              className="text-xs font-bold text-[#F68B62] hover:underline cursor-pointer"
+            >
+              {isFrench ? '← Voir tous les rayons' : '← View all aisles'}
+            </button>
+          ) : (
+            <>
+              {/* Show All / Afficher plus button (Matches user screenshot: "Show all ›") */}
+              <button
+                type="button"
+                onClick={() => onSelectAisle(aisle.slug)}
+                className="text-xs sm:text-sm font-bold text-stone-900 hover:text-[#F68B62] transition-colors flex items-center gap-1 cursor-pointer select-none"
+              >
+                <span>{isFrench ? 'Afficher plus' : 'Show all'}</span>
+                <span className="text-sm sm:text-base leading-none">›</span>
+              </button>
+
+              {/* Circular Carousel Navigation Arrows (Left/Right) */}
+              <div className="flex items-center gap-1.5 ml-1">
+                <button
+                  type="button"
+                  onClick={() => handleScroll('left')}
+                  disabled={!canScrollLeft}
+                  className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
+                    canScrollLeft
+                      ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
+                      : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
+                  }`}
+                  aria-label={isFrench ? 'Précédent' : 'Previous'}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleScroll('right')}
+                  disabled={!canScrollRight}
+                  className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
+                    canScrollRight
+                      ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
+                      : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
+                  }`}
+                  aria-label={isFrench ? 'Suivant' : 'Next'}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Product Display: Grid if single category view, 5-per-line Carousel if all categories view */}
+      {isSingleAisleView ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
+          {aisle.products.map((product) => renderProductCard(product))}
+        </div>
+      ) : (
+        <div
+          ref={rowRef}
+          className="flex gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-3 pt-0.5 -mx-1 px-1"
+        >
+          {aisle.products.map((product) => (
+            <div
+              key={product.id}
+              className="shrink-0 w-[calc(50%-6px)] sm:w-[calc(33.333%-10px)] md:w-[calc(33.333%-10px)] lg:w-[calc(25%-11px)] xl:w-[calc(20%-11.5px)] 2xl:w-[calc(20%-11.5px)] flex flex-col"
+            >
+              {renderProductCard(product)}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
