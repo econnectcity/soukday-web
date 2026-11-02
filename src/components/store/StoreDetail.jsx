@@ -1065,29 +1065,6 @@ export default function StoreDetail() {
             ) : (
               /* 3. REGULAR AISLES BROWSING (Instacart Fluid Shelf) */
               <div className="space-y-5 sm:space-y-6">
-                {/* Active Aisle Banner when a single category is filtered */}
-                {selectedAisleSlug && displayedAisles.length > 0 && (
-                  <div className="p-3.5 sm:p-4 rounded-2xl bg-orange-50/80 border border-orange-200/90 flex flex-wrap items-center justify-between gap-3 shadow-xs">
-                    <div className="flex items-center gap-2.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#F68B62] animate-pulse"></span>
-                      <span className="text-xs font-semibold text-stone-600">{isFrench ? 'Rayon sélectionné :' : 'Selected aisle:'}</span>
-                      <span className="text-sm sm:text-base font-black text-stone-900">{displayedAisles[0].name}</span>
-                      <span className="text-xs font-bold text-[#F68B62] bg-white px-2 py-0.5 rounded-full border border-orange-200">
-                        {displayedAisles[0].products.length} {isFrench ? 'articles' : 'items'}
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedAisleSlug(null);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="px-3.5 py-1.5 rounded-full bg-white hover:bg-stone-50 border border-stone-200 text-xs font-bold text-stone-700 hover:text-[#F68B62] transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
-                    >
-                      <span>{isFrench ? '← Voir tous les rayons' : '← View all aisles'}</span>
-                    </button>
-                  </div>
-                )}
                 {isLoadingProducts ? (
                   <div className="space-y-8">
                     {Array.from({ length: 3 }).map((_, i) => (
@@ -1123,25 +1100,44 @@ export default function StoreDetail() {
                     </Link>
                   </div>
                 ) : (
-                  displayedAisles.map((aisle) => (
-                    <AisleShelfRow
-                      key={aisle.slug}
-                      aisle={aisle}
-                      isFrench={isFrench}
-                      isSingleAisleView={Boolean(selectedAisleSlug)}
-                      onSelectAisle={(slug) => {
-                        setSelectedAisleSlug(slug);
-                        setInStoreSearchQuery('');
-                        setActiveTab('shop');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      onClearAisle={() => {
-                        setSelectedAisleSlug(null);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      renderProductCard={renderProductCard}
-                    />
-                  ))
+                  <>
+                    {displayedAisles.map((aisle) => (
+                      <AisleShelfRow
+                        key={aisle.slug}
+                        aisle={aisle}
+                        isFrench={isFrench}
+                        isSingleAisleView={Boolean(selectedAisleSlug)}
+                        onSelectAisle={(slug) => {
+                          setSelectedAisleSlug(slug);
+                          setInStoreSearchQuery('');
+                          setActiveTab('shop');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        onClearAisle={() => {
+                          setSelectedAisleSlug(null);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        renderProductCard={renderProductCard}
+                      />
+                    ))}
+
+                    {/* Bottom "Voir tous les rayons" Orange button with white text when a single category is viewed */}
+                    {selectedAisleSlug && (
+                      <div className="pt-8 pb-4 flex justify-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedAisleSlug(null);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F68B62] hover:bg-[#e07750] text-white text-xs sm:text-sm font-bold shadow-md shadow-[#F68B62]/25 active:scale-95 transition-all cursor-pointer"
+                        >
+                          <span>←</span>
+                          <span>{isFrench ? 'Voir tous les rayons' : 'View all aisles'}</span>
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
