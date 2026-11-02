@@ -732,13 +732,13 @@ export default function StoreDetail() {
           {/* ─── LEFT SIDEBAR (100% Fixed, Independent Scroll) ──────────────── */}
           <aside className="w-60 shrink-0 hidden lg:flex flex-col sticky top-[68px] h-[calc(100vh-68px)] overflow-y-auto overscroll-contain custom-sidebar-scroll py-6 pb-16 pr-3 space-y-6 select-none">
             
-            {/* Store Brand Card - Clickable (Logo, Store Name & Text all open Policies Modal) */}
+            {/* Store Brand Card - Clickable (Logo, Store Name & Text all centered inside this box) */}
             <div
               onClick={() => setIsStoreInfoModalOpen(true)}
-              className="group cursor-pointer select-none space-y-3 p-2 -m-2 rounded-2xl hover:bg-orange-50/60 transition-all border border-transparent hover:border-orange-200/60"
+              className="group cursor-pointer select-none flex flex-col items-center text-center space-y-3 p-3 rounded-2xl bg-orange-50/30 hover:bg-orange-50/70 transition-all border border-orange-100 hover:border-orange-200/80 shadow-2xs"
               title={isFrench ? "Afficher les politiques de ce commerce" : "View store policies"}
             >
-              <div className="w-24 h-24 rounded-2xl bg-white border border-stone-200 p-2 shadow-xs group-hover:border-[#F68B62]/60 group-hover:shadow-md transition-all flex items-center justify-center overflow-hidden">
+              <div className="w-24 h-24 rounded-2xl bg-white border border-stone-200 p-2 shadow-xs group-hover:border-[#F68B62]/60 group-hover:shadow-md transition-all flex items-center justify-center overflow-hidden mx-auto">
                 <img
                   src={storeLogo}
                   alt={storeName}
@@ -749,11 +749,11 @@ export default function StoreDetail() {
                 />
               </div>
 
-              <div>
-                <h1 className="text-xl font-black text-stone-900 leading-tight group-hover:text-[#F68B62] transition-colors">
+              <div className="w-full flex flex-col items-center text-center">
+                <h1 className="text-xl font-black text-stone-900 leading-tight group-hover:text-[#F68B62] transition-colors text-center">
                   {storeName}
                 </h1>
-                <div className="text-[11px] text-stone-500 font-semibold group-hover:text-[#F68B62] transition-colors text-left mt-1 flex items-center gap-1">
+                <div className="text-[11px] text-stone-500 font-semibold group-hover:text-[#F68B62] transition-colors text-center mt-1.5 flex items-center justify-center gap-1">
                   <span>{isFrench ? 'Politiques du commerce • Min. 25 $' : 'Store policies • Min $25'}</span>
                   <ChevronRight className="w-3 h-3 text-stone-400 group-hover:translate-x-0.5 group-hover:text-[#F68B62] transition-all" />
                 </div>
