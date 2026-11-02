@@ -1491,7 +1491,7 @@ function AisleShelfRow({
       {/* Aisle Title Bar */}
       <div className="flex items-center justify-between mb-4 pb-2 border-b border-stone-100">
         <div className="flex items-baseline gap-2">
-          <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight">
+          <h2 className="text-[1.2rem] font-black text-stone-900 tracking-tight">
             {aisle.name}
           </h2>
           <span className="text-xs text-stone-400 font-medium">
