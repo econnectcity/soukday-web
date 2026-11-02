@@ -117,6 +117,14 @@ const htaccessContent = `<IfModule mod_rewrite.c>
   ExpiresByType text/html "access plus 0 seconds"
   ExpiresByType application/json "access plus 0 seconds"
 </IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>
 `;
 
 fs.writeFileSync(path.join(outDir, '.htaccess'), htaccessContent, 'utf8');

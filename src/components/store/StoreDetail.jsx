@@ -1064,7 +1064,7 @@ export default function StoreDetail() {
               </div>
             ) : (
               /* 3. REGULAR AISLES BROWSING (Instacart Fluid Shelf) */
-              <div className="space-y-8 sm:space-y-10">
+              <div className="space-y-5 sm:space-y-6">
                 {/* Active Aisle Banner when a single category is filtered */}
                 {selectedAisleSlug && displayedAisles.length > 0 && (
                   <div className="p-3.5 sm:p-4 rounded-2xl bg-orange-50/80 border border-orange-200/90 flex flex-wrap items-center justify-between gap-3 shadow-xs">
@@ -1311,10 +1311,10 @@ export default function StoreDetail() {
     return (
       <div
         key={product.id}
-        className="group relative bg-white rounded-2xl p-2.5 sm:p-3 border border-stone-200/90 hover:border-[#F68B62]/50 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full"
+        className="group relative bg-white rounded-2xl p-2.5 sm:p-3 border border-stone-200/90 hover:border-[#F68B62]/50 hover:shadow-md transition-all duration-300 flex flex-col"
       >
         {/* Top Image + Floating Orange "+ Ajouter" button */}
-        <div className="relative w-full h-28 sm:h-32 rounded-xl overflow-hidden bg-white mb-1.5 flex items-center justify-center">
+        <div className="relative w-full h-24 sm:h-28 rounded-xl overflow-hidden bg-white mb-1.5 flex items-center justify-center">
           <Link
             href={`/product/${productSlug}`}
             className="w-full h-full flex items-center justify-center cursor-pointer"
@@ -1322,7 +1322,7 @@ export default function StoreDetail() {
             <img
               src={product.image || '/images/default-product.png'}
               alt={product.name}
-              className="w-full h-full object-contain p-1.5 group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-300"
               onError={(e) => {
                 e.currentTarget.src = '/images/default-product.png';
               }}
@@ -1388,23 +1388,23 @@ export default function StoreDetail() {
           </div>
 
           {/* Seasonal / Fresh Badge */}
-          <span className="absolute bottom-1 right-1 text-[9.5px] font-semibold text-stone-500 bg-white/80 backdrop-blur-2xs px-1.5 py-0.5 rounded pointer-events-none">
+          <span className="absolute bottom-1 right-1 text-[9px] font-semibold text-stone-500 bg-white/85 backdrop-blur-2xs px-1.5 py-0.5 rounded pointer-events-none">
             {isFrench ? 'De saison' : 'Fresh'}
           </span>
         </div>
 
-        {/* Product Details */}
-        <div className="flex-1 flex flex-col justify-between">
+        {/* Product Details (Tight, natural flow without empty space) */}
+        <div className="flex flex-col">
           <Link href={`/product/${productSlug}`} className="block group/link cursor-pointer">
             {/* Price (Instacart style with superscript cents: e.g. 15^27 $) */}
-            <div className="flex items-baseline gap-1.5 leading-none">
+            <div className="flex items-baseline gap-1 leading-none">
               <span className="text-base sm:text-lg font-black text-stone-900 tracking-tight group-hover/link:text-[#F68B62] transition-colors">
                 {wholePrice}
                 <sup className="text-xs font-black ml-0.5">{cents}</sup>
                 <span className="text-xs sm:text-sm font-black ml-0.5">$</span>
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-[11px] text-stone-400 line-through">
+                <span className="text-[11px] text-stone-400 line-through ml-1">
                   ${product.originalPrice.toFixed(2)}
                 </span>
               )}
@@ -1412,13 +1412,13 @@ export default function StoreDetail() {
 
             {/* Discount badge if promo */}
             {product.originalPrice && product.originalPrice > product.price && (
-              <div className="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[9.5px] font-bold mt-1">
+              <div className="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[9px] font-bold mt-1">
                 ${(product.originalPrice - product.price).toFixed(2)} {isFrench ? 'de réduction' : 'off'}
               </div>
             )}
 
             {/* Title & Unit */}
-            <h3 className="text-xs sm:text-[13px] font-semibold text-stone-900 line-clamp-2 mt-1 min-h-[2rem] sm:min-h-[2.25rem] group-hover/link:text-[#F68B62] transition-colors leading-snug">
+            <h3 className="text-xs sm:text-[13px] font-semibold text-stone-900 line-clamp-2 mt-1 leading-snug group-hover/link:text-[#F68B62] transition-colors">
               {product.name}
             </h3>
             <p className="text-[11px] text-stone-500 font-medium mt-0.5">
@@ -1426,8 +1426,8 @@ export default function StoreDetail() {
             </p>
           </Link>
 
-          {/* Stock status (Soukday Orange bar style) */}
-          <div className="mt-2 pt-1.5 border-t border-stone-100/90 flex items-center gap-1.5 text-[10.5px] font-bold text-[#F68B62]">
+          {/* Stock status (Soukday Orange bar style - sits directly under unit with tight border) */}
+          <div className="mt-2 pt-1.5 border-t border-stone-100 flex items-center gap-1.5 text-[10.5px] font-bold text-[#F68B62]">
             <span className="flex flex-col gap-0.5">
               <span className="w-2.5 h-0.5 bg-[#F68B62] rounded-full"></span>
               <span className="w-2 h-0.5 bg-[#F68B62] rounded-full"></span>
@@ -1515,45 +1515,49 @@ function AisleShelfRow({
             </button>
           ) : (
             <>
-              {/* Show All / Afficher plus button (Matches user screenshot: "Show all ›") */}
-              <button
-                type="button"
-                onClick={() => onSelectAisle(aisle.slug)}
-                className="text-xs sm:text-sm font-bold text-stone-900 hover:text-[#F68B62] transition-colors flex items-center gap-1 cursor-pointer select-none"
-              >
-                <span>{isFrench ? 'Afficher plus' : 'Show all'}</span>
-                <span className="text-sm sm:text-base leading-none">›</span>
-              </button>
+              {/* Show All / Afficher plus button (Only show when there are more than 4 products) */}
+              {aisle.products.length > 4 && (
+                <button
+                  type="button"
+                  onClick={() => onSelectAisle(aisle.slug)}
+                  className="text-xs sm:text-sm font-bold text-stone-900 hover:text-[#F68B62] transition-colors flex items-center gap-1 cursor-pointer select-none"
+                >
+                  <span>{isFrench ? 'Afficher plus' : 'Show all'}</span>
+                  <span className="text-sm sm:text-base leading-none">›</span>
+                </button>
+              )}
 
-              {/* Circular Carousel Navigation Arrows (Left/Right) */}
-              <div className="flex items-center gap-1.5 ml-1">
-                <button
-                  type="button"
-                  onClick={() => handleScroll('left')}
-                  disabled={!canScrollLeft}
-                  className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
-                    canScrollLeft
-                      ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
-                      : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
-                  }`}
-                  aria-label={isFrench ? 'Précédent' : 'Previous'}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleScroll('right')}
-                  disabled={!canScrollRight}
-                  className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
-                    canScrollRight
-                      ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
-                      : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
-                  }`}
-                  aria-label={isFrench ? 'Suivant' : 'Next'}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
+              {/* Circular Carousel Navigation Arrows (Left/Right) - only show when there are scrollable items */}
+              {(canScrollLeft || canScrollRight || aisle.products.length > 5) && (
+                <div className="flex items-center gap-1.5 ml-1">
+                  <button
+                    type="button"
+                    onClick={() => handleScroll('left')}
+                    disabled={!canScrollLeft}
+                    className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
+                      canScrollLeft
+                        ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
+                        : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
+                    }`}
+                    aria-label={isFrench ? 'Précédent' : 'Previous'}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleScroll('right')}
+                    disabled={!canScrollRight}
+                    className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
+                      canScrollRight
+                        ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
+                        : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
+                    }`}
+                    aria-label={isFrench ? 'Suivant' : 'Next'}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>
