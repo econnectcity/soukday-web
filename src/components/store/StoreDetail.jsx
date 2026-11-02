@@ -540,7 +540,7 @@ export default function StoreDetail() {
           - Cart: Free delivery threshold pill ($150 limit)
          ═══════════════════════════════════════════════════════════════════════ */}
       <header className="sticky top-0 z-40 bg-white border-b border-stone-200/90 shadow-2xs h-[68px] flex items-center w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between gap-3 sm:gap-5">
+        <div className="w-full px-3 sm:px-4 lg:px-5 flex items-center justify-between gap-2.5 sm:gap-4">
           
           {/* LEFT: 1 (Hamburger) + 2 (Official Soukday Logo) */}
           <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
@@ -828,11 +828,11 @@ export default function StoreDetail() {
             with completely independent smooth scrolling (never shifts with main page)
           - Right: Fluid responsive product grids & carousels across the wide screen
          ═══════════════════════════════════════════════════════════════════════ */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex-1">
-        <div className="flex gap-6 lg:gap-8 items-start w-full">
+      <div className="w-full px-3 sm:px-4 lg:px-5 flex-1">
+        <div className="flex gap-3.5 sm:gap-4 lg:gap-5 items-start w-full">
           
           {/* ─── LEFT SIDEBAR (100% Fixed, Independent Scroll) ──────────────── */}
-          <aside className="w-56 xl:w-60 2xl:w-64 shrink-0 hidden lg:flex flex-col sticky top-[68px] h-[calc(100vh-68px)] overflow-y-auto overscroll-contain custom-sidebar-scroll py-6 pb-16 pr-3.5 space-y-6 select-none border-r border-stone-100/90">
+          <aside className="w-52 xl:w-56 2xl:w-60 shrink-0 hidden lg:flex flex-col sticky top-[68px] h-[calc(100vh-68px)] overflow-y-auto overscroll-contain custom-sidebar-scroll py-5 pb-16 pr-2.5 space-y-5 select-none border-r border-stone-100/90">
             
             {/* Store Brand Card - Clickable (Logo, Store Name & Text all centered inside this box) */}
             <div
@@ -972,7 +972,7 @@ export default function StoreDetail() {
           </aside>
 
           {/* ─── RIGHT FLUID CONTENT (Dense multi-column product grids) ── */}
-          <main className="flex-1 min-w-0 py-6">
+          <main className="flex-1 min-w-0 py-4 sm:py-5">
             
             {/* 1. BUY AGAIN VIEW (when "Acheter de nouveau" is selected) */}
             {activeTab === 'buy_again' ? (
