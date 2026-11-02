@@ -568,7 +568,7 @@ export default function StoreDetail() {
           </div>
 
           {/* MIDDLE: 3 & 4. Search inside store (Stretched & strictly scoped - Expands fluidly on wide screens) */}
-          <div className="flex-1 max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl relative mx-2 sm:mx-4">
+          <div className="flex-1 max-w-5xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1500px] relative mx-2 sm:mx-4">
             <div className="relative w-full">
               <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
@@ -612,28 +612,28 @@ export default function StoreDetail() {
               </div>
             </div>
 
-            {/* 6. Cart Button with Free Delivery indicator ($150 limit, Brand Orange #F68B62) */}
+            {/* 6. Cart Button with Free Delivery indicator ($150 limit, Brand Orange #F68B62 - slightly reduced size) */}
             <button
               type="button"
               onClick={() => setIsCartOpen(true)}
-              className="relative overflow-hidden rounded-full bg-[#F68B62] hover:bg-[#e07750] active:scale-95 text-white transition-all cursor-pointer shadow-md shadow-[#F68B62]/20 flex items-center px-3.5 sm:px-4 py-2 sm:py-2.5 gap-2.5"
+              className="relative overflow-hidden rounded-full bg-[#F68B62] hover:bg-[#e07750] active:scale-95 text-white transition-all cursor-pointer shadow-md shadow-[#F68B62]/20 flex items-center px-3 sm:px-3.5 py-1.5 sm:py-2 gap-2"
             >
               {/* Free delivery text */}
-              <div className="hidden sm:block text-left text-[11px] sm:text-xs font-bold leading-tight">
+              <div className="hidden sm:block text-left text-[10.5px] sm:text-[11px] font-bold leading-tight">
                 {cartSubtotal >= FREE_SHIPPING_THRESHOLD ? (
                   <span>🎉 {isFrench ? 'Livraison 0 $ débloquée' : 'Free delivery unlocked'}</span>
                 ) : (
                   <span>
                     {isFrench 
-                      ? `Frais de livraison à 0 $ dès 150 $ (encore ${remainingForFreeShipping.toFixed(0)} $)` 
+                      ? `Livraison 0 $ dès 150 $ (encore ${remainingForFreeShipping.toFixed(0)} $)` 
                       : `Free delivery over $150 ($${remainingForFreeShipping.toFixed(0)} left)`}
                   </span>
                 )}
               </div>
 
               {/* Cart Icon & Count */}
-              <div className="flex items-center gap-1.5 pl-1 font-black text-xs sm:text-sm">
-                <ShoppingCart className="w-4 h-4 text-white" />
+              <div className="flex items-center gap-1 pl-0.5 font-black text-xs sm:text-[13px]">
+                <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                 <span>{cartCount}</span>
               </div>
 
