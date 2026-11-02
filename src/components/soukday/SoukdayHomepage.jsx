@@ -6,7 +6,6 @@ import { useCart } from '@/context/SoukdayCartContext';
 import HeroBanner from './HeroBanner';
 import CategorySlider from './CategorySlider';
 import SoukdayGrocerySection from './SoukdayGrocerySection';
-import SoukdayAppExperienceBanner from './SoukdayAppExperienceBanner';
 import ButcherSection from './ButcherSection';
 import SoukdayHowItWorksSection from './SoukdayHowItWorksSection';
 import OtherStoresSection from './OtherStoresSection';
@@ -116,9 +115,6 @@ export default function SoukdayHomepage() {
 
       {/* 3. Butchers Delivering to You (Vos boucheries halal à proximité - White BG) */}
       <ButcherSection stores={stores} settings={webSettings || DEFAULT_LIVE_SETTINGS} />
-
-      {/* 4. Instacart-Style Soukday App Experience Banner (Vivez l'expérience Soukday) */}
-      <SoukdayAppExperienceBanner settings={webSettings || DEFAULT_LIVE_SETTINGS} />
 
       {/* 5. Combined Order Explanation (Vous commandez épicerie et boucherie?) */}
       <SoukdayHowItWorksSection />
