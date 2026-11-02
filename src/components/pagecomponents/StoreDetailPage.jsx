@@ -4,7 +4,7 @@ import StoreDetail from '@/components/store/StoreDetail';
 
 const StoreDetailPage = () => {
   return (
-    <Layout hideHeader={true}>
+    <Layout hideHeader={true} hideFooter={true}>
       <StoreDetail />
     </Layout>
   );
