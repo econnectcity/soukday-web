@@ -1018,7 +1018,7 @@ export default function StoreDetail() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1800px]:grid-cols-8 min-[2100px]:grid-cols-10 gap-3 sm:gap-3.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 min-[1750px]:grid-cols-8 min-[2000px]:grid-cols-10 gap-2.5 sm:gap-3">
                     {buyAgainProducts.map((product) => renderProductCard(product))}
                   </div>
                 )}
@@ -1057,7 +1057,7 @@ export default function StoreDetail() {
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1800px]:grid-cols-8 min-[2100px]:grid-cols-10 gap-3 sm:gap-3.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 min-[1750px]:grid-cols-8 min-[2000px]:grid-cols-10 gap-2.5 sm:gap-3">
                     {searchResults.map((product) => renderProductCard(product))}
                   </div>
                 )}
@@ -1093,9 +1093,9 @@ export default function StoreDetail() {
                     {Array.from({ length: 3 }).map((_, i) => (
                       <div key={i} className="space-y-3">
                         <div className="h-6 bg-stone-100 rounded w-48 animate-pulse" />
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1800px]:grid-cols-8 min-[2100px]:grid-cols-10 gap-3 sm:gap-3.5">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 min-[1750px]:grid-cols-8 min-[2000px]:grid-cols-10 gap-2.5 sm:gap-3">
                           {Array.from({ length: 8 }).map((_, j) => (
-                            <div key={j} className="h-64 bg-stone-100 rounded-2xl animate-pulse" />
+                            <div key={j} className="h-60 bg-stone-100 rounded-2xl animate-pulse" />
                           ))}
                         </div>
                       </div>
@@ -1311,10 +1311,10 @@ export default function StoreDetail() {
     return (
       <div
         key={product.id}
-        className="group relative bg-white rounded-2xl p-3 border border-stone-200/90 hover:border-[#F68B62]/50 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full"
+        className="group relative bg-white rounded-2xl p-2.5 sm:p-3 border border-stone-200/90 hover:border-[#F68B62]/50 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full"
       >
         {/* Top Image + Floating Orange "+ Ajouter" button */}
-        <div className="relative w-full h-32 sm:h-36 rounded-xl overflow-hidden bg-white mb-2 flex items-center justify-center">
+        <div className="relative w-full h-28 sm:h-32 rounded-xl overflow-hidden bg-white mb-1.5 flex items-center justify-center">
           <Link
             href={`/product/${productSlug}`}
             className="w-full h-full flex items-center justify-center cursor-pointer"
@@ -1322,7 +1322,7 @@ export default function StoreDetail() {
             <img
               src={product.image || '/images/default-product.png'}
               alt={product.name}
-              className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-contain p-1.5 group-hover:scale-105 transition-transform duration-300"
               onError={(e) => {
                 e.currentTarget.src = '/images/default-product.png';
               }}
@@ -1331,7 +1331,7 @@ export default function StoreDetail() {
 
           {/* Floating Orange "+ Ajouter" button or Stepper */}
           <div
-            className="absolute top-2 right-2 z-10"
+            className="absolute top-1.5 right-1.5 z-10"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -1345,7 +1345,7 @@ export default function StoreDetail() {
                   e.stopPropagation();
                   addToCart(product);
                 }}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#F68B62] hover:bg-[#e07750] active:scale-90 text-white text-xs font-bold shadow-md shadow-[#F68B62]/30 transition-all cursor-pointer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#F68B62] hover:bg-[#e07750] active:scale-90 text-white text-[11px] sm:text-xs font-bold shadow-md shadow-[#F68B62]/30 transition-all cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>{isFrench ? 'Ajouter' : 'Add'}</span>
@@ -1359,17 +1359,17 @@ export default function StoreDetail() {
                     e.stopPropagation();
                     updateQuantity(product.id, qty - 1);
                   }}
-                  className="w-6 h-6 rounded-full hover:bg-black/20 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
+                  className="w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full hover:bg-black/20 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
                   title={qty === 1 ? (isFrench ? 'Supprimer' : 'Delete') : (isFrench ? 'Diminuer' : 'Decrease')}
                   aria-label={qty === 1 ? (isFrench ? 'Supprimer' : 'Delete') : (isFrench ? 'Diminuer' : 'Decrease')}
                 >
                   {qty === 1 ? (
-                    <Trash2 className="w-3.5 h-3.5 text-white" />
+                    <Trash2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white" />
                   ) : (
-                    <Minus className="w-3 h-3 text-white" />
+                    <Minus className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white" />
                   )}
                 </button>
-                <span className="text-xs font-black px-2">{qty}</span>
+                <span className="text-[11px] sm:text-xs font-black px-1.5 sm:px-2">{qty}</span>
                 <button
                   type="button"
                   onClick={(e) => {
@@ -1377,18 +1377,18 @@ export default function StoreDetail() {
                     e.stopPropagation();
                     updateQuantity(product.id, qty + 1);
                   }}
-                  className="w-6 h-6 rounded-full hover:bg-black/20 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
+                  className="w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full hover:bg-black/20 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
                   title={isFrench ? 'Ajouter un de plus' : 'Add one more'}
                   aria-label={isFrench ? 'Ajouter un de plus' : 'Add one more'}
                 >
-                  <Plus className="w-3 h-3 text-white" />
+                  <Plus className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white" />
                 </button>
               </div>
             )}
           </div>
 
           {/* Seasonal / Fresh Badge */}
-          <span className="absolute bottom-1 right-1 text-[10px] font-semibold text-stone-500 bg-white/80 backdrop-blur-2xs px-1.5 py-0.5 rounded pointer-events-none">
+          <span className="absolute bottom-1 right-1 text-[9.5px] font-semibold text-stone-500 bg-white/80 backdrop-blur-2xs px-1.5 py-0.5 rounded pointer-events-none">
             {isFrench ? 'De saison' : 'Fresh'}
           </span>
         </div>
@@ -1398,13 +1398,13 @@ export default function StoreDetail() {
           <Link href={`/product/${productSlug}`} className="block group/link cursor-pointer">
             {/* Price (Instacart style with superscript cents: e.g. 15^27 $) */}
             <div className="flex items-baseline gap-1.5 leading-none">
-              <span className="text-lg sm:text-xl font-black text-stone-900 tracking-tight group-hover/link:text-[#F68B62] transition-colors">
+              <span className="text-base sm:text-lg font-black text-stone-900 tracking-tight group-hover/link:text-[#F68B62] transition-colors">
                 {wholePrice}
                 <sup className="text-xs font-black ml-0.5">{cents}</sup>
-                <span className="text-sm font-black ml-1">$</span>
+                <span className="text-xs sm:text-sm font-black ml-0.5">$</span>
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-xs text-stone-400 line-through">
+                <span className="text-[11px] text-stone-400 line-through">
                   ${product.originalPrice.toFixed(2)}
                 </span>
               )}
@@ -1412,13 +1412,13 @@ export default function StoreDetail() {
 
             {/* Discount badge if promo */}
             {product.originalPrice && product.originalPrice > product.price && (
-              <div className="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-bold mt-1.5">
+              <div className="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[9.5px] font-bold mt-1">
                 ${(product.originalPrice - product.price).toFixed(2)} {isFrench ? 'de réduction' : 'off'}
               </div>
             )}
 
             {/* Title & Unit */}
-            <h3 className="text-xs sm:text-sm font-semibold text-stone-900 line-clamp-2 mt-1.5 group-hover/link:text-[#F68B62] transition-colors leading-snug">
+            <h3 className="text-xs sm:text-[13px] font-semibold text-stone-900 line-clamp-2 mt-1 min-h-[2rem] sm:min-h-[2.25rem] group-hover/link:text-[#F68B62] transition-colors leading-snug">
               {product.name}
             </h3>
             <p className="text-[11px] text-stone-500 font-medium mt-0.5">
@@ -1427,7 +1427,7 @@ export default function StoreDetail() {
           </Link>
 
           {/* Stock status (Soukday Orange bar style) */}
-          <div className="mt-2.5 pt-2 border-t border-stone-100 flex items-center gap-1.5 text-[11px] font-bold text-[#F68B62]">
+          <div className="mt-2 pt-1.5 border-t border-stone-100/90 flex items-center gap-1.5 text-[10.5px] font-bold text-[#F68B62]">
             <span className="flex flex-col gap-0.5">
               <span className="w-2.5 h-0.5 bg-[#F68B62] rounded-full"></span>
               <span className="w-2 h-0.5 bg-[#F68B62] rounded-full"></span>
@@ -1561,18 +1561,18 @@ function AisleShelfRow({
 
       {/* Product Display: Grid if single category view, Fluid Carousel if all categories view (up to 10 products on wide screens) */}
       {isSingleAisleView ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1800px]:grid-cols-8 min-[2100px]:grid-cols-10 gap-3 sm:gap-3.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 min-[1750px]:grid-cols-8 min-[2000px]:grid-cols-10 gap-2.5 sm:gap-3">
           {aisle.products.map((product) => renderProductCard(product))}
         </div>
       ) : (
         <div
           ref={rowRef}
-          className="flex gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-3 pt-0.5 -mx-1 px-1"
+          className="flex gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-3 pt-0.5 -mx-1 px-1"
         >
           {aisle.products.map((product) => (
             <div
               key={product.id}
-              className="shrink-0 w-[calc(50%-6px)] sm:w-[calc(33.333%-8px)] md:w-[calc(25%-10px)] lg:w-[calc(25%-10.5px)] xl:w-[calc(20%-11.2px)] 2xl:w-[calc(16.666%-11.7px)] min-[1800px]:w-[calc(12.5%-12.3px)] min-[2100px]:w-[calc(10%-12.6px)] flex flex-col"
+              className="shrink-0 w-[calc(50%-5px)] sm:w-[calc(33.333%-7px)] md:w-[calc(25%-8px)] lg:w-[calc(20%-8.5px)] xl:w-[calc(16.666%-9px)] 2xl:w-[calc(14.285%-9.5px)] min-[1750px]:w-[calc(12.5%-10px)] min-[2000px]:w-[calc(10%-10.5px)] flex flex-col"
             >
               {renderProductCard(product)}
             </div>
