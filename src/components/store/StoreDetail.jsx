@@ -9,6 +9,7 @@ import { Store as StoreType, Product } from '@/types';
 import * as api from '@/api/apiRoutes';
 import { fetchLiveSellers } from '@/services/soukdayApi';
 import { useTranslation } from '@/utils/translation';
+import { getTranslatedCategoryName } from '@/utils/categoryTranslation';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedLanguage } from '@/redux/slices/languageSlice';
 import {
@@ -57,34 +58,39 @@ function CanadaFlag({ className = "w-4 h-3" }) {
  */
 function getBackendCategory(item, isFrench = true) {
   const rawCat = item?.category || {};
-  let catName = '';
+  let rawName = '';
   if (Array.isArray(rawCat.translations) && rawCat.translations.length > 0) {
-    catName = rawCat.translations[0]?.name || rawCat.translations[0]?.title || '';
+    rawName = rawCat.translations[0]?.name || rawCat.translations[0]?.title || '';
   } else if (rawCat.translations && typeof rawCat.translations === 'object') {
-    catName = rawCat.translations.name || rawCat.translations.title || '';
+    rawName = rawCat.translations.name || rawCat.translations.title || '';
   }
-  if (!catName) {
-    catName = rawCat.name || item?.category_name || (isFrench ? 'Épicerie & Spécialités' : 'Grocery & Specialties');
+  if (!rawName) {
+    rawName = rawCat.name || item?.category_name || (isFrench ? 'Épicerie & Spécialités' : 'Grocery & Specialties');
   }
 
   // Normalize and capitalize first letter
-  catName = String(catName).trim();
-  if (catName.length > 0) {
-    catName = catName.charAt(0).toUpperCase() + catName.slice(1);
+  rawName = String(rawName).trim();
+  if (rawName.length > 0) {
+    rawName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
   } else {
-    catName = isFrench ? 'Épicerie & Spécialités' : 'Grocery & Specialties';
+    rawName = isFrench ? 'Épicerie & Spécialités' : 'Grocery & Specialties';
   }
 
   const catSlug =
     rawCat.slug ||
-    String(catName)
+    String(rawName)
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
-  return { name: catName, slug: catSlug };
+  const translatedName = getTranslatedCategoryName(
+    { name: rawName, slug: catSlug, translations: rawCat.translations },
+    isFrench
+  );
+
+  return { name: translatedName || rawName, rawName, slug: catSlug };
 }
 
 export default function StoreDetail() {
@@ -356,6 +362,8 @@ export default function StoreDetail() {
             slug: item.slug || variant.product?.slug || String(item.id),
             name: pName,
             categoryName: catInfo.name,
+            rawCategoryName: catInfo.rawName,
+            rawCategoryTranslations: item.category?.translations,
             categorySlug: catInfo.slug,
             price,
             originalPrice,
@@ -393,7 +401,16 @@ export default function StoreDetail() {
     const map = new Map();
     products.forEach((prod) => {
       const catSlug = prod.categorySlug || 'epicerie-specialites';
-      const catName = prod.categoryName || (isFrench ? 'Épicerie & Spécialités' : 'Grocery & Specialties');
+      const catName =
+        getTranslatedCategoryName(
+          {
+            name: prod.rawCategoryName || prod.categoryName,
+            slug: catSlug,
+            translations: prod.rawCategoryTranslations,
+          },
+          isFrench
+        ) || prod.categoryName || (isFrench ? 'Épicerie & Spécialités' : 'Grocery & Specialties');
+
       if (!map.has(catSlug)) {
         map.set(catSlug, {
           slug: catSlug,
@@ -572,7 +589,7 @@ export default function StoreDetail() {
             </div>
           </div>
 
-          {/* RIGHT: 5 (Delivery Time & Address) + Language Switcher + 6 (Brand Orange Cart Button with $150 limit) */}
+          {/* RIGHT: 5 (Delivery Time & Address) + 6 (Brand Orange Cart Button with $150 limit) + Language Switcher (in end after cart button) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
             {/* 5. Delivery time & customer address (Accurate with store address to customer address) */}
@@ -593,34 +610,6 @@ export default function StoreDetail() {
                 </div>
               </div>
             </div>
-
-            {/* Language Switcher (Matches homepage - placed right after delivery button) */}
-            <button 
-              type="button" 
-              onClick={() => {
-                const available = languageState?.availableLanguages || [];
-                const activeCode = (currentCode || 'fr').toLowerCase();
-                let nextLang = available.find(l => (l.code || '').toLowerCase() !== activeCode);
-                if (!nextLang) {
-                  nextLang = activeCode === 'fr' 
-                    ? { id: 3, name: "English", code: "en", type: "LTR", display_name: "English" }
-                    : { id: 5, name: "Français", code: "fr", type: "LTR", display_name: "Français (CA)" };
-                }
-                dispatch(setSelectedLanguage({ data: nextLang }));
-              }}
-              title={isFrench ? "Passer en anglais / Switch to English" : "Passer en français / Switch to French"}
-              aria-label={isFrench ? "Passer en anglais" : "Switch to French"}
-              className="group relative flex items-center justify-center w-10 sm:w-11 h-10 sm:h-11 rounded-full border border-stone-200/80 bg-white hover:bg-stone-50 hover:border-stone-400 text-stone-900 shadow-2xs hover:shadow-xs hover:-translate-y-0.5 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
-            >
-              <div className="flex items-center justify-center gap-1 select-none">
-                <span className="w-4 h-3 rounded-[2px] overflow-hidden border border-stone-200/60 shadow-2xs shrink-0 flex items-center justify-center">
-                  <CanadaFlag className="w-full h-full object-cover" />
-                </span>
-                <span className="text-[11px] sm:text-xs font-black tracking-tight text-stone-800 group-hover:text-[#F68B62] transition-colors">
-                  {isFrench ? "EN" : "FR"}
-                </span>
-              </div>
-            </button>
 
             {/* 6. Cart Button with Free Delivery indicator ($150 limit, Brand Orange #F68B62) */}
             <button
@@ -653,6 +642,34 @@ export default function StoreDetail() {
                   className="h-full bg-white transition-all duration-300"
                   style={{ width: `${freeShippingProgress}%` }}
                 />
+              </div>
+            </button>
+
+            {/* Language Switcher - Placed at the end after the cart button */}
+            <button 
+              type="button" 
+              onClick={() => {
+                const available = languageState?.availableLanguages || [];
+                const activeCode = (currentCode || 'fr').toLowerCase();
+                let nextLang = available.find(l => (l.code || '').toLowerCase() !== activeCode);
+                if (!nextLang) {
+                  nextLang = activeCode === 'fr' 
+                    ? { id: 3, name: "English", code: "en", type: "LTR", display_name: "English" }
+                    : { id: 5, name: "Français", code: "fr", type: "LTR", display_name: "Français (CA)" };
+                }
+                dispatch(setSelectedLanguage({ data: nextLang }));
+              }}
+              title={isFrench ? "Passer en anglais / Switch to English" : "Passer en français / Switch to French"}
+              aria-label={isFrench ? "Passer en anglais" : "Switch to French"}
+              className="group relative flex items-center justify-center w-10 sm:w-11 h-10 sm:h-11 rounded-full border border-stone-200/80 bg-white hover:bg-stone-50 hover:border-stone-400 text-stone-900 shadow-2xs hover:shadow-xs hover:-translate-y-0.5 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
+            >
+              <div className="flex items-center justify-center gap-1 select-none">
+                <span className="w-4 h-3 rounded-[2px] overflow-hidden border border-stone-200/60 shadow-2xs shrink-0 flex items-center justify-center">
+                  <CanadaFlag className="w-full h-full object-cover" />
+                </span>
+                <span className="text-[11px] sm:text-xs font-black tracking-tight text-stone-800 group-hover:text-[#F68B62] transition-colors">
+                  {isFrench ? "EN" : "FR"}
+                </span>
               </div>
             </button>
 
