@@ -1515,49 +1515,45 @@ function AisleShelfRow({
             </button>
           ) : (
             <>
-              {/* Show All / Afficher plus button (Only show when there are more than 4 products) */}
-              {aisle.products.length > 4 && (
+              {/* Show All / Afficher plus button (Matches user screenshot: "Show all ›") */}
+              <button
+                type="button"
+                onClick={() => onSelectAisle(aisle.slug)}
+                className="text-xs sm:text-sm font-bold text-stone-900 hover:text-[#F68B62] transition-colors flex items-center gap-1 cursor-pointer select-none"
+              >
+                <span>{isFrench ? 'Afficher plus' : 'Show all'}</span>
+                <span className="text-sm sm:text-base leading-none">›</span>
+              </button>
+
+              {/* Circular Carousel Navigation Arrows (Left/Right) */}
+              <div className="flex items-center gap-1.5 ml-1">
                 <button
                   type="button"
-                  onClick={() => onSelectAisle(aisle.slug)}
-                  className="text-xs sm:text-sm font-bold text-stone-900 hover:text-[#F68B62] transition-colors flex items-center gap-1 cursor-pointer select-none"
+                  onClick={() => handleScroll('left')}
+                  disabled={!canScrollLeft}
+                  className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
+                    canScrollLeft
+                      ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
+                      : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
+                  }`}
+                  aria-label={isFrench ? 'Précédent' : 'Previous'}
                 >
-                  <span>{isFrench ? 'Afficher plus' : 'Show all'}</span>
-                  <span className="text-sm sm:text-base leading-none">›</span>
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
-              )}
-
-              {/* Circular Carousel Navigation Arrows (Left/Right) - only show when there are scrollable items */}
-              {(canScrollLeft || canScrollRight || aisle.products.length > 5) && (
-                <div className="flex items-center gap-1.5 ml-1">
-                  <button
-                    type="button"
-                    onClick={() => handleScroll('left')}
-                    disabled={!canScrollLeft}
-                    className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
-                      canScrollLeft
-                        ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
-                        : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
-                    }`}
-                    aria-label={isFrench ? 'Précédent' : 'Previous'}
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleScroll('right')}
-                    disabled={!canScrollRight}
-                    className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
-                      canScrollRight
-                        ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
-                        : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
-                    }`}
-                    aria-label={isFrench ? 'Suivant' : 'Next'}
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
+                <button
+                  type="button"
+                  onClick={() => handleScroll('right')}
+                  disabled={!canScrollRight}
+                  className={`w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center transition-all ${
+                    canScrollRight
+                      ? 'bg-white hover:bg-stone-50 hover:border-[#F68B62] text-stone-700 hover:text-[#F68B62] shadow-2xs active:scale-95 cursor-pointer'
+                      : 'bg-stone-100/60 text-stone-300 border-stone-150 cursor-not-allowed opacity-40'
+                  }`}
+                  aria-label={isFrench ? 'Suivant' : 'Next'}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </>
           )}
         </div>
