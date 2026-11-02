@@ -532,15 +532,15 @@ export default function StoreDetail() {
     <div className="min-h-screen bg-white text-stone-900 flex flex-col">
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          TOP HEADER (Instacart Single Store Header)
+          TOP HEADER (Instacart Single Store Header - Fluid Full Width)
           - Color theme: 100% Soukday Coral / Brand Orange (#F68B62)
           - Logo: Official Soukday logo (/images/logo.png)
           - Search: Stretched search bar strictly scoped inside this store
           - Delivery: Accurate delivery window with customer address
           - Cart: Free delivery threshold pill ($150 limit)
          ═══════════════════════════════════════════════════════════════════════ */}
-      <header className="sticky top-0 z-40 bg-white border-b border-stone-200/90 shadow-2xs h-[68px] flex items-center">
-        <div className="w-full max-w-[1520px] mx-auto px-3 sm:px-5 lg:px-7 flex items-center justify-between gap-2 sm:gap-4">
+      <header className="sticky top-0 z-40 bg-white border-b border-stone-200/90 shadow-2xs h-[68px] flex items-center w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between gap-3 sm:gap-5">
           
           {/* LEFT: 1 (Hamburger) + 2 (Official Soukday Logo) */}
           <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
@@ -567,8 +567,8 @@ export default function StoreDetail() {
             </Link>
           </div>
 
-          {/* MIDDLE: 3 & 4. Search inside store (Stretched & strictly scoped) */}
-          <div className="flex-1 max-w-3xl relative mx-1 sm:mx-3">
+          {/* MIDDLE: 3 & 4. Search inside store (Stretched & strictly scoped - Expands fluidly on wide screens) */}
+          <div className="flex-1 max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl relative mx-2 sm:mx-4">
             <div className="relative w-full">
               <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
@@ -823,16 +823,16 @@ export default function StoreDetail() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          MAIN STORE BODY (Two-Column Instacart Architecture)
+          MAIN STORE BODY (Two-Column Instacart Architecture - Fluid Full Width)
           - Left: 100% Fixed Sticky Store Brand, Navigation tabs, and Clean Deduplicated Aisles
             with completely independent smooth scrolling (never shifts with main page)
-          - Right: Multi-column responsive product grids (5 items per line)
+          - Right: Fluid responsive product grids & carousels across the wide screen
          ═══════════════════════════════════════════════════════════════════════ */}
-      <div className="max-w-[1520px] mx-auto px-3 sm:px-5 lg:px-7 flex-1 w-full">
-        <div className="flex gap-8 items-start">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex-1">
+        <div className="flex gap-6 lg:gap-8 items-start w-full">
           
           {/* ─── LEFT SIDEBAR (100% Fixed, Independent Scroll) ──────────────── */}
-          <aside className="w-60 shrink-0 hidden lg:flex flex-col sticky top-[68px] h-[calc(100vh-68px)] overflow-y-auto overscroll-contain custom-sidebar-scroll py-6 pb-16 pr-3 space-y-6 select-none">
+          <aside className="w-56 xl:w-60 2xl:w-64 shrink-0 hidden lg:flex flex-col sticky top-[68px] h-[calc(100vh-68px)] overflow-y-auto overscroll-contain custom-sidebar-scroll py-6 pb-16 pr-3.5 space-y-6 select-none border-r border-stone-100/90">
             
             {/* Store Brand Card - Clickable (Logo, Store Name & Text all centered inside this box) */}
             <div
@@ -1018,7 +1018,7 @@ export default function StoreDetail() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1800px]:grid-cols-8 min-[2100px]:grid-cols-10 gap-3 sm:gap-3.5">
                     {buyAgainProducts.map((product) => renderProductCard(product))}
                   </div>
                 )}
@@ -1057,13 +1057,13 @@ export default function StoreDetail() {
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1800px]:grid-cols-8 min-[2100px]:grid-cols-10 gap-3 sm:gap-3.5">
                     {searchResults.map((product) => renderProductCard(product))}
                   </div>
                 )}
               </div>
             ) : (
-              /* 3. REGULAR AISLES BROWSING (5 Products Per Line Instacart Shelf) */
+              /* 3. REGULAR AISLES BROWSING (Instacart Fluid Shelf) */
               <div className="space-y-8 sm:space-y-10">
                 {/* Active Aisle Banner when a single category is filtered */}
                 {selectedAisleSlug && displayedAisles.length > 0 && (
@@ -1093,8 +1093,8 @@ export default function StoreDetail() {
                     {Array.from({ length: 3 }).map((_, i) => (
                       <div key={i} className="space-y-3">
                         <div className="h-6 bg-stone-100 rounded w-48 animate-pulse" />
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
-                          {Array.from({ length: 5 }).map((_, j) => (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1800px]:grid-cols-8 min-[2100px]:grid-cols-10 gap-3 sm:gap-3.5">
+                          {Array.from({ length: 8 }).map((_, j) => (
                             <div key={j} className="h-64 bg-stone-100 rounded-2xl animate-pulse" />
                           ))}
                         </div>
@@ -1484,8 +1484,8 @@ function AisleShelfRow({
   const handleScroll = (direction) => {
     if (rowRef.current) {
       const clientWidth = rowRef.current.clientWidth;
-      // Scroll by 1 viewport width (5 products)
-      const offset = direction === 'left' ? -clientWidth : clientWidth;
+      // Scroll by visible viewport width
+      const offset = direction === 'left' ? -clientWidth * 0.85 : clientWidth * 0.85;
       rowRef.current.scrollBy({ left: offset, behavior: 'smooth' });
     }
   };
@@ -1559,9 +1559,9 @@ function AisleShelfRow({
         </div>
       </div>
 
-      {/* Product Display: Grid if single category view, 5-per-line Carousel if all categories view */}
+      {/* Product Display: Grid if single category view, Fluid Carousel if all categories view (up to 10 products on wide screens) */}
       {isSingleAisleView ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 sm:gap-3.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1800px]:grid-cols-8 min-[2100px]:grid-cols-10 gap-3 sm:gap-3.5">
           {aisle.products.map((product) => renderProductCard(product))}
         </div>
       ) : (
@@ -1572,7 +1572,7 @@ function AisleShelfRow({
           {aisle.products.map((product) => (
             <div
               key={product.id}
-              className="shrink-0 w-[calc(50%-6px)] sm:w-[calc(33.333%-10px)] md:w-[calc(33.333%-10px)] lg:w-[calc(25%-11px)] xl:w-[calc(20%-11.5px)] 2xl:w-[calc(20%-11.5px)] flex flex-col"
+              className="shrink-0 w-[calc(50%-6px)] sm:w-[calc(33.333%-8px)] md:w-[calc(25%-10px)] lg:w-[calc(25%-10.5px)] xl:w-[calc(20%-11.2px)] 2xl:w-[calc(16.666%-11.7px)] min-[1800px]:w-[calc(12.5%-12.3px)] min-[2100px]:w-[calc(10%-12.6px)] flex flex-col"
             >
               {renderProductCard(product)}
             </div>

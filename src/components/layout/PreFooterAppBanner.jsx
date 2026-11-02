@@ -22,11 +22,11 @@ export default function PreFooterAppBanner() {
 
   return (
     <section className="w-full bg-white border-t border-stone-200/80 py-10 sm:py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-12">
           
           {/* Left Column: Heading (H3) & Description */}
-          <div className="max-w-2xl">
+          <div className="max-w-2xl lg:max-w-3xl xl:max-w-4xl">
             <h3 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">
               {isFrench
                 ? "Téléchargez l’application Soukday"
