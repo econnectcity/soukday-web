@@ -54,12 +54,16 @@ export default function AddressModal() {
         address: `${matched.city}, QC`,
         city: matched.city,
         postalCode: matched.postalCode,
+        lat: (matched as any).lat || 45.5017,
+        lng: (matched as any).lng || -73.5673,
       });
     } else {
       setSelectedAddress({
         address: `${clean}, QC`,
         city: 'Montréal & Environs',
         postalCode: clean,
+        lat: 45.5017,
+        lng: -73.5673,
       });
     }
 
@@ -71,6 +75,8 @@ export default function AddressModal() {
       address: `${loc.city}, QC`,
       city: loc.city,
       postalCode: loc.postalCode,
+      lat: (loc as any).lat || 45.5017,
+      lng: (loc as any).lng || -73.5673,
     });
     setIsAddressModalOpen(false);
   };

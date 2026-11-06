@@ -33,11 +33,13 @@ import { isRtl } from "@/lib/utils";
 import { getTranslatedCategoryName } from "@/utils/categoryTranslation";
 import { PRODUCTS, DEFAULT_CATEGORIES } from "@/data/mockData";
 import { Sparkles, ShoppingBag } from "lucide-react";
+import { useCart } from "@/context/SoukdayCartContext";
 
 const CategoryDetail = () => {
   const dispatch = useDispatch();
   const router = useLocalizedRouter();
   const { slug } = router.query;
+  const { selectedAddress } = useCart();
 
   const city = useSelector((state) => state.City);
   const filter = useSelector((state) => state.ProductFilter);
@@ -211,9 +213,21 @@ const CategoryDetail = () => {
         setIsLoadMoreLoading(true);
       }
 
-      // Safe coordinates with Montreal defaults
-      const lat = city?.city?.latitude ? parseFloat(city.city.latitude) : 45.5017;
-      const lng = city?.city?.longitude ? parseFloat(city.city.longitude) : -73.5673;
+      // Safe coordinates: user address priority, fallback to city or Montreal defaults
+      const lat = selectedAddress?.lat
+        ? parseFloat(selectedAddress.lat)
+        : selectedAddress?.latitude
+        ? parseFloat(selectedAddress.latitude)
+        : city?.city?.latitude
+        ? parseFloat(city.city.latitude)
+        : 45.5017;
+      const lng = selectedAddress?.lng
+        ? parseFloat(selectedAddress.lng)
+        : selectedAddress?.longitude
+        ? parseFloat(selectedAddress.longitude)
+        : city?.city?.longitude
+        ? parseFloat(city.city.longitude)
+        : -73.5673;
 
       const result = await api.getProductByFilter({
         latitude: lat,
@@ -296,6 +310,7 @@ const CategoryDetail = () => {
     filter?.country_id,
     filter?.section_id,
     city?.city,
+    selectedAddress,
   ]);
 
   const handlePrices = async (result) => {

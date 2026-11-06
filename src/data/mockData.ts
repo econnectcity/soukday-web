@@ -9,13 +9,13 @@ export const DEFAULT_USER_ADDRESS: UserAddress | null = null;
 
 
 export const POPULAR_LOCATIONS = [
-  { city: 'Montréal', postalCode: 'H3S 1R7', label: 'Montréal (Côte-des-Neiges)' },
-  { city: 'Saint-Laurent', postalCode: 'H4L 3M8', label: 'Saint-Laurent' },
-  { city: 'Saint-Léonard', postalCode: 'H1P 2Y7', label: 'Saint-Léonard' },
-  { city: 'Brossard', postalCode: 'J4Z 3G3', label: 'Brossard (Rive-Sud)' },
-  { city: 'Laval', postalCode: 'H7V 2W1', label: 'Laval (Chomedey)' },
-  { city: 'Terrebonne', postalCode: 'J6X 2Z8', label: 'Terrebonne' },
-  { city: 'Saint-Jérôme', postalCode: 'J7Z 5L2', label: 'Saint-Jérôme' },
+  { city: 'Montréal', postalCode: 'H3S 1R7', label: 'Montréal (Côte-des-Neiges)', lat: 45.4972, lng: -73.6231 },
+  { city: 'Saint-Laurent', postalCode: 'H4L 3M8', label: 'Saint-Laurent', lat: 45.5081, lng: -73.6738 },
+  { city: 'Saint-Léonard', postalCode: 'H1P 2Y7', label: 'Saint-Léonard', lat: 45.5868, lng: -73.5932 },
+  { city: 'Brossard', postalCode: 'J4Z 3G3', label: 'Brossard (Rive-Sud)', lat: 45.4667, lng: -73.4500 },
+  { city: 'Laval', postalCode: 'H7V 2W1', label: 'Laval (Chomedey)', lat: 45.5667, lng: -73.7500 },
+  { city: 'Terrebonne', postalCode: 'J6X 2Z8', label: 'Terrebonne', lat: 45.7000, lng: -73.6333 },
+  { city: 'Saint-Jérôme', postalCode: 'J7Z 5L2', label: 'Saint-Jérôme', lat: 45.7833, lng: -74.0000 },
 ];
 
 export const DEFAULT_CATEGORIES: Category[] = [

@@ -22,6 +22,7 @@ import {
 import { DEFAULT_LIVE_SETTINGS, DEFAULT_CATEGORIES } from '@/data/mockData';
 
 export default function SoukdayHomepage() {
+  const { selectedAddress } = useCart();
   const city = useSelector((state) => state.City?.city);
   const reduxSetting = useSelector((state) => state.Setting?.setting);
 
@@ -61,8 +62,20 @@ export default function SoukdayHomepage() {
   // Fetch Live Data from Admin API
   useEffect(() => {
     let isMounted = true;
-    const lat = city?.latitude ? parseFloat(city.latitude) : 45.5017;
-    const lng = city?.longitude ? parseFloat(city.longitude) : -73.5673;
+    const lat = selectedAddress?.lat
+      ? parseFloat(selectedAddress.lat)
+      : selectedAddress?.latitude
+      ? parseFloat(selectedAddress.latitude)
+      : city?.latitude
+      ? parseFloat(city.latitude)
+      : 45.5017;
+    const lng = selectedAddress?.lng
+      ? parseFloat(selectedAddress.lng)
+      : selectedAddress?.longitude
+      ? parseFloat(selectedAddress.longitude)
+      : city?.longitude
+      ? parseFloat(city.longitude)
+      : -73.5673;
 
     async function loadData() {
       try {
@@ -103,7 +116,7 @@ export default function SoukdayHomepage() {
     return () => {
       isMounted = false;
     };
-  }, [city?.latitude, city?.longitude, currentLang]);
+  }, [selectedAddress, city?.latitude, city?.longitude, currentLang]);
 
   return (
     <div className="flex flex-col min-h-screen bg-stone-50">

@@ -1,4 +1,4 @@
-﻿import React from 'react'
+import React from 'react'
 import {
     Dialog,
     DialogContent,
@@ -10,6 +10,7 @@ import * as api from "@/api/apiRoutes"
 import { clearAllFilter } from "@/redux/slices/productFilterSlice";
 import { logoutAuth, setJWTToken, setCurrentUser, setAuthType, } from "@/redux/slices/userSlice"
 import { clearCartPromo, setCart, setCartProducts, setCartSubTotal, setIsGuest } from "@/redux/slices/cartSlice"
+import { setAllAddresses, setSelectedAddress } from "@/redux/slices/addressSlice"
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
@@ -37,6 +38,12 @@ const LogoutModal = ({ showLogout, setShowLogout }) => {
                 dispatch(setCartProducts({ data: [] }))
                 dispatch(clearCartPromo())
                 dispatch(setIsGuest({ data: true }))
+                dispatch(setAllAddresses({ data: [] }))
+                dispatch(setSelectedAddress({ data: [] }))
+                try {
+                    sessionStorage.removeItem('soukday_session_address')
+                    localStorage.removeItem('soukday_address')
+                } catch (e) {}
                 router.push("/")
                 setShowLogout(false)
                 toast.success(response.message)

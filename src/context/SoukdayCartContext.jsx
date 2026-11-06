@@ -9,6 +9,10 @@ import {
   setCartSubTotal,
   setIsGuest
 } from '@/redux/slices/cartSlice';
+import { 
+  setAllAddresses, 
+  setSelectedAddress as setSelectedAddressAction 
+} from '@/redux/slices/addressSlice';
 import * as api from '@/api/apiRoutes';
 import { toast } from 'react-toastify';
 
@@ -110,27 +114,84 @@ export function SoukdayCartProvider({ children }) {
   const reduxSelectedAddress = useSelector((state) => state.Addresses?.selectedAddress);
 
   const [sessionAddress, setSessionAddress] = useState(null);
+  const [accountAddress, setAccountAddress] = useState(null);
 
-  // Load manually saved session address if customer explicitly picked one
+  // 1. Initial hydration: load session address only if visitor specifically set one during this session.
+  // Guests start with NO address by default (empty) as requested.
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('soukday_address');
-      if (saved) {
-        setSessionAddress(JSON.parse(saved));
+      const isAuth = Boolean(user?.jwtToken || user?.id);
+      if (!isAuth) {
+        localStorage.removeItem('soukday_address');
+      }
+      const savedSession = sessionStorage.getItem('soukday_session_address');
+      if (savedSession) {
+        setSessionAddress(JSON.parse(savedSession));
       }
     } catch (e) {}
-  }, []);
+  }, [user]);
 
-  // Priority: 1. session chosen address, 2. user account saved address, 3. null (default is none)
-  const userAccountAddress = (reduxSelectedAddress && (reduxSelectedAddress.city || reduxSelectedAddress.area)) ? {
+  // 2. When user logs in: fetch saved addresses from account, pick default, and sync
+  useEffect(() => {
+    const isAuth = Boolean(user?.jwtToken || user?.id);
+    if (isAuth) {
+      api.getAddress()
+        .then((response) => {
+          if (response?.status == 1 && Array.isArray(response?.data) && response.data.length > 0) {
+            dispatch(setAllAddresses({ data: response.data }));
+            const defaultAddr = response.data.find((a) => a.is_default == 1) || response.data[0];
+            if (defaultAddr) {
+              const formatted = {
+                id: defaultAddr.id,
+                address: defaultAddr.address || '',
+                street: defaultAddr.address || defaultAddr.street || '',
+                city: defaultAddr.city || '',
+                postalCode: defaultAddr.pincode || defaultAddr.postalCode || '',
+                latitude: defaultAddr.latitude,
+                longitude: defaultAddr.longitude,
+                lat: defaultAddr.latitude ? parseFloat(defaultAddr.latitude) : 45.5017,
+                lng: defaultAddr.longitude ? parseFloat(defaultAddr.longitude) : -73.5673,
+                is_default: defaultAddr.is_default,
+              };
+              setAccountAddress(formatted);
+              dispatch(setSelectedAddressAction({ data: defaultAddr }));
+            }
+          }
+        })
+        .catch((err) => {
+          console.warn('Could not fetch user account addresses:', err);
+        });
+    } else {
+      // Logged out / guest
+      setAccountAddress(null);
+      setSessionAddress(null);
+      try {
+        sessionStorage.removeItem('soukday_session_address');
+        localStorage.removeItem('soukday_address');
+      } catch (e) {}
+    }
+  }, [user?.jwtToken, user?.id, dispatch]);
+
+  // Fallback user account address from Redux if already in state
+  const reduxFallbackAddress = (reduxSelectedAddress && (reduxSelectedAddress.city || reduxSelectedAddress.area || reduxSelectedAddress.address)) ? {
+    id: reduxSelectedAddress.id,
     address: `${reduxSelectedAddress.address || ''}, ${reduxSelectedAddress.city || ''}`,
+    street: reduxSelectedAddress.address || reduxSelectedAddress.street || '',
     city: reduxSelectedAddress.city || '',
     postalCode: reduxSelectedAddress.pincode || reduxSelectedAddress.postalCode || '',
+    latitude: reduxSelectedAddress.latitude,
+    longitude: reduxSelectedAddress.longitude,
     lat: parseFloat(reduxSelectedAddress.latitude || 45.5017),
     lng: parseFloat(reduxSelectedAddress.longitude || -73.5673),
   } : null;
 
-  const selectedAddress = sessionAddress || userAccountAddress || null;
+  // Selected address priority:
+  // 1. Manually chosen in this session (by guest or logged-in user override)
+  // 2. User account default address (when logged in)
+  // 3. Redux fallback (when logged in)
+  // 4. null (empty by default for guests)
+  const isAuth = Boolean(user?.jwtToken || user?.id);
+  const selectedAddress = sessionAddress || (isAuth ? (accountAddress || reduxFallbackAddress) : null);
 
   // Safely load and sync cart from localStorage AFTER client hydration
   useEffect(() => {
@@ -306,14 +367,29 @@ export function SoukdayCartProvider({ children }) {
   }, 0);
 
   const setSelectedAddress = (addr) => {
-    setSessionAddress(addr);
-    try {
-      if (addr) {
-        localStorage.setItem('soukday_address', JSON.stringify(addr));
-      } else {
+    if (addr) {
+      const formatted = {
+        id: addr.id || null,
+        address: addr.address || addr.street || `${addr.city || ''}, QC`,
+        street: addr.street || addr.address || '',
+        city: addr.city || '',
+        postalCode: addr.postalCode || addr.pincode || '',
+        latitude: addr.latitude || addr.lat || null,
+        longitude: addr.longitude || addr.lng || null,
+        lat: addr.lat ? parseFloat(addr.lat) : addr.latitude ? parseFloat(addr.latitude) : 45.5017,
+        lng: addr.lng ? parseFloat(addr.lng) : addr.longitude ? parseFloat(addr.longitude) : -73.5673,
+      };
+      setSessionAddress(formatted);
+      try {
+        sessionStorage.setItem('soukday_session_address', JSON.stringify(formatted));
+      } catch (e) {}
+    } else {
+      setSessionAddress(null);
+      try {
+        sessionStorage.removeItem('soukday_session_address');
         localStorage.removeItem('soukday_address');
-      }
-    } catch (e) {}
+      } catch (e) {}
+    }
   };
 
   return (

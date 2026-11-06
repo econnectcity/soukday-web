@@ -350,33 +350,37 @@ export default function Header() {
               )}
             </Link>
 
-            {/* 2. Location Box (Only shown when location is put / chosen, otherwise hidden) */}
-            {hasSelectedLocation && (
-              <button 
-                type="button"
-                onClick={() => setIsAddressModalOpen(true)}
-                className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FCEFEA]/80 hover:bg-[#FCEFEA] border border-[#F68B62]/30 hover:border-[#F68B62]/60 hover:-translate-y-0.5 text-left transition-all duration-200 shrink-0 cursor-pointer shadow-2xs"
-                title={isFrench ? "Modifier l'adresse de livraison" : "Change delivery address"}
-              >
-                <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-[#F68B62] border border-[#F68B62]/20 shadow-2xs shrink-0">
-                  <MapPin className="w-3.5 h-3.5" />
+            {/* 2. Location Box */}
+            <button 
+              type="button"
+              onClick={() => setIsAddressModalOpen(true)}
+              className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FCEFEA]/80 hover:bg-[#FCEFEA] border border-[#F68B62]/30 hover:border-[#F68B62]/60 hover:-translate-y-0.5 text-left transition-all duration-200 shrink-0 cursor-pointer shadow-2xs"
+              title={hasSelectedLocation ? (isFrench ? "Modifier l'adresse de livraison" : "Change delivery address") : (isFrench ? "Choisir une adresse de livraison" : "Select delivery address")}
+            >
+              <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-[#F68B62] border border-[#F68B62]/20 shadow-2xs shrink-0">
+                <MapPin className="w-3.5 h-3.5" />
+              </div>
+              <div className="text-xs">
+                <div className="text-stone-500 font-medium text-[9px] uppercase tracking-wider">
+                  {hasSelectedLocation ? (isFrench ? "Livraison à" : "Deliver to") : (isFrench ? "Adresse" : "Address")}
                 </div>
-                <div className="text-xs">
-                  <div className="text-stone-500 font-medium text-[9px] uppercase tracking-wider">
-                    {isFrench ? "Livraison à" : "Deliver to"}
-                  </div>
-                  <div className="font-bold text-stone-800 flex items-center gap-1 max-w-[150px] truncate">
-                    {selectedAddress.postalCode ? `${selectedAddress.postalCode} (${selectedAddress.city})` : selectedAddress.city}
-                    <ChevronDown className="w-3 h-3 text-stone-400 shrink-0" />
-                  </div>
+                <div className="font-bold text-stone-800 flex items-center gap-1 max-w-[150px] truncate">
+                  {hasSelectedLocation ? (
+                    selectedAddress.postalCode 
+                      ? `${selectedAddress.postalCode}${selectedAddress.city ? ` (${selectedAddress.city})` : ''}` 
+                      : (selectedAddress.street || selectedAddress.city)
+                  ) : (
+                    isFrench ? "Sélectionner" : "Select"
+                  )}
+                  <ChevronDown className="w-3 h-3 text-stone-400 shrink-0" />
                 </div>
-              </button>
-            )}
+              </div>
+            </button>
 
             {/* 3. Bigger & Wide Search Bar */}
             <div 
               ref={searchContainerRef}
-              className={`flex-1 relative min-w-0 transition-all duration-300 ${hasSelectedLocation ? 'max-w-2xl' : 'max-w-4xl'}`}
+              className="flex-1 relative min-w-0 transition-all duration-300 max-w-2xl lg:max-w-3xl"
             >
               <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full">
                 <input
@@ -636,23 +640,35 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Mobile Location bar (Only shown when location is put / chosen, otherwise hidden) */}
-          {hasSelectedLocation && (
-            <div className="sm:hidden mt-2 pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-              <button
-                type="button"
-                onClick={() => setIsAddressModalOpen(true)}
-                className="flex items-center gap-1.5 text-stone-700 font-medium"
-              >
-                <MapPin className="w-3.5 h-3.5 text-[#F68B62] shrink-0" />
-                <span>Livraison à : <strong className="font-bold text-stone-900">{selectedAddress.city} ({selectedAddress.postalCode})</strong></span>
-                <ChevronDown className="w-3 h-3 text-stone-400" />
-              </button>
-              <span className="text-[11px] font-semibold text-[#F68B62]">
-                Changer
-              </span>
-            </div>
-          )}
+          {/* Mobile Location bar */}
+          <div className="sm:hidden mt-2 pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
+            <button
+              type="button"
+              onClick={() => setIsAddressModalOpen(true)}
+              className="flex items-center gap-1.5 text-stone-700 font-medium truncate max-w-[80%]"
+            >
+              <MapPin className="w-3.5 h-3.5 text-[#F68B62] shrink-0" />
+              {hasSelectedLocation ? (
+                <span className="truncate">
+                  {isFrench ? "Livraison à : " : "Deliver to: "}
+                  <strong className="font-bold text-stone-900">
+                    {selectedAddress.postalCode ? `${selectedAddress.postalCode} (${selectedAddress.city})` : (selectedAddress.street || selectedAddress.city)}
+                  </strong>
+                </span>
+              ) : (
+                <span>
+                  {isFrench ? "Livraison : " : "Delivery: "}
+                  <strong className="font-bold text-[#F68B62]">
+                    {isFrench ? "Sélectionner une adresse" : "Select an address"}
+                  </strong>
+                </span>
+              )}
+              <ChevronDown className="w-3 h-3 text-stone-400 shrink-0" />
+            </button>
+            <span className="text-[11px] font-semibold text-[#F68B62] shrink-0">
+              {hasSelectedLocation ? (isFrench ? "Changer" : "Change") : (isFrench ? "Choisir" : "Choose")}
+            </span>
+          </div>
         </div>
       </header>
 

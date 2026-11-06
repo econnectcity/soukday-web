@@ -450,12 +450,16 @@ export default function StoreDetail() {
   }, [activeTab, cart, products]);
 
   // ─── 5. Delivery Time & Address Calculation (Accurate to Customer & Store) ─
-  const customerLat = selectedAddress?.latitude
+  const customerLat = selectedAddress?.lat
+    ? parseFloat(selectedAddress.lat)
+    : selectedAddress?.latitude
     ? parseFloat(selectedAddress.latitude)
     : cityState?.latitude
     ? parseFloat(cityState.latitude)
     : 45.5017;
-  const customerLng = selectedAddress?.longitude
+  const customerLng = selectedAddress?.lng
+    ? parseFloat(selectedAddress.lng)
+    : selectedAddress?.longitude
     ? parseFloat(selectedAddress.longitude)
     : cityState?.longitude
     ? parseFloat(cityState.longitude)
@@ -482,6 +486,9 @@ export default function StoreDetail() {
 
   // Delivery Window based on current clock and distance
   const deliveryWindowText = useMemo(() => {
+    if (!selectedAddress) {
+      return isFrench ? 'Livraison locale & Expédition' : 'Local Delivery & Shipping';
+    }
     const now = new Date();
     const travelMin = Math.max(25, Math.round(20 + calculatedDistanceKm * 2.5));
     const startMin = travelMin;
@@ -495,17 +502,20 @@ export default function StoreDetail() {
     const endStr = `${endTime.getHours()} h ${pad(endTime.getMinutes())}`;
 
     return isFrench ? `Livraison d’ici ${startStr} - ${endStr}` : `Delivery by ${startStr} - ${endStr}`;
-  }, [calculatedDistanceKm, isFrench]);
+  }, [calculatedDistanceKm, isFrench, selectedAddress]);
 
   const activeAddressDisplay = useMemo(() => {
     if (selectedAddress?.street) {
       return `${selectedAddress.street}`;
     }
     if (selectedAddress?.city) {
-      return `${selectedAddress.city}, QC`;
+      return selectedAddress.postalCode ? `${selectedAddress.postalCode} (${selectedAddress.city})` : `${selectedAddress.city}, QC`;
     }
-    return '17682 Rue Alexis-Contant';
-  }, [selectedAddress]);
+    if (selectedAddress?.postalCode) {
+      return `${selectedAddress.postalCode}`;
+    }
+    return isFrench ? 'Sélectionner une adresse' : 'Select an address';
+  }, [selectedAddress, isFrench]);
 
   // ─── 6. Free Delivery Progress ($150 Threshold) ──────────────────────────
   const FREE_SHIPPING_THRESHOLD = 150.0;
